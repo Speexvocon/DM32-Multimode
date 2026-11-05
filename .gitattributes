@@ -1,0 +1,8 @@
+* text=auto eol=lf
+*.bin -text
+*.zip -text
+*.png -text
+*.ico -text
+# Runtime integrity manifests and source notices hash these exact upstream bytes.
+tools/vendor/** -text -whitespace
+licenses/** -text -whitespace

@@ -1,0 +1,507 @@
+{
+  "schema": "dm32-vendored-tools/1",
+  "upstream": "https://github.com/RadioFoundry/RadioFoundry",
+  "commit": "75c46ea46d5ebf6406f5b4ce0bbe2443b7649f91",
+  "files": {
+    "AUTHORS": {
+      "bytes": 129,
+      "sha256": "fbddf6d2652b31da8853c0be802fef55438fc15f24b2863b4641275408ab6f2a"
+    },
+    "LICENSE": {
+      "bytes": 1116,
+      "sha256": "b8b397bab9272c42d3a1dff3b60972526aba548f7f0bbf5a39bfed77e9ff962d"
+    },
+    "platform/hrc7000/platform.h": {
+      "bytes": 18450,
+      "sha256": "058c2eac51b507bff58702845c55d812e0ea7cbafad1ca81c45feb7e57c2f573"
+    },
+    "stub/f4stub.py": {
+      "bytes": 96210,
+      "sha256": "004a982c411c67b36748d57d770ebe1380b888825966cdfbd3cb8331f61b64d7"
+    },
+    "stub/stm32f4/f4stub_header.h": {
+      "bytes": 3076,
+      "sha256": "b34a62419fb22d8c9bf8453ae0b1b7cffedf639119670fa3e33b9805484cd6af"
+    },
+    "stub/stubtool.py": {
+      "bytes": 189968,
+      "sha256": "8ac5c2f5e798bf38cd4011337a286675ca16b46eebdfdf23078b2f051eccf15b"
+    },
+    "tools/hrc7000_codec.py": {
+      "bytes": 39213,
+      "sha256": "a0e1d3c008e2506623f99f84daf166163fce86706f0d9072b0ab97f988a19c17"
+    },
+    "tools/rfoundry/rfoundry/__init__.py": {
+      "bytes": 357,
+      "sha256": "410212c82d9c9f98aeb394ecb713731c9ae111a8387138f5841fc796dd401da0"
+    },
+    "tools/rfoundry/rfoundry/__main__.py": {
+      "bytes": 462,
+      "sha256": "c764ad181f8b472c3fcf8469cc6ecfe73003140c04749b1abbb6636b2efe235d"
+    },
+    "tools/rfoundry/rfoundry/boards.py": {
+      "bytes": 10056,
+      "sha256": "631ef3acb2025313f1268d909a572f63a8fd61393c67d5d0443f3be926ac7713"
+    },
+    "tools/rfoundry/rfoundry/bootkey.py": {
+      "bytes": 2130,
+      "sha256": "569e7f17dc3bfe373c44c7f6a730617cf121fdf2cf7202469fb8bfb26cf3a4e1"
+    },
+    "tools/rfoundry/rfoundry/cli.py": {
+      "bytes": 56518,
+      "sha256": "9e3665a0549654c744b9324c0e32f44dd3235f61fc053249fcf4104101d05d55"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/README.md": {
+      "bytes": 1543,
+      "sha256": "542969a2260ea331db3c82e817d38dcea28fef10875cd6269e14b24e02846e30"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/db25d/db25d-020.json": {
+      "bytes": 14232,
+      "sha256": "be7783961a7e0a9aba93aed916e33375115d90137f311400e99dcc4bbccf388f"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/db25d/db25d-2307.json": {
+      "bytes": 14232,
+      "sha256": "9e7b9eed984c3aa445d16e7daa43dbaf8ba981b388e384b6fbb792606f6c20c8"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/db25d/db25d-2405.json": {
+      "bytes": 14247,
+      "sha256": "4735c9d18be6e25c4acd67df4ad23e83fda44a03a2ca2bd2a246a445447b20b2"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/db25d/db25d-2409.json": {
+      "bytes": 14236,
+      "sha256": "a51ac08ae9504001bee6b9c9c9bf845700ce51f9120f72b7930e5d6c0639ce0b"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/db25d/db25d-2501.json": {
+      "bytes": 14236,
+      "sha256": "ecfc4d311a8102625efef11ba79406d82c73f0dfd48d1374b63025eec970bc17"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/dm1701/dm1701-v0203-csv.json": {
+      "bytes": 14648,
+      "sha256": "b4e90d82c643a089175b65d7464ecb41fee1d4fbd0ba32db55c71e0e5c963c56"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/dm1701/dm1701-v0203-nocsv.json": {
+      "bytes": 14611,
+      "sha256": "5108e76104187bac16d028207050b397fad0a859739ff80d98bf26852e6213dc"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/dm1701/dm1701-v0206-csv.json": {
+      "bytes": 14626,
+      "sha256": "ff7616660541593800b8d4a89f8809b1f4a147e748b0dd6a9cc2f3b03e9ea0b0"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/dm1701/dm1701-v0206-nocsv.json": {
+      "bytes": 14598,
+      "sha256": "ea193d622239e9fe811eeb203e7bd40135ce9bc314bd951135e644807036a942"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/dm1801pro/dm1801pro-049.json": {
+      "bytes": 14194,
+      "sha256": "348b19f471a540a471f6e0070b258f4dd376dd77cf6108cf4d7d162493bc2212"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/dm32/dm32-032.json": {
+      "bytes": 14213,
+      "sha256": "6e7391986b74c2eda74824125e59ea2a46374bf70ed2f5d79c144eef9004cfa0"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/dm32/dm32-037.json": {
+      "bytes": 14213,
+      "sha256": "a35b78b71b14a5b0a6c345ee8546a9985be300582ac3d85953168b55943aba6b"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/dm32/dm32-046.json": {
+      "bytes": 14213,
+      "sha256": "1a8197386880ad67d284a886e4304d0f61f39956bd314cd8a52eea5838326783"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/dm32/dm32-046hr.json": {
+      "bytes": 14243,
+      "sha256": "b3cd4c218ab451f3a0a3a659ff6cb54b7251a867d7285d32e466ce51906d3981"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/dm32/dm32-049.json": {
+      "bytes": 14213,
+      "sha256": "5dab705f8e1e0a4e7c55b5f97457b77e564495d1b08024439c8385df3efd55a2"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/dm32/dm32-l01-048.json": {
+      "bytes": 14219,
+      "sha256": "49d0a4d4af650a0e2587b563e0fc05572f1bab810e0a0e01fe185e0f3f06717e"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/dm32/dm32-nrf-049.json": {
+      "bytes": 14225,
+      "sha256": "a6d733a22b85fa385912406bf1177aa206c5ba6b22a1986132f5bfb032f15dbf"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md380/md380-d13034.json": {
+      "bytes": 15561,
+      "sha256": "25b4baaaded0484c9f32f3b4d30541a325df02cca173d62fbd57208fe3cf212f"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md380/md380-d1314.json": {
+      "bytes": 15578,
+      "sha256": "d217b89c0f7bcb9d229670dd9e494a903791d9065dd0b443123a42677004982a"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md380/md380-d1320.json": {
+      "bytes": 15578,
+      "sha256": "664010f4261096b6c864edb5779a4e1fe7a0aa975a99fca6a52c59716a6b8848"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md380/md380-d14004.json": {
+      "bytes": 15561,
+      "sha256": "b926f80a5bfbf32fe964cac787b715c5840916ce59f96c39edcb3728479d2af6"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md380/md380-d1407.json": {
+      "bytes": 15576,
+      "sha256": "b3af1b1b4e71d504c7e9ca6830f92b33fca45f9d25067164b78543843383c005"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md380/md380-d2024up.json": {
+      "bytes": 16277,
+      "sha256": "83b9fea3ae0ab7aa36cb67170c80f69f5f86a51fb80bde056900957d4ee1aa19"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md380/md380-d2025.json": {
+      "bytes": 16211,
+      "sha256": "249aea82138df9edba844dcd5bf85f0e7a3cb6a6a52e17eafaa6e788b89f0b0d"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md380/md380-d2026.json": {
+      "bytes": 16211,
+      "sha256": "3ca804837511d941e98b525d2ea84e35e2fb4d53cee2dc4dab66a0c79709c550"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md380/md380-d2027.json": {
+      "bytes": 16211,
+      "sha256": "36ad36cf5fb0bd87068efbdcef54aba6535823525c7ce3d91fa8e3754baad44e"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md380/md380-d2030.json": {
+      "bytes": 16211,
+      "sha256": "81a1880bb6eda52f946eb5d6681aadb939d08eaa73a321fa67b7aeb221b8c1e8"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md380/md380-d2032.json": {
+      "bytes": 16218,
+      "sha256": "cba5a0ecd696d3fdddec2172d9918140e9f668918a53de7986bec864dbd3e943"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md380/md380-d2034.json": {
+      "bytes": 16211,
+      "sha256": "b154cb7187c19a16f799e9326c0a783ea1af1ee16da4251360fb960b928cf6a5"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md380/md380-d3008.json": {
+      "bytes": 16234,
+      "sha256": "d19c29771bcabd38b421c03f072978d52b597fe6a99fa151ed197782761fb145"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md380/md380-d3020.json": {
+      "bytes": 16245,
+      "sha256": "9c6fcf09930d06acf3c053d882e4d63be3f682560b439eab265e92617eca1386"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md380/md380-d3032.json": {
+      "bytes": 16246,
+      "sha256": "feb95c684d97f2dba08e2f8b933a7b555be504d604a5e6991f4eeaae95ce1489"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md380/md380-d3514.json": {
+      "bytes": 15271,
+      "sha256": "c2ac619f2b91e9ca4f8e4d8e1b40973adc7010c2add97e5e314508676c92e365"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md380/md390-s1312.json": {
+      "bytes": 15576,
+      "sha256": "bb2d92821d6283bf97f2f6cdb509349b0adeae01d62e347cb8356b7dc56b6c78"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md380/md390-s1320.json": {
+      "bytes": 15576,
+      "sha256": "2e169ecfc95b0e1664e53ed9fdc7be68dc52f9468ee316e499dd49271348859f"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md380/md390-s1407.json": {
+      "bytes": 15574,
+      "sha256": "277f46014881312879b45a7519f1b1ab1170e3e462dc6b297ffdce942de09584"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md380/md390-s3012.json": {
+      "bytes": 16255,
+      "sha256": "5fdc25ccd95660e32cc9b1ba78fc1ad3cc591fc052072c6c3e35d125b7dca812"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md380/md390-s3514.json": {
+      "bytes": 15271,
+      "sha256": "29e85743df1ba5f3c9a7f62db9ac988fedd9d5c57076f495b70ef582b22bdeab"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md380/md446-d1320.json": {
+      "bytes": 15575,
+      "sha256": "c2968d12bc577f587d3600585df021d08375ce6392c51e91e4cb934414fe404f"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md380/md446-d3020.json": {
+      "bytes": 16245,
+      "sha256": "45c183b33e28133cbb7db6746da60b7b4ff60349ab8fd7737c7bfba6333562a3"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md380/rt3-s1404.json": {
+      "bytes": 15575,
+      "sha256": "91cd9238b14e5b19b9a30bf15d053f90e4f1e003ebfed864cd9d44a956b9004e"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md9600/md9600-v06-09-csv.json": {
+      "bytes": 14587,
+      "sha256": "f715ec38ff528207383246e03ce251caa4a917c081c3041d1d79cac914d19c81"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md9600/md9600-v06-09-gps-csv.json": {
+      "bytes": 14599,
+      "sha256": "c544c1c73c4c7f8e371dd8eef7d3bd12421ed5093fdea2e55e73614b9c62291b"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md9600/md9600-v06-09-gps-rec.json": {
+      "bytes": 14604,
+      "sha256": "b0b400e3b2f44f15232dd57b56d0a9d80df53a0771b41f1284ec3b4a45dcf942"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md9600/md9600-v06-09-rec.json": {
+      "bytes": 14592,
+      "sha256": "868aa4ec06fa0c16650e0f2d29c46b7dffeae199d5d0a1963c61a4cc35bc7cfb"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md9600/md9600-v06-24-csv.json": {
+      "bytes": 14587,
+      "sha256": "bf9bec00ee5b2114c7c8ca447588bd6698f4922787917b550f8e9e9a0b432804"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md9600/md9600-v06-24-gps-csv.json": {
+      "bytes": 14599,
+      "sha256": "1a227fc3c3191f8ebbca59bc67ea8894d571abb33aefa456a4e1c9269cafcd5a"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md9600/md9600-v06-24-gps-rec.json": {
+      "bytes": 14604,
+      "sha256": "c8a5a6b786671066a06c04b8a7784a01b7effdc04f88e63e19e53d315c8106fc"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md9600/md9600-v06-24-rec.json": {
+      "bytes": 14592,
+      "sha256": "0faf9ababa12e4265753f50779be30065c186d11ac1f058135b95d58217a7afb"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md9600/md9600-v16-24-csv.json": {
+      "bytes": 14591,
+      "sha256": "6468ae56645272f9c0b615f1da3827c640443d49c7b067895d758429cd91b2fb"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md9600/md9600-v16-24-gps-csv.json": {
+      "bytes": 14603,
+      "sha256": "dc2ecc252e7ed4f10fb76fece93a82ea071af237660b3aab11bc104a47480b32"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md9600/md9600-v16-24-gps-rec.json": {
+      "bytes": 14608,
+      "sha256": "9c1615aa7edeef45561b98f2a292c7576e0339d1a3eaa6c01d5d7d3448285fd2"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md9600/md9600-v16-24-rec.json": {
+      "bytes": 14596,
+      "sha256": "447a3768bc3a5429917ca115bfbd57301e027e0516a9ea5ed6ed2edf4eca48a1"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md9600/md9600-v16-45-csv.json": {
+      "bytes": 14591,
+      "sha256": "e32e6099b79474aec89df43bbb9d458c0dcc1306782712780adad154d6b72434"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md9600/md9600-v16-45-gps-csv.json": {
+      "bytes": 14603,
+      "sha256": "94446a57162b626621a5a9a31c8740bc50a981b9e3b43207d7c6bfb547294aa1"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md9600/md9600-v16-45-gps-rec.json": {
+      "bytes": 14608,
+      "sha256": "70cbe4d46143036f57a3eda91e2f7c2113e721ba5991f38c787d0b55265a5bd1"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md9600/md9600-v16-45-rec.json": {
+      "bytes": 14596,
+      "sha256": "24c186217a610d227f0c82147f6688b2f5e7af321045edbecdf751796e4a8d67"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md9600/md9600-v26-45-csv.json": {
+      "bytes": 14595,
+      "sha256": "150998ddf56c1f44dd7c1158205f291d6ea8ca4305c8545525cd7ea3d9054579"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md9600/md9600-v26-45-gps-csv.json": {
+      "bytes": 14607,
+      "sha256": "3e60086536706cfec9ce27a54cb00d49ec7f10fce08d482f1d5711cc50194188"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md9600/md9600-v26-45-gps-rec.json": {
+      "bytes": 14612,
+      "sha256": "d12c8fa0f3b6e620b4ae8fa570c1a4bfd190b141ad60366407fd47e77e12b4db"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md9600/md9600-v26-45-rec.json": {
+      "bytes": 14600,
+      "sha256": "f23d0c895366332787ea74c0b9163f99315792984154e386681ba405495d0170"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/md9600/md9600-v26-57-rec.json": {
+      "bytes": 14600,
+      "sha256": "d6f2193175a07bffdf7b30d0648312976ee7ec42fb4e1d88e348ec53fd6ea939"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/mduv380-10w-aes-d21974-rec.json": {
+      "bytes": 14629,
+      "sha256": "fdd76d19c18edf8f18ba47266440168082b9472615fd3191639fa8cc04301058"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/mduv380-10w-aes-v21974-csv.json": {
+      "bytes": 14628,
+      "sha256": "284262027291a69cf040fdccc9dd9168fa69284439c22bbcbef9390f31fc0c01"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/mduv380-10w-d1974-rec.json": {
+      "bytes": 14644,
+      "sha256": "683ec6a56d93d985918461a71c0ab510fff5f980e2cc2be2f4bc2570f782361e"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/mduv380-10w-v1974-csv.json": {
+      "bytes": 14605,
+      "sha256": "6544d046cd1ddde86e5ce5688650ea0021c54ee0bdb017ae51e2ffca89280a01"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/mduv380-aes-d21974-rec.json": {
+      "bytes": 14618,
+      "sha256": "a67583c1f45a11a4fe8dc42bc2de5ab59bc208b68a2ef9dfb66520fa37ef5d16"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/mduv380-aes-v21974-csv.json": {
+      "bytes": 14618,
+      "sha256": "130d6e6bede98bd2a534c8c08b197405f8a60ff7eb0998e65c15e7977b28f53e"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/mduv380-d1803-rec.json": {
+      "bytes": 14633,
+      "sha256": "70a50664e70253a6fd72ce82807ba06ad2bf28aac3316370c317dc0d4eb501ff"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/mduv380-d1811-rec.json": {
+      "bytes": 14632,
+      "sha256": "b20ee30f39398b8bd8b7ca8cf89975331c384c928a782cb1a230bf56e0b1c365"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/mduv380-d1926-rec.json": {
+      "bytes": 14597,
+      "sha256": "12658300c6d19f3db849ffac8c02d820553c388d25f67c86631aaae1ee04a6b5"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/mduv380-d1974-rec.json": {
+      "bytes": 14632,
+      "sha256": "e18612132fbfe58878099e6b446d7149924d88144f617b1787079f4720f8dfce"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/mduv380-v1803-csv.json": {
+      "bytes": 14593,
+      "sha256": "114aced982e1400bfb2597d4e906b6fc9f343ded0653ed49f7830a9725720f46"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/mduv380-v1811-csv.json": {
+      "bytes": 14595,
+      "sha256": "421658dae727da7653e44524efafa88acc3de5c650f7019d77129755d8f93993"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/mduv380-v1926-csv.json": {
+      "bytes": 14596,
+      "sha256": "c60d2c598b769ca0783da6481e407835b632d278069e12ed4af915190380e9f9"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/mduv380-v1974-csv.json": {
+      "bytes": 14596,
+      "sha256": "8e4b68b5699111c58f4725d2bfb1e0ad36ad7e96e48e61aed57acee03fc8ffcf"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/mduv390-10w-aes-p21974-csvgps.json": {
+      "bytes": 14640,
+      "sha256": "b6695e233b0c1c18a1535e04aea5818f63aee1c608de057c35909695810f3525"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/mduv390-10w-aes-s21974-gpsrec.json": {
+      "bytes": 14640,
+      "sha256": "ab39ab32fda01ef32bd746bf33e0ec3a3603612d2da308237bd52821cd431764"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/mduv390-10w-p1974-csvgps.json": {
+      "bytes": 14619,
+      "sha256": "e289f602f7a573e6821afa4779f715422507680437c1775c24b1ffff426bb443"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/mduv390-10w-s1974-gpsrec.json": {
+      "bytes": 14654,
+      "sha256": "a19a58a1856d41b3984f566a2be225ea5c0002d1dd175a8f10dc8f1cbb001087"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/mduv390-aes-p21974-csvgps.json": {
+      "bytes": 14628,
+      "sha256": "f44f420826abbed41ac6f21e36be88285196d02579020290f618a54594cfe3f5"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/mduv390-aes-s21974-gpsrec.json": {
+      "bytes": 14625,
+      "sha256": "a2fa3005d6a5c6e088d5a86e8cdce00ba19a53aa1cea2a47178b727e11e6b452"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/mduv390-p1803-csvgps.json": {
+      "bytes": 14605,
+      "sha256": "62866ddc67cd51f33ad0ce18ca985bc57232df60c6474cc2a8c9738ad8cd6d03"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/mduv390-p1811-csvgps.json": {
+      "bytes": 14606,
+      "sha256": "c98e1f7e64320773f9ab1d6647fc6eecc4091c255f6a526fba8871c23fcee0bd"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/mduv390-p1816-csvgps.json": {
+      "bytes": 14606,
+      "sha256": "6cd0d70229003a08d99129403c4b1c95edb3f88de9ac3027ae38146ecbacf1ab"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/mduv390-p1926-csvgps.json": {
+      "bytes": 14607,
+      "sha256": "fa98c852a77cf769a14b2bbd7cd6c952643e0cd4c1786b632cc6c94a28278455"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/mduv390-p1933-csvgps.json": {
+      "bytes": 14610,
+      "sha256": "799cb246110c8b420e57e32e47da826488072ba8d4aab5091f597f269e173f09"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/mduv390-p1974-csvgps.json": {
+      "bytes": 14604,
+      "sha256": "d7bb604c6aa885790f8a23cfce58aa9c391774915e2bd65704a720257217379a"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/mduv390-s1803-gpsrec.json": {
+      "bytes": 14644,
+      "sha256": "a25841d6ed368c933755005412a8b5862dbc42db9c7775992a21eece4f1e6167"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/mduv390-s1811-gpsrec.json": {
+      "bytes": 14644,
+      "sha256": "862c32125a445e0a8d53d396697885a654a0f04a9bc84a5d839ec5e02e35cb73"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/mduv390-s1816-gpsrec.json": {
+      "bytes": 14643,
+      "sha256": "1130b2348aef10021f1dfefb5bb351c14fc154237b306185b15f14180d5d9d01"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/mduv390-s1926-gpsrec.json": {
+      "bytes": 14605,
+      "sha256": "b7e1f9dd48cc0a52e77c586e7e461be75469e6fbd65f89e7396661d8cd00bdfb"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/mduv390-s1974-gpsrec.json": {
+      "bytes": 14644,
+      "sha256": "8d75a189453b9c6a82d2e8131a7125f9d4565a42e3592645fc79042ff07a419e"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/rt3s-p1906-csvgps.json": {
+      "bytes": 14604,
+      "sha256": "b124674599be0db3e39d9754fdbf52ac537c9b12bbff7ffd1290506910148146"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/rt3s-p21960-csvgps.json": {
+      "bytes": 14627,
+      "sha256": "a5de91f43de229bc78f7a52d97124760eed2e300c94e52432fd5ed698867209a"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/rt3s-v1906-csv.json": {
+      "bytes": 14590,
+      "sha256": "ca1c0fc825b353165918f47be3883e3781199a970fd6069b52ae9911d33fafef"
+    },
+    "tools/rfoundry/rfoundry/codec_maps/mduv380/rt3s-v21960-csv.json": {
+      "bytes": 14614,
+      "sha256": "24a3d94007e7448643a1171079d6bb09977ab02214dda1f90ca87f3ed20e1e8b"
+    },
+    "tools/rfoundry/rfoundry/codecmap.py": {
+      "bytes": 20275,
+      "sha256": "67b01b63b65e58e272691ded9660bd13543ac355abe5afdf5ffa91d7509a641b"
+    },
+    "tools/rfoundry/rfoundry/codecsave.py": {
+      "bytes": 4808,
+      "sha256": "5f545ded8cc63107a8bc95555d0611ed0976058aeede2ff8c731267c379600cf"
+    },
+    "tools/rfoundry/rfoundry/debuglink.py": {
+      "bytes": 5016,
+      "sha256": "88a20c614a1ef6115317d1a454e01eab6be36ff580d3b9c16529c8f12b95c44d"
+    },
+    "tools/rfoundry/rfoundry/dfu.py": {
+      "bytes": 10228,
+      "sha256": "0ebd58a4683eac8839113088752c047525119e7f99cbfdc830864f1cb5d185a1"
+    },
+    "tools/rfoundry/rfoundry/fakedfu.py": {
+      "bytes": 6390,
+      "sha256": "9e41b92e7378d9b3992d94a64d91b9fada20a9c7b50fa5dcbdf6998b4a9d8c2b"
+    },
+    "tools/rfoundry/rfoundry/manifest.py": {
+      "bytes": 8240,
+      "sha256": "9d004cc962fa18ad0b3b9ef360e3bccd1baa6e7e4597ee562b74a78f643ed555"
+    },
+    "tools/rfoundry/rfoundry/names.py": {
+      "bytes": 2787,
+      "sha256": "18441e0ecb58259e4f8ced44fe761a10a51355c846f5f731fbcae885ab304da1"
+    },
+    "tools/rfoundry/rfoundry/plan.py": {
+      "bytes": 9360,
+      "sha256": "f6e51358921ff499b0bacaec8ddf6500f9a565b4f78b6e71047bd6939969048d"
+    },
+    "tools/rfoundry/rfoundry/protect.py": {
+      "bytes": 4381,
+      "sha256": "345842abc194a0729032d0385532386a231a0e24af7a1226e3bdeeb6739ffd3a"
+    },
+    "tools/rfoundry/rfoundry/registry.json": {
+      "bytes": 23487,
+      "sha256": "aac340541f5f4d896233cfb79663ee5b1775e10130c65b6ed924702712895049"
+    },
+    "tools/rfoundry/rfoundry/release.py": {
+      "bytes": 4359,
+      "sha256": "99f77bef1ddc02fe60e7ec15b2023b6f21c53c95277e23dc7e0f655b7e1b572c"
+    },
+    "tools/rfoundry/rfoundry/serialflash.py": {
+      "bytes": 13572,
+      "sha256": "d4a1d7960fae1fe1bfb4565046aca5da555c0a246f088d3a3284e1c2d5c59c31"
+    },
+    "tools/rfoundry/rfoundry/state.py": {
+      "bytes": 2672,
+      "sha256": "892d250f098fbe0171d7358b0a3f766a27f19e1afcee761db62a346360e1a82a"
+    },
+    "tools/rfoundry/rfoundry/stockfw.py": {
+      "bytes": 135845,
+      "sha256": "ecb83f4efe493c678312d9c2b73b178b7d0dcee22cbca1ec07e76dd22ce7a8a9"
+    },
+    "tools/serial_loader.py": {
+      "bytes": 37216,
+      "sha256": "d81590754355ce8dc375c87b2f61f40411f223255294ff59efc77b2a72eac308"
+    }
+  }
+}

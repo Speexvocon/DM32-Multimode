@@ -1,0 +1,42 @@
+{
+  "schema": "dm32-multimode-release/1",
+  "version": "0.1.0-beta.1",
+  "board": "dm32",
+  "channel": "private-beta",
+  "source_commit": "05c496514bf9efe9bbb1a8f219b284228c814a60",
+  "source_description": "Exact installed and verified TX-pacing build; the version is a beta-package label, not a rebuilt firmware version string.",
+  "firmware_display_id": "05c4965",
+  "application": {
+    "file": "dm32-multimode-0.1.0-beta.1-05c4965.application.bin",
+    "bytes": 306304,
+    "sha256": "7f4366141b337c3f6201b2b39f2a573241f4e1c3b8144d45b5b3dbae4dcdff97",
+    "load_address": "0x0300C000",
+    "contains_native_codec": false,
+    "directly_flashable": false
+  },
+  "upstream": {
+    "radiofoundry_commit": "75c46ea46d5ebf6406f5b4ce0bbe2443b7649f91",
+    "freertos_commit": "3a22924e0a9ddbbc8b0758881c33b3422a5cc20d"
+  },
+  "qualified_native_codec": {
+    "code_sha256": "cd0820a18df0b53bf011907a02d5b649bfbccf030c3d0432f4e363077d67a2c0",
+    "tables_sha256": "10684c33e3cc8238376e455fd96b1c15a863a864420dbbaa4589803c4eb0b0e1",
+    "required_source": "Tester own verified stock program-flash backup; never distributed in this repository."
+  },
+  "build_validation": {
+    "host_ci": 41971956281,
+    "target_ci": 41971956316,
+    "host_conclusion": "success",
+    "target_conclusion": "success",
+    "application_bytes": 306304,
+    "static_ram_bytes": 206752,
+    "static_ram_limit": 211456,
+    "static_ram_margin": 4704
+  },
+  "distribution": {
+    "proprietary_codec_included": false,
+    "per_radio_backup_included": false,
+    "matching_source": "../../source/0.1.0-beta.1-project.zip"
+  },
+  "status": "prepared-for-owner-review; no tag or GitHub release published"
+}

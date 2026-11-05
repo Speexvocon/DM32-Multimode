@@ -1,0 +1,24 @@
+name: Beta test result
+description: Share a successful or mixed result from ordinary use.
+title: "[Beta result] "
+body:
+  - type: input
+    id: build
+    attributes:
+      label: Firmware version / build ID and radio model
+    validations:
+      required: true
+  - type: textarea
+    id: setup
+    attributes:
+      label: What was tested?
+      description: Mode, relevant signaling, direct/repeater, reference receiver and whether the programming cable was connected. Use your own channel values; redact personal data if needed.
+    validations:
+      required: true
+  - type: textarea
+    id: result
+    attributes:
+      label: Result and limits
+      description: Describe audio, received details, screen wake, retention or controls. Note missed/partial calls and how many attempts were made; a finite pass does not establish endurance.
+    validations:
+      required: true

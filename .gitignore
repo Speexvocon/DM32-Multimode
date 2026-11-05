@@ -1,0 +1,16 @@
+# Per-radio data and locally built native-codec packages stay local.
+/backups/
+/build/
+/captures/
+/local/
+/private/
+/work/
+/.venv/
+.env
+.env.*
+*.log
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.DS_Store
+Thumbs.db

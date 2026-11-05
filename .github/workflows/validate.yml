@@ -1,0 +1,23 @@
+name: Validate beta package
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  beta:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install host tool dependency
+        run: python -m pip install -r requirements.txt
+      - name: Validate release hashes, source archives, notices and links
+        run: python tools/check-release.py
+      - name: Exercise package refusal paths and offline behavior
+        run: python -m unittest discover -s tests -p 'test_beta_tools*.py' -v
+      - name: Validate browser model and serial protocol without hardware
+        run: node --test cps/tests/model.test.js cps/tests/transport.test.js

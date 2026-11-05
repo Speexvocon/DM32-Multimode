@@ -1,0 +1,8 @@
+{
+  "name": "dm32-p25-web-cps",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/model.test.js tests/transport.test.js"
+  }
+}

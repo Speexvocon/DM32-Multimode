@@ -1,0 +1,52 @@
+name: Bug report
+description: Report a reproducible firmware, audio, UI or programming problem.
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please read KNOWN_ISSUES.md first. Do not attach stock backups, calibration dumps or locally merged codec images. Redact personal IDs and configuration when appropriate.
+  - type: input
+    id: build
+    attributes:
+      label: Firmware version / build ID
+      description: Find it under P2 → Radio status.
+    validations:
+      required: true
+  - type: input
+    id: hardware
+    attributes:
+      label: Radio model and hardware/stock baseline
+      description: Include the exact model; add hardware or original firmware details if known.
+    validations:
+      required: true
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Affected area
+      options:
+        - DMR
+        - P25
+        - Analog FM
+        - Menus / display / controls
+        - CPS / settings
+        - Startup / flashing / recovery
+    validations:
+      required: true
+  - type: textarea
+    id: setup
+    attributes:
+      label: Relevant setup
+      description: Frequencies, simplex/split, direct/repeater, NAC or CC/slot/destination, reference receiver and cable connected/unplugged. Redact personal IDs if preferred.
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps, expected behavior and actual result
+      description: Include whether it repeats, any fault text/restart, and what the reference receiver heard. Include failed attempts as well as a successful retry.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Optional evidence
+      description: Screenshots, exact messages or requested counters. Inspect CPS files for personal data before sharing.
