@@ -23,8 +23,8 @@ function wireFixture() {
 
 test("geometry and CRC match the firmware and independent standard vectors", () => {
     assert.equal(RECORD_BYTES, 32);
-    assert.equal(RECORD_COUNT, 35);
-    assert.equal(MEMORY_COUNT, 32);
+    assert.equal(RECORD_COUNT, 387);
+    assert.equal(MEMORY_COUNT, 256);
     assert.deepEqual(FILTERS, ["NAC", "PROM", "NAC+TG"]);
     assert.equal(crc32(new Uint8Array()), 0);
     assert.equal(crc32(new TextEncoder().encode("123456789")), 0xcbf43926);
@@ -38,7 +38,7 @@ test("independent wire fixture decodes P25, wide FM, NFM, scan membership and em
     const model = decodePayload(fixture);
     assert.deepEqual(model.channels[0], {
         name: "Local", rxHz: 145700000, txHz: 145100000, mode: "P25", nac: 0x293, talkgroup: 10,
-        filter: "PROM", rxOnly: true, scanLists: [0, 3], squelch: 5,
+        filter: "PROM", rxOnly: true, scanLists: [0, 3], squelch: 5, powerLevel: 0,
         txTone: { type: "none", value: 0 }, rxTone: { type: "none", value: 0 },
     });
     assert.equal(model.channels[31].name, "ABCDEFGHIJKL");
@@ -53,7 +53,8 @@ test("independent wire fixture decodes P25, wide FM, NFM, scan membership and em
     assert.deepEqual(model.vfos[0].rxTone, { type: "ctcss", value: 2600 });
     assert.equal(model.vfos[1], null);
     assert.deepEqual(model.settings, { sourceId: 1, micGainDb: 42, screenSeconds: 600, keypadSeconds: 0,
-        activeVfo: 1, selectionA: 1, selectionB: 32, scanList: 3, txInhibit: true });
+        activeVfo: 1, selectionA: 1, selectionB: 32, scanList: 3, txInhibit: true,
+        totSeconds: 0, p1Action: 0, p2Action: 0, sk1Action: 0, sk2Action: 0, broadcastKHz: 0 });
     assert.deepEqual(model.channels.slice(1, 31), Array(30).fill(null));
     assert.deepEqual(encodePayload(model), fixture);
     assert.deepEqual(fixture, before);
@@ -71,7 +72,7 @@ test("decoder honors nonzero typed-array offsets and does not retain mutable byt
 });
 
 test("default drafts are independent, valid, complete and transmit-policy neutral until upload", () => {
-    const first = createDefaultModel(), second = createDefaultModel();
+    const first = createDefaultModel(3), second = createDefaultModel(3);
     assert.deepEqual(validateModel(first), []);
     assert.equal(first.settings.txInhibit, false);
     assert.equal(first.settings.sourceId, 1);
@@ -92,7 +93,7 @@ test("valid wire boundaries, split bands, names and all tone types round-trip ex
         { type: "dcs", value: 1 }, { type: "dcs", value: 511 }, { type: "dcs-inv", value: 1 }, { type: "dcs-inv", value: 511 }];
     for (const mode of ["P25", "NFM", "FM"]) for (const filter of FILTERS) {
         for (const frequency of [136000000, 174000000, 400000000, 480000000]) for (const tone of mode === "P25" ? [none] : tones) {
-            const model = createDefaultModel();
+            const model = createDefaultModel(3);
             model.channels[0] = { ...clone(model.vfos[0]), name: " !~012345678", mode, filter,
                 rxHz: frequency, txHz: frequency, nac: 0xfff, talkgroup: 65535, rxOnly: true,
                 scanLists: [3, 1], txTone: clone(tone), rxTone: clone(tone), squelch: 9 };
@@ -106,7 +107,7 @@ test("valid wire boundaries, split bands, names and all tone types round-trip ex
 });
 
 test("empty VFOs and an entirely empty channel table remain supported", () => {
-    const model = createDefaultModel();
+    const model = createDefaultModel(3);
     model.vfos = [null, null];
     assert.deepEqual(validateModel(model), []);
     const payload = encodePayload(model);
@@ -155,7 +156,7 @@ test("model validation rejects lossy coercions, reserved properties and invalid 
         ["mic gain overflow", (model) => { model.settings.micGainDb = 43; return model; }],
     ];
     for (const [label, mutate] of mutations) {
-        const model = mutate(createDefaultModel());
+        const model = mutate(createDefaultModel(3));
         assert(validateModel(model).length > 0, label);
         assert.throws(() => encodePayload(model), undefined, label);
     }
@@ -171,7 +172,7 @@ test("wire decoder rejects all reserved bits, noncanonical empties, padding and 
         ["scan mask overflow", (payload) => { payload[13] = 16; }],
         ["embedded nonzero after NUL", (payload) => { payload[20] = 65; }],
         ["nonprintable name", (payload) => { payload[14] = 31; }],
-        ["record reserved byte", (payload) => { payload[31] = 1; }],
+        ["power level overflow", (payload) => { payload[31] = 9; }],
         ["squelch overflow", (payload) => { payload[30] = 10; }],
         ["unused tone data", (payload) => { payload[26] = 1; }],
         ["P25 tone", (payload) => { payload[26] = 0x75; payload[27] = 0x43; }],
@@ -203,7 +204,7 @@ test("file export is deterministic, complete, checksummed and keeps download ori
     assert.equal(JSON.parse(text).crc32, "BF2C0B25");
     assert.equal(JSON.parse(text).payload.length, 2240);
     assert.equal(JSON.parse(text).format, "DM32P25-CPS");
-    assert.equal(JSON.parse(text).version, 2);
+    assert.equal(JSON.parse(text).version, 3);
     assert.equal(importFile(exportFile(model)).origin, null);
     loaded.origin.revision = 5;
     assert.equal(origin.revision, 0xffffffff);
@@ -216,7 +217,7 @@ test("file import fails closed for foreign versions, damage, missing fields and 
     const original = JSON.parse(exportFile(decodePayload(wireFixture()), { revision: 1, crc: 0xbf2c0b25 }));
     const mutations = [
         (file) => { file.format = "stock DM32"; },
-        (file) => { file.version = 3; },
+        (file) => { file.version = 4; },
         (file) => { file.version = "1"; },
         (file) => { file.flashAddress = 0x711000; },
         (file) => { delete file.origin; },
@@ -238,8 +239,8 @@ test("file import fails closed for foreign versions, damage, missing fields and 
     assert.throws(() => importFile("not json"), /Invalid CPS JSON/);
     assert.throws(() => importFile("null"), /Unrecognized/);
     assert.throws(() => importFile("[]"), /Unrecognized/);
-    assert.throws(() => importFile(exportFile(createDefaultModel()).slice(0, -8)), /Invalid CPS JSON/);
-    assert.throws(() => exportFile(createDefaultModel(), { revision: 0, crc: "00000000" }), /Origin/);
+    assert.throws(() => importFile(exportFile(createDefaultModel(3)).slice(0, -8)), /Invalid CPS JSON/);
+    assert.throws(() => exportFile(createDefaultModel(3), { revision: 0, crc: "00000000" }), /Origin/);
     // Recomputing a checksum cannot authorize noncanonical reserved bytes.
     const reserved = wireFixture(); reserved[34 * 32 + 31] = 1;
     const badFile = { ...original, payload: Buffer.from(reserved).toString("hex"), crc32: crc32(reserved).toString(16).padStart(8, "0") };
@@ -256,18 +257,77 @@ test("V1 files preserve all P25/FM bytes and cannot smuggle DMR records", () => 
     assert.throws(() => importFile(JSON.stringify(file)), /flags/);
 });
 
+test("V3 power and functions match independently packed bytes and survive file round trips", () => {
+    const model = createDefaultModel(3);
+    model.vfos[0].powerLevel = 8;
+    Object.assign(model.settings, {totSeconds:300, p1Action:2, p2Action:7, sk1Action:6, sk2Action:3, broadcastKHz:101700});
+    const payload = encodePayload(model);
+    assert.equal(payload[32 * 32 + 31], 8);
+    // Python struct.pack('<HBBBBI', 300, 2, 7, 6, 3, 101700).
+    assert.deepEqual(payload.slice(34 * 32 + 14, 34 * 32 + 24), fromHex('2c0102070603448d0100'));
+    assert(payload.slice(34 * 32 + 24).every(value => value === 0));
+    assert.deepEqual(decodePayload(payload, 3), model);
+    assert.deepEqual(importFile(exportFile(model)).model, model);
+    for (const version of [1, 2]) assert.throws(() => decodePayload(payload, version), /reserved/);
+});
+
+test("V1 and V2 imports keep reserved defaults zero without changing original bytes or CRC", () => {
+    for (const version of [1, 2]) {
+        const payload = wireFixture();
+        const file = JSON.parse(exportFile(decodePayload(payload))); file.version = version;
+        const loaded = importFile(JSON.stringify(file));
+        assert.equal(loaded.model.settings.totSeconds, 0);
+        assert.equal(loaded.model.settings.broadcastKHz, 0);
+        assert.equal(loaded.model.vfos[0].powerLevel, 0);
+        assert.deepEqual(encodePayload(loaded.model), payload);
+        assert.equal(crc32(encodePayload(loaded.model)), 0xbf2c0b25);
+        for (const offset of [32 * 32 + 31, 34 * 32 + 14, 34 * 32 + 16, 34 * 32 + 20]) {
+            const incompatible = payload.slice(); incompatible[offset] = 1;
+            assert.throws(() => decodePayload(incompatible, version), /reserved/);
+        }
+    }
+});
+
+test("V3 validates timeout, tuner grid, all button actions and power across every mode", () => {
+    for (const mode of ['P25', 'NFM', 'FM', 'DMR']) for (let powerLevel = 0; powerLevel <= 8; powerLevel++) {
+        const model = createDefaultModel(3); setChannelMode(model.vfos[0], mode); model.vfos[0].powerLevel = powerLevel;
+        assert.deepEqual(decodePayload(encodePayload(model)), model);
+    }
+    for (const totSeconds of [0, 15, 30, 600]) for (const broadcastKHz of [0, 65000, 87500, 101750, 108000]) {
+        const model = createDefaultModel(3); Object.assign(model.settings, {totSeconds, broadcastKHz});
+        for (let action = 0; action <= 8; action++) {
+            for (const key of ['p1Action', 'p2Action', 'sk1Action', 'sk2Action']) model.settings[key] = action;
+            assert.deepEqual(decodePayload(encodePayload(model)), model);
+        }
+    }
+    for (const [key, values] of [['totSeconds', [-1, 1, 14, 15.5, 601, '30']],
+        ['broadcastKHz', [1, 64950, 87501, 87550.5, 108050, '87500']],
+        ...['p1Action', 'p2Action', 'sk1Action', 'sk2Action'].map(key => [key, [-1, 9, 1.5, '6']])]) {
+        for (const value of values) {
+            const model = createDefaultModel(3); model.settings[key] = value;
+            assert.throws(() => encodePayload(model), undefined, `${key}=${value}`);
+        }
+    }
+    for (const powerLevel of [-1, 9, 0.5, '1']) {
+        const model = createDefaultModel(3); model.vfos[0].powerLevel = powerLevel;
+        assert.throws(() => encodePayload(model));
+    }
+});
+
 function dmrChannel(overrides = {}) {
     return { name: 'DMR MAX', rxHz: 145700000, txHz: 145700000, mode: 'DMR', rxOnly: true,
         scanLists: [0, 3], destinationId: 0x123456, colorCode: 15, timeslot: 2,
-        privateCall: true, repeater: true, filter: 'PROM', ...overrides };
+        privateCall: true, repeater: true, filter: 'PROM', powerLevel: 0, ...overrides };
 }
 
 test("DMR24-bit destination, CC, slot, call type and operation match independent byte layout", () => {
-    const model = createDefaultModel(); model.channels[0] = dmrChannel();
+    const model = createDefaultModel(3); model.channels[0] = dmrChannel();
     const payload = encodePayload(model);
     assert.deepEqual(payload.slice(0, 32), fromHex('a034af08a034af085634127f5509444d52204d41580000000000000000000500'));
     assert.deepEqual(decodePayload(payload), model);
     assert.deepEqual(importFile(exportFile(model)).model, model);
+    const legacy = JSON.parse(exportFile(model)); legacy.version = 2;
+    assert.deepEqual(encodePayload(importFile(JSON.stringify(legacy)).model), payload);
     assert.throws(() => decodePayload(payload, 1), /flags/);
     for (const destinationId of [1, 65536, 0xffffff]) for (const colorCode of [0, 15])
         for (const timeslot of [1, 2]) for (const filter of FILTERS) {
@@ -277,13 +337,13 @@ test("DMR24-bit destination, CC, slot, call type and operation match independent
 });
 
 test("DMR invalid domain, conflicting modes and unused bytes fail closed", () => {
-    const model = createDefaultModel();model.channels[0] = dmrChannel();
+    const model = createDefaultModel(3);model.channels[0] = dmrChannel();
     for (const [field, value] of [['destinationId', 0], ['destinationId', 0x1000000], ['colorCode', 16],
         ['timeslot', 0], ['timeslot', 3], ['privateCall', 1], ['repeater', 'yes'], ['nac', 0x293], ['filter', 'any']]) {
         const invalid = structuredClone(model); invalid.channels[0][field] = value;
         assert.throws(() => encodePayload(invalid), undefined, field);
     }
-    for (const [offset, value] of [[11, 128], [12, 0x43], [12, 0x61], [12, 0x4d], [26, 1], [30, 0], [31, 1]]) {
+    for (const [offset, value] of [[11, 128], [12, 0x43], [12, 0x61], [12, 0x4d], [26, 1], [30, 0], [31, 9]]) {
         const payload = encodePayload(model); payload[offset] = value;
         assert.throws(() => decodePayload(payload));
     }
@@ -303,7 +363,7 @@ test("dense varied databases keep exact payload bytes through file and model rou
     let state = 0x9e3779b9;
     const next = () => { state ^= state << 13; state ^= state >>> 17; state ^= state << 5; return state >>> 0; };
     for (let pass = 0; pass < 64; pass++) {
-        const model = createDefaultModel();
+        const model = createDefaultModel(3);
         for (let index = 0; index < 32; index++) {
             if (next() % 4 === 0) continue;
             const channel = clone(model.vfos[0]);

@@ -1,0 +1,163 @@
+{
+  "schema": "dm32-multimode-release/1",
+  "version": "0.2.0-beta.1",
+  "board": "dm32",
+  "channel": "private-beta",
+  "source_commit": "2e0f18ad2d47a20b78d00c0702fbe2307dddfd09",
+  "source_description": "Exact source-validated V4 unified build. Host CI, target build and local package checks passed; no new hardware or RF qualification is claimed. The version names the beta package; firmware displays its source build ID.",
+  "firmware_display_id": "2e0f18a",
+  "application": {
+    "file": "dm32-multimode-0.2.0-beta.1-2e0f18a.application.bin",
+    "bytes": 302856,
+    "sha256": "c33d62667b348d4880a3c15654bdccd835658468dcd189fad15d4ddd6664764e",
+    "load_address": "0x0300C000",
+    "contains_native_codec": false,
+    "directly_flashable": false
+  },
+  "upstream": {
+    "radiofoundry_commit": "75c46ea46d5ebf6406f5b4ce0bbe2443b7649f91",
+    "freertos_commit": "3a22924e0a9ddbbc8b0758881c33b3422a5cc20d"
+  },
+  "supported_native_codecs": [
+    {
+      "id": "dm32-046",
+      "name": "Standard 046 (01.01 / 01.02)",
+      "code_sha256": "9720ec0c923ac32bc909d06a0d4c414c6a1e80c3eaa6e9c5b5df0d0bf5ff5665",
+      "tables_sha256": "10684c33e3cc8238376e455fd96b1c15a863a864420dbbaa4589803c4eb0b0e1",
+      "code_bytes": 83456,
+      "tables_bytes": 12152,
+      "run": 93404,
+      "tables_ram": 402656936,
+      "stock_tag": 46,
+      "entries": {
+        "decode": 0,
+        "encode": 608,
+        "dec_init": 180,
+        "dec_set": 132,
+        "enc_init": 788,
+        "enc_set": 740,
+        "fec_init": 7160
+      },
+      "relocations": [
+        6868,
+        6872,
+        11916
+      ],
+      "slot_bytes": 95748
+    },
+    {
+      "id": "dm32-049",
+      "name": "Standard 049",
+      "code_sha256": "355ca9061979eceb2991826da9d39c95b4a9d40466245923d541a6556ceeafd1",
+      "tables_sha256": "10684c33e3cc8238376e455fd96b1c15a863a864420dbbaa4589803c4eb0b0e1",
+      "code_bytes": 83456,
+      "tables_bytes": 12152,
+      "run": 93404,
+      "tables_ram": 402656936,
+      "stock_tag": 49,
+      "entries": {
+        "decode": 0,
+        "encode": 608,
+        "dec_init": 180,
+        "dec_set": 132,
+        "enc_init": 788,
+        "enc_set": 740,
+        "fec_init": 7160
+      },
+      "relocations": [
+        6868,
+        6872,
+        11916
+      ],
+      "slot_bytes": 95748
+    },
+    {
+      "id": "dm32-nrf-049",
+      "name": "NRF / fanti 049",
+      "code_sha256": "cd0820a18df0b53bf011907a02d5b649bfbccf030c3d0432f4e363077d67a2c0",
+      "tables_sha256": "10684c33e3cc8238376e455fd96b1c15a863a864420dbbaa4589803c4eb0b0e1",
+      "code_bytes": 83456,
+      "tables_bytes": 12152,
+      "run": 93404,
+      "tables_ram": 402656944,
+      "stock_tag": 49,
+      "entries": {
+        "decode": 0,
+        "encode": 608,
+        "dec_init": 180,
+        "dec_set": 132,
+        "enc_init": 788,
+        "enc_set": 740,
+        "fec_init": 7160
+      },
+      "relocations": [
+        6868,
+        6872,
+        11916
+      ],
+      "slot_bytes": 95748
+    },
+    {
+      "id": "dm32-046hr",
+      "name": "HR Vocoder 046",
+      "code_sha256": "02743cf4b3d252b8764fe083fb808b00ab42f0f0ab76935e62ca59fd5c5e64fb",
+      "tables_sha256": "cd5a4d270f555cdbd586bca8de89e4e845789ed7aa2a2bb7414b6c3a270ef803",
+      "code_bytes": 82140,
+      "tables_bytes": 12152,
+      "run": 112696,
+      "tables_ram": 402656840,
+      "stock_tag": 46,
+      "entries": {
+        "decode": 0,
+        "encode": 608,
+        "dec_init": 180,
+        "dec_set": 132,
+        "enc_init": 788,
+        "enc_set": 740,
+        "fec_init": 7628
+      },
+      "relocations": [
+        7336,
+        7340,
+        12384
+      ],
+      "slot_bytes": 94432
+    }
+  ],
+  "native_codec_validation": {
+    "scope": "Offline structure and byte comparison against the four declared native contracts; no native codec bytes are distributed.",
+    "hardware_or_rf_qualification_for_this_release": false,
+    "required_source": "Tester own verified stock program-flash backup; never distributed in this repository.",
+    "unrecognized_contract": "Refuse preparation; do not guess firmware family from a version label."
+  },
+  "build_validation": {
+    "host_ci": 42162825624,
+    "target_ci": 42162825718,
+    "host_conclusion": "success",
+    "target_conclusion": "success",
+    "application_bytes": 302856,
+    "static_ram_bytes": 162632,
+    "static_ram_limit": 211456,
+    "static_ram_margin": 48824
+  },
+  "codeplug_geometry": {
+    "version": 4,
+    "channels": 256,
+    "vfos": 2,
+    "records": 387,
+    "zones": 16,
+    "scan_lists": 16,
+    "p25_talkgroups_per_list": 64
+  },
+  "cps": {
+    "url": "https://speexvocon.github.io/DM32-Studio/",
+    "source_commit": "2e0f18ad2d47a20b78d00c0702fbe2307dddfd09",
+    "public_commit": "25453260847760b543410181287c5bff03c229b1"
+  },
+  "distribution": {
+    "proprietary_codec_included": false,
+    "per_radio_backup_included": false,
+    "matching_source": "../../source/0.2.0-beta.1-project.zip"
+  },
+  "status": "prepared-for-owner-review; no tag or GitHub release published; not installed by this package preparation"
+}

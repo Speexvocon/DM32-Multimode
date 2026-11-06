@@ -1,73 +1,87 @@
 # Quick start
 
-Install using [FLASHING.md](FLASHING.md) first. This guide describes normal radio use on v0.1.0-beta.1; optional test modes live under Diagnostics.
+Install using [FLASHING.md](FLASHING.md) first. This guide covers **v0.2.0-beta.1 / build 2e0f18a**. Older firmware has fewer settings/memory slots.
 
-## First use
+## First use and controls
 
-Turn on normally with PTT released. If PTT was held during startup, release it and wait for **PTT READY** before making a new press. The held-PTT startup warning prevents that initial press from carrying into a transmission.
+Turn on normally with PTT released. If held at startup, release it and wait for **PTT READY** before making a new press. Confirm mode, RX/TX frequencies, digital identity and TX permission. Wait for **SAVED** after an edit before powering off.
 
-Check the active channel's mode, receive/transmit frequencies, digital identity and transmit permission. Use your own values. Wait for **SAVED** after changing settings before switching power off.
+Remove the radio-side programming plug for normal mic/speaker use. Connect it for CPS transfers and disconnect CPS before another program uses that port.
 
-Unplug the radio-side programming cable for ordinary microphone/speaker use. On the tested programming connection, the plug affects the radio's audio routing. Keep the cable connected for CPS transfers, then disconnect the CPS before another program accesses that port.
-
-## Controls
-
-| Control | Action |
+| Control | Default action |
 | --- | --- |
 | OK | Open Radio menu; select an item; save a valid edit |
-| Up / Down | Navigate a menu; on home, tune a VFO by 12.5 kHz or change memory |
-| Back | Return one level or cancel an edit |
-| P1 | Switch between VFO and populated memories |
+| Up / Down | Navigate; on home tune Frequency mode by 12.5 kHz or select a populated channel |
+| Channel rotary encoder | Select populated channels in Channel mode |
+| Back | Return one level or cancel |
+| P1 | Switch Frequency / Channel mode |
+| P2 | Radio status |
+| SK1 | FM broadcast |
 | SK2 | Switch A/B context |
-| # or home-screen digits | Start frequency entry |
-| P2 | Open Radio status |
-| Hold OK + * for one second | Lock/unlock the keypad; release both before repeating |
+| # or home-screen digits | Begin frequency entry |
+| Hold OK + * for one second | Lock/unlock; release both before repeating |
 
-The physical volume knob controls speaker level. Keypad lock does not disable PTT and clears at restart. A key that wakes a dark display is consumed, so press again to perform its ordinary action. PTT wakes and operates normally.
+Reassign buttons in **Settings → Button actions** or CPS **Functions**. The volume knob sets speaker level. Keypad lock leaves PTT operational and clears at restart. A key that wakes a dark display is consumed; press again to use it. PTT wakes and operates normally.
 
-Menus and editors pause normal reception and do not accept PTT. Return home before making or receiving a call. Calls have a 30-second limit; release PTT before starting another call after timeout.
+Menus/editors pause reception and do not accept PTT. Return home for calls. The TX timeout defaults to 30 seconds; release PTT after timeout before another call.
 
-## Set a channel
+## Five menu groups
 
-Open **OK → Channel**. Set **Mode**, **Receive frequency** and **Transmit frequency**, or choose **Use simplex** to copy receive frequency to transmit. **Receive only** disables transmission for that channel. The root **Transmit** item separately controls the owner's overall transmit permission.
-
-Frequency entry uses seven digits in units of 100 Hz. For example, `1465200` means 146.520 MHz; this illustrates the entry format, not a supplied channel. OK saves; Back cancels; * deletes the last digit.
-
-| Mode | Channel/signaling settings |
+| Group | Contents |
 | --- | --- |
-| P25 | NAC under Channel; TX talkgroup and Radio ID under Voice & ID |
-| DMR | Color code plus DMR settings: timeslot, group/private call and direct/repeater operation; TX destination and Radio ID under Voice & ID |
-| FM | FM settings: narrow/wide bandwidth, squelch and independent transmit/receive tones |
+| Operating | Frequency / Channel, A/B, save/select channel, scan lists, selected zone |
+| Channel | RX/TX frequencies, simplex, mode, NAC/CC, FM/DMR settings, receive-only/filter |
+| Audio & TX | Voice & ID, mic gain, TX permission, channel power and timeout |
+| Settings | Display/keypad timers and button assignments |
+| Tools | FM broadcast, broadcast frequency and Diagnostics/status |
 
-P25 NACs are hexadecimal. Enter numeric digits normally; Up/Down cycles the last digit through 0–F. P25 talkgroups and digital IDs are decimal. Digital mic gain is shared by P25 and DMR; analog FM uses its native gain.
+Under **Channel**, enter seven digits in 100-Hz units: `1465200` means 146.520 MHz. OK saves; Back cancels; * deletes. **Use simplex** copies RX to TX. **Receive only** blocks that channel's PTT; **Audio & TX → Transmit → Transmit permission** is the separate overall permission.
 
-FM CTCSS entry uses tenths of a hertz (`885` means 88.5 Hz); DCS entry uses octal digits. A zero tone code disables that tone. FM is implemented but its RF/audio behavior is not yet physically qualified for this beta.
-
-## Receive filters and call information
-
-Select **Receive filter** to cycle through the available policies:
-
-| Mode | Policies |
+| Mode | Main settings |
 | --- | --- |
-| P25 | Configured NAC/all talkgroups; PROM; configured NAC plus selected talkgroup |
-| DMR | Configured color code/all destinations; PROM; configured color code plus selected destination |
+| P25 | NAC under Channel; TX TG/Radio ID under Audio & TX → Voice & ID |
+| DMR | CC, slot, group/private and direct/repeater under Channel → DMR settings; destination/Radio ID under Voice & ID |
+| FM | Width, squelch and RX/TX tones under Channel → FM settings |
 
-PROM bypasses the configured identity filters for compatible clear voice. DMR still listens on the selected timeslot. PROM does not decode encrypted traffic or add support for another air protocol; encrypted and unsupported calls remain muted.
+NAC is hexadecimal: type digits, using Up/Down to cycle the last digit through 0-F. TGs/IDs are decimal. CTCSS radio entry is tenths of Hz (`885` = 88.5 Hz); DCS uses octal. Zero disables the tone. Digital mic gain is shared by P25/DMR; FM uses native gain.
 
-Green SYNC and the received-call panel identify reception. Received IDs are distinct from the configured TX target. Signal bars show approximate strength, not BER or a calibrated S-meter. The battery icon indicates approximate pack level, not time remaining. Raw values and build information remain under Radio status.
+**Audio & TX → Transmit** offers calibrated hardware power levels and a **15-600-second timeout**. Named levels are not measured watts; verify actual output with suitable equipment if needed.
 
-## Memories, A/B and scanning
+## Reception and filters
 
-Configure the current channel, then use **Memories / VFO → Save to memory** and select slot 01–32. Use **Recall memory**, P1 or Up/Down to select populated memories. Initially unnamed slots use `CH nn`; the browser CPS can assign names up to 12 printable ASCII characters.
+P25: NAC/all TGs, PROM, or NAC+selected TG. DMR: CC/all destinations, PROM, or CC+selected destination. DMR always uses its selected slot. PROM receives compatible clear calls regardless of configured NAC/CC/TG; encrypted/unsupported calls remain muted.
 
-A/B retain independent selections, but share one RF receiver. There is no simultaneous monitoring.
+Green SYNC and the RX panel indicate reception. RX identities differ from the configured TX target. Signal bars are approximate strength, not BER/a calibrated S-meter; battery fill is approximate pack level, not runtime. Reception wakes the display.
 
-Under **Scan lists**, choose one of four lists and include the current channel. Save that profile in a memory before expecting it in memory scanning. Start scanning from the same menu. PTT or a local action stops on the current channel. The implemented dwell/hold is one second/two seconds; there is no priority scan or nuisance delete. Mixed-mode scan acquisition remains unqualified.
+## Channels, zones and A/B
 
-## Screen, lights and diagnostics
+Configure a profile, then **Operating → Save channel**, choosing 001-256. Use **Select channel**, P1 or the encoder to recall memories. CPS supplies names up to 12 printable ASCII characters and **16 named zones**. Choose **Operating → Selected zone**; **All channels** is always available. Encoder/Up/Down visit populated members of that zone.
 
-**Display & keys** controls the screen and keypad-light timers separately, from 0–600 seconds; zero means always on. Reception wakes the screen. Turning the backlight off does not stop the receiver.
+A/B retain independent selections/zones but share one receiver; no simultaneous monitoring.
 
-The small **D** icon points to Diagnostics. It becomes amber for nonstandard diagnostic paths. Leave bench/audio test choices at their normal settings for ordinary operation. Use P2 or **Diagnostics → Radio status** when reporting an issue.
+## Channel scan versus P25 TG scan
 
-For a complete configuration editor and file backup, see [browser CPS](docs/CPS.md).
+Define lists in [CPS](docs/CPS.md), then **Operating → Scan lists** to select/start/stop. Home says **CH SCAN** or **TG SCAN**.
+
+- **Channel scan** visits saved FM/DMR/P25 configurations. Compatible co-channel P25 entries share continuous acquisition.
+- **P25 TG scan** stays on one P25 base memory's frequency/NAC and accepts up to **64 TGs**, without duplicate memories. Its list is strict even if the base normally uses PROM.
+
+Each of 16 lists has a name, dwell of 100-5000 ms, post-call hold of 0-10000 ms and reply policy:
+
+| Reply | PTT uses |
+| --- | --- |
+| Selected | Original selected channel; base channel for TG scan |
+| Last heard | Heard channel/TG; TG override is temporary, never saved over its channel |
+| Fixed | Complete reply-channel profile selected in CPS |
+
+PTT stops scanning before replying, subject to normal TX guards. Failed profile loading refuses TX. Empty lists save but cannot start. New geometry/scan behavior still needs beta feedback; no priority scan/nuisance delete.
+
+For TG1/10/100/1000 on one frequency/NAC, keep one P25 base memory, create a P25 TG list in CPS, enter those four TGs, choose reply behavior, review/write, then select/start it on the radio.
+
+## Broadcast FM, lights and diagnostics
+
+**Tools → Broadcast FM** opens a receive-only 65-108-MHz tuner and pauses the two-way channel. **P1 seeks down, P2 seeks up**; Up/Down step manually. Type the frequency (# for decimal point), then **OK** to accept; Back cancels an entry or exits. PTT exits broadcast and requires a fresh press to transmit; broadcast-band TX is never enabled.
+
+**Settings → Display & keys** sets screen/keypad timers independently, 0-600 seconds; zero means always on. A dark display does not stop reception.
+
+The small **D** icon identifies diagnostics/nonstandard operation. Normal releases retain status/fault info and omit extended lab capture. Use P2 or **Tools → Diagnostics → Radio status** for build/battery/counters in reports.

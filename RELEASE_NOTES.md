@@ -1,8 +1,44 @@
-# v0.1.0-beta.1 — proposed first private beta
+# v0.2.0-beta.1 — expanded codeplug and installer compatibility
+
+Firmware source: `2e0f18ad2d47a20b78d00c0702fbe2307dddfd09`; radio build **2e0f18a**. The package version labels this exact application; it is not a rebuilt firmware version string. Previous v0.1.0-beta.1 is retained.
+
+## Added
+
+- **256 memories, 16 named zones and 16 named scan lists**.
+- Distinct Channel scan and continuous P25 TG scan with up to 64 TGs on one base frequency/NAC.
+- Per-list dwell/hold and Selected / Last heard / Fixed reply. Temporary heard-TG replies never overwrite the saved TX target.
+- Matching [DM32 Studio CPS](https://speexvocon.github.io/DM32-Studio/): zones/lists, channel CSV, bulk editing and reference-safe movement. Legacy firmware/files remain supported.
+- Programmable TX timeout/power, configurable buttons, receive-only broadcast FM and the five grouped menus from the intervening development revisions.
+- Normal build with minimal status/fault diagnostics; extended lab captures excluded.
+
+## Installer correction
+
+New-release preparation detects four exact native contracts automatically: standard 046 (01.01/01.02), standard 049, NRF/fanti 049 and HR046. Earlier tools rejected standard 046 before flashing. No stock-049 upgrade or manual codec selection is needed when the tester's own sealed backup matches a verified profile.
+
+`prepare-firmware.py codec-info` diagnoses an existing sealed backup offline. Default output is version-specific; valid repeat preparation reuses verified files, while invalid/changed output is never overwritten. Existing original backups remain reusable; each flash still makes a fresh preservation read and requires independent installed-image verification.
+
+Standard 046 equivalence and HR046's separate map have offline comparison/layout/package evidence. HR046 voice remains physically unqualified. V0.1.0 keeps its original narrower codec gate. See [compatibility scope](KNOWN_ISSUES.md#native-codec-compatibility).
+
+## Migration and rollback
+
+Firmware reads V1-V3 without boot migration writes; the first explicit save atomically publishes V4. Existing four membership lists become Scan 1-4 with Last heard reply. V4 adds no automatic stock codeplug import. Export old JSON before upgrading: older firmware cannot read expanded configuration and its retained fallback may be stale. There is no lossless V4-to-legacy conversion.
+
+## Exact-build validation
+
+- Host CI **42162825624** and processor CI **42162825718** passed at the exact source revision.
+- Application **302,856 bytes**; linked RAM **162,632 / 211,456 bytes**, leaving **48,824 bytes**. Codec workspace and receive union unchanged from the preceding minimal build.
+- Storage interruption/migration, CH256/zone16/TG64/reply behavior, actual C/CPS integration, 20 simulated browser flows and updater-package checks passed.
+- **This V4 geometry has not yet been flashed or physically qualified.** Earlier P25/DMR audio evidence below does not claim an exact-binary pass. New scan/reply behavior, added hardware variants, two-way FM, repeater/split operation and broader RF coverage remain beta feedback areas.
+
+Use [FLASHING.md](FLASHING.md) for both fresh install and upgrade. No owner backup/calibration or merged native codec is distributed.
+
+---
+
+# v0.1.0-beta.1 — original private beta
 
 Firmware source: `05c496514bf9efe9bbb1a8f219b284228c814a60`.
 
-This is the first proposed private-beta package of the unified DM32 P25/DMR/FM application. Repository preparation does not establish an existing tag or published GitHub release.
+Retained historical package of the unified DM32 P25/DMR/FM application. Its original application, source and codec restriction remain unchanged.
 
 ## Included
 

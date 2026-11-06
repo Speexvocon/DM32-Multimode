@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { CpsClient } from '../transport.js';
-import { crc32, createDefaultModel, encodePayload, decodePayload } from '../model.js';
+import { crc32, createDefaultModel, encodePayload, decodePayload, upgradeModel, createScanList } from '../model.js';
 
 const hex = value => (value >>> 0).toString(16).toUpperCase().padStart(8, '0');
 const bytesHex = value => Array.from(value, byte => byte.toString(16).toUpperCase().padStart(2, '0')).join('');
@@ -18,7 +18,7 @@ function edited(payload) {
 /** Real WHATWG browser streams with a deterministic logical radio peer; no serial port is opened. */
 class FakeSerial {
   constructor({ override, fragment = 0, revision = 19, protocol = 1 } = {}) {
-    this.active = encodePayload(createDefaultModel());
+    this.active = encodePayload(createDefaultModel(protocol === 4 ? 4 : 3));
     this.revision = revision;
     this.protocol = protocol;
     this.stage = null;
@@ -73,7 +73,7 @@ class FakeSerial {
     const parts = command.split(' ');
     if (command === 'CPS HELLO') {
       if (this.stage) return 'CPS ERR TRANSACTION\r\n';
-      return `CPS HELLO DM32P25 ${this.protocol} 32 2 ${this.revision} ${hex(crc32(this.active))}\r\n`;
+      return `CPS HELLO DM32P25 ${this.protocol} ${this.protocol === 4 ? 256 : 32} 2 ${this.revision} ${hex(crc32(this.active))}\r\n`;
     }
     if (parts[1] === 'GET') {
       const index = Number(parts[2]);
@@ -148,11 +148,11 @@ test('35 records download between matching HELLOs, strict CRC and one-byte strea
 });
 
 test('V2 DMR uploads and legacy V1 refuses DMR before BEGIN', async t => {
-  for (const protocol of [1, 2]) {
+  for (const protocol of [1, 2, 3]) {
     const {client, peer} = await setup(t, new FakeSerial({protocol}));
     const read = await client.read(); const model = decodePayload(read.payload);
     model.channels[0] = {name: 'DMR TEST', rxHz:145700000, txHz:145700000, mode:'DMR', rxOnly:false,
-      scanLists:[0], destinationId:0xffffff, colorCode:0, timeslot:2, privateCall:true, repeater:true, filter:'PROM'};
+      scanLists:[0], destinationId:0xffffff, colorCode:0, timeslot:2, privateCall:true, repeater:true, filter:'PROM', powerLevel:0};
     const payload = encodePayload(model);peer.requests.length=0;
     if (protocol === 1) {
       await assert.rejects(client.write(payload, read), {code:'UNSUPPORTED_MODE'});
@@ -168,6 +168,37 @@ test('schema changes within a connected baseline fail before programming', async
   const read = await client.read();peer.protocol=1;peer.requests.length=0;
   await assert.rejects(client.write(edited(read.payload), read), /protocol/);
   assert.deepEqual(peer.requests,['CPS HELLO']);assert.equal(peer.commits,0);
+});
+
+test('V3 programmable functions upload and read back with pinned schema', async t => {
+  const {client, peer} = await setup(t, new FakeSerial({protocol:3}));
+  assert.equal(client.protocolVersion, 3);
+  const read = await client.read(), model = decodePayload(read.payload);
+  model.vfos[0].powerLevel = 8;
+  Object.assign(model.settings, {totSeconds:600, p1Action:4, p2Action:8, sk1Action:6, sk2Action:3, broadcastKHz:108000});
+  const payload = encodePayload(model);
+  await client.write(payload, read);
+  assert.equal(peer.commits, 1);
+  assert.deepEqual(decodePayload((await client.read()).payload), model);
+});
+
+test('V1/V2 uploads refuse every nondefault V3 field before BEGIN without discarding the read baseline', async t => {
+  for (const protocol of [1, 2]) {
+    const {client, peer} = await setup(t, new FakeSerial({protocol}));
+    const read = await client.read();
+    const changes = [model => {model.vfos[0].powerLevel=1;}, ...[
+      ['totSeconds',30], ['p1Action',1], ['p2Action',1], ['sk1Action',1], ['sk2Action',1], ['broadcastKHz',87500],
+    ].map(([key,value]) => model => {model.settings[key]=value;})];
+    for (const change of changes) {
+      const model = decodePayload(read.payload); change(model); peer.requests.length=0;
+      await assert.rejects(client.write(encodePayload(model), read), {code:'UNSUPPORTED_FUNCTIONS'});
+      assert.deepEqual(peer.requests, []);
+      assert.equal(peer.commits, 0);
+    }
+    // Original reserved defaults stay zero, permitting lossless legacy edits.
+    await client.write(edited(read.payload), read);
+    assert.equal(peer.commits, 1);
+  }
 });
 
 test('upload stages all records, publishes one atomic commit, verifies HELLO and advances origin', async t => {
@@ -312,7 +343,7 @@ test('USB disconnect after commit publication is uncertain, keeps published data
 test('bad identity, revision overflow and malformed bounded frames close connect without settings commands', async t => {
   const replies = [
     'CPS HELLO STOCK-DM32 1 32 2 19 12345678\r\n',
-    'CPS HELLO DM32P25 3 32 2 19 12345678\r\n',
+    'CPS HELLO DM32P25 4 32 2 19 12345678\r\n',
     'CPS HELLO DM32P25 1 32 2 4294967296 12345678\r\n',
     'CPS HELLO DM32P25 1 32 2 19 12345678\n',
     'CPS HELLO DM32P25 1 32 2 19 12345678\rX\n',
@@ -452,4 +483,38 @@ test('an earlier staged transaction gives idle-timeout recovery guidance without
   assert.deepEqual(peer.requests, ['CPS HELLO']);
   assert.equal(peer.commits, 0);
   assert.equal(peer.aborts, 0);
+});
+
+test('V4 pins 256/387 geometry and transfers high channels, zones and independent TG lists once', async t => {
+  const progress = [], {client,peer}=await setup(t,new FakeSerial({protocol:4,fragment:7}),{onProgress:event=>progress.push(event),timeoutMs:3000});
+  const read=await client.read();assert.equal(read.payload.length,12384);assert.equal(progress.at(-1).total,387);
+  assert.equal(peer.requests.filter(x=>x.startsWith('CPS GET ')).length,387);
+  const model=decodePayload(read.payload);model.channels[255]={...structuredClone(model.vfos[0]),name:'CH256'};
+  model.zones[15]={name:'Last zone',channels:[256]};model.scanLists[15]={...createScanList('P25 TG','p25-tg',256),reply:'fixed',replyChannel:256,talkgroups:[1,10,100,1000]};
+  Object.assign(model.settings,{selectionA:256,zoneA:16,scanList:15});
+  peer.requests.length=0;const bytes=encodePayload(model),result=await client.write(bytes,read);
+  assert.equal(peer.commits,1);assert.equal(peer.requests.filter(x=>x.startsWith('CPS PUT ')).length,387);
+  assert(peer.requests.every(x=>new TextEncoder().encode(x+'\r\n').length<=120));
+  assert.deepEqual(peer.active,bytes);assert.equal(result.revision,read.revision+1);
+  assert.equal(peer.duringStage.length,387);assert(peer.duringStage.every(snapshot=>Buffer.from(snapshot).equals(Buffer.from(read.payload))));
+  assert.deepEqual((await client.read()).payload,bytes);
+});
+
+test('geometry mismatches never silently truncate or start a transaction', async t => {
+  for (const protocol of [1,2,3,4]) {
+    const {client,peer}=await setup(t,new FakeSerial({protocol})),read=await client.read();
+    const wrong=protocol===4?encodePayload(createDefaultModel(3)):encodePayload(upgradeModel(decodePayload(read.payload)));
+    peer.requests.length=0;await assert.rejects(client.write(wrong,read),{code:'UNSUPPORTED_GEOMETRY'});
+    assert.deepEqual(peer.requests,[]);assert.equal(peer.commits,0);
+  }
+});
+
+test('V4 lost commit reply remains uncertain once and reconnect/read recovers full expanded snapshot', async t => {
+  let drop=true;
+  const peer=new FakeSerial({protocol:4,override:(command,response)=>drop&&command.startsWith('CPS COMMIT ')?null:response});
+  const {client}=await setup(t,peer,{timeoutMs:200});
+  const read=await client.read(),bytes=edited(read.payload);
+  await assert.rejects(client.write(bytes,read),{code:'UNCERTAIN'});assert.equal(peer.commits,1);
+  await assert.rejects(client.write(bytes,read),{code:'NOT_CONNECTED'});assert.equal(peer.commits,1);
+  drop=false;await client.disconnect();await client.connect();assert.deepEqual((await client.read()).payload,bytes);
 });

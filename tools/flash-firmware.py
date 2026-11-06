@@ -16,7 +16,7 @@ def main():
     parser.add_argument("action", choices=("flash", "verify-installed", "restore"))
     parser.add_argument("--backup", type=Path, required=True)
     parser.add_argument("--radio-label", required=True)
-    parser.add_argument("--package", type=Path, help="Default: build/<sanitized-radio-label>/package.json")
+    parser.add_argument("--package", type=Path, help="Default: build/<sanitized-radio-label>/<current-release-version>/package.json")
     parser.add_argument("--port", help="Explicit programming cable COM port; required with --execute")
     parser.add_argument("--execute", action="store_true", help="Allow this hardware operation; default is offline")
     args = parser.parse_args()
@@ -28,9 +28,10 @@ def main():
         library = runpy.run_path(str(loader))
         library["check_image"](image, library["MODELS"]["dm32"])
     else:
-        package_path = args.package or beta.label_directory(args.radio_label) / "package.json"
+        package_path = args.package or beta.default_package_path(args.radio_label)
         package, image, original = beta.validated_package(package_path, backup, args.radio_label)
         print(f"Validated {package['version']} ({package['source_commit'][:7]}) for {args.radio_label}")
+        print("Package: " + str(package_path.resolve()))
     if not args.execute:
         print("PLAN ONLY: no serial port opened.")
         print("Next: read both complete memories and compare bootloader/calibration with your sealed backup.")
@@ -65,6 +66,9 @@ def main():
 if __name__ == "__main__":
     try:
         main()
+    except ModuleNotFoundError as error:
+        print("flash-firmware: " + safety.dependency_hint(error), file=sys.stderr)
+        sys.exit(1)
     except (ValueError, KeyError, TypeError, RuntimeError, OSError, subprocess.CalledProcessError) as error:
         print("flash-firmware: " + str(error), file=sys.stderr)
         sys.exit(1)

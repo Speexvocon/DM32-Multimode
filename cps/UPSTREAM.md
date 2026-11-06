@@ -27,8 +27,8 @@ this folder and requires no upstream installation or remote assets at runtime.
 
 ## Beta distribution adjustments
 
-The beta copy changes the microphone-gain wording to reflect the current
-shared P25/DMR control, uses a neutral example radio ID in its simulated-browser
-fixture, and limits its standalone `npm test` command to the model and transport
-tests. The full firmware-parser integration test remains in the
-matching project source archive; it requires that firmware host-test build.
+This offline CPS matches source `2e0f18a` and the hosted V4 editor. Its standalone
+package contains the model, expanded-codeplug and transport suites. The actual
+firmware-parser integration test remains in the corresponding project archive
+and requires that project's host adapter build. Runtime production files are
+unchanged; all simulated identities are neutral examples.

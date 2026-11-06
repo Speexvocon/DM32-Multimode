@@ -1,35 +1,46 @@
 # Known issues and scope
 
-This is an early private beta for the DM32 target used during development. Physical evidence comes from one development unit and finite local tests. Compatibility with other variants, hardware revisions and stock update baselines must be checked before installation; a similar model name alone is insufficient.
+This is an early private beta. Physical evidence comes from one development radio and finite local tests. **V0.2.0-beta.1 / 2e0f18a** passed host/processor/package checks but its expanded V4 geometry has **not yet been flashed or physically qualified**. Earlier images' results are not an exact-binary hardware pass.
 
 ## Current issues
 
-- **DMR initial acquisition:** the latest clean uplink had a first-sync/receiver-sequence anomaly, followed by correct synchronization. The trace does not prove a duplicated or missing transmitted burst. A preamble change has not been qualified.
-- **Uniden DMR uplink compatibility:** the AnyTone decoded clear DM32 speech. The Uniden previously missed an entire uplink, and its settings after the preceding P25 test were not confirmed. The latest pacing pass did not retest it.
-- **Accessory audio routing:** the tested radio-side programming plug affects microphone/speaker routing. Disconnect it for an audible or live-microphone comparison; reconnect without powering off when diagnostics are needed.
-- **DMR transmit display:** the transmit view remains static during the active call and ending to keep LCD transfers from delaying voice-queue service. It redraws after completion.
-- **Programming labels/format:** use this repository's CPS and custom JSON codeplugs. Stock CPS, RadioFoundry binary codeplugs and CHIRP are not supported programming routes for this beta.
+- **DMR initial acquisition:** an earlier clean uplink showed a first-sync/receiver-sequence anomaly followed by correct synchronization. That trace does not prove a missing/duplicated transmitted burst; a preamble change is unqualified.
+- **Uniden DMR uplink:** an AnyTone decoded clear DM32 speech. A Uniden missed an entire uplink; its settings after a P25 test were unconfirmed. Later pacing testing did not settle compatibility.
+- **Accessory audio:** the programming plug affects mic/speaker routing. Remove the radio-side plug for audio comparisons; reconnect without powering off if counters are needed.
+- **DMR TX display:** the view stays static through the call/ending to keep LCD transfers from delaying voice queues. It redraws afterward.
+- **V4 rollback:** old firmware cannot read expanded memories/zones/lists. Export compatible JSON before upgrade; CSV is not a complete backup. See [FLASHING.md](FLASHING.md#upgrading-an-existing-beta).
+- **Programming format:** use DM32 Studio/custom JSON. Stock CPS, RadioFoundry binary codeplugs and CHIRP are not interchangeable.
 
-## Implemented but not physically qualified
+## Native-codec compatibility
 
-The following remain available development features rather than proven compatibility claims:
+The installer detects exact codec bytes from **your own sealed original backup**. The new release accepts:
 
-- Analog FM RF/audio, deviation, tone/squelch behavior and transmit/receive routing.
-- DMR repeater access and private-call interoperability; P25/DMR split-frequency operation.
-- Mixed-mode memory scanning and acquisition during its short dwell.
-- Browser CPS end-to-end physical read/write/readback. The protocol and editor have host/parser tests; earlier logical hardware transfers do not qualify the browser UI session.
-- Reception/transmission across the radio's advertised bands, calibrated signal strength/deviation and weak-signal performance.
-- Extended soak, large repeated-turnaround batches and worst-case runtime resource margins. These were deliberately deferred for the private beta.
-- A full physical stock restore followed by beta reinstall as a release recovery exercise. Preserve your own original backup before changing firmware.
+| Profile | Evidence and limit |
+| --- | --- |
+| Standard 01.01.046 / 01.02.046 | Same codec in both; offline comparison with tested 049 implementation, plus slot/relocation/package checks |
+| Standard 01.01.049 | Offline slot/relocation/package checks and comparison with the tested 049 family |
+| 01.01.049 NRF / fanti | Family used in physical development tests; exact backup still validated |
+| 046HRVocoder | Separate layout/init map; offline slot/relocation/package checks; voice/audio not physically qualified |
+
+These are exact contracts, not every file labeled 046/049. Unknown/altered code or tables are refused before erase. The codec is preserved locally, never supplied here. Detection does not establish RF/audio interoperability on every hardware variant. V0.1.0 retains its original NRF/fanti-only gate.
+
+## Features needing broader physical qualification
+
+- New 256-channel geometry, 16-zone navigation, independent TG lists/reply policies and mixed-mode scan acquisition.
+- Two-way FM RF/audio, deviation, tone/squelch and routing. Broadcast FM receive has development feedback; this does not qualify two-way FM.
+- Actual output at selectable power levels, calibrated signal/deviation and weak-signal behavior across bands.
+- DMR repeater/private-call interoperability and P25/DMR split operation.
+- End-to-end physical browser programming on V4. C/parser, migration, interruption and simulated-browser tests are not hardware transfers.
+- Extended soak/worst-case margins and a complete stock-restore/reinstall exercise on a second radio. These remain deferred beta areas, not mandatory participation tests.
 
 ## Product limits
 
-- One RF receiver; A/B are selectable contexts, not simultaneous dual receive.
-- Conventional clear P25 Phase 1 and conventional DMR only. No trunking, P25 Phase 2, APRS or decryption.
-- PROM does not override encrypted/unsupported mute. DMR PROM remains on the configured timeslot.
-- 32 memories, 12 printable ASCII characters per name and four overlapping scan lists. No named zones, contact/alias database or multi-talkgroup allowlists.
+- One receiver; A/B are selectable contexts, not simultaneous dual receive.
+- Conventional clear P25 Phase 1 and DMR; no trunking, P25 Phase 2, APRS or decryption.
+- PROM does not bypass encrypted/unsupported mute. DMR PROM stays on its chosen slot.
+- 256 memories; 12 printable ASCII name characters; 16 zones/lists; up to 64 TGs per P25 TG list. No contact/alias database.
 - No priority scan, nuisance delete, VOX or DTMF feature in this iteration.
-- Low-power operation and a 30-second call limit. The keypad lock leaves PTT operational.
-- Signal bars are approximate RF strength; battery fill is approximate pack level. Neither is a calibrated instrument or runtime estimate.
+- Power-level labels are not measured watts. TX timeout is 15-600 seconds. Keypad lock leaves PTT usable.
+- Signal/battery icons are approximate, not calibrated instruments or runtime estimates.
 
-See [TESTING.md](TESTING.md) to report a reproducible result. Do not assume a passing retry makes a prior missed or partial call irrelevant; include both observations.
+Report reproducible behavior via [TESTING.md](TESTING.md), including failed/partial calls alongside successful retries.

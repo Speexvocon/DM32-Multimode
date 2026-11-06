@@ -40,7 +40,8 @@ class BetaToolsTests(unittest.TestCase):
         cls.app = (beta.DEFAULT_RELEASE.parent / real["application"]["file"]).read_bytes()
         (cls.release_dir / "app.bin").write_bytes(cls.app)
         cls.manifest = {"schema": "dm32-multimode-release/1", "board": "dm32", "version": "test",
-                        "source_commit": "1" * 40, "application": {"file": "app.bin", **beta.record(cls.app)}}
+                        "source_commit": "1" * 40, "supported_native_codecs": beta.native_contract_records(),
+                        "application": {"file": "app.bin", **beta.record(cls.app)}}
         cls.release = cls.release_dir / "release.json"
         cls.release.write_text(json.dumps(cls.manifest), encoding="utf-8")
 
@@ -74,7 +75,7 @@ class BetaToolsTests(unittest.TestCase):
     def test_native_codec_variant_is_rejected_before_merge(self):
         codec = {"extract": lambda *a, **kw: ({"code": (0, 1, 0), "tables": (0, 1, 0)}, b"bad", b"bad"),
                  "merge": lambda *a: self.fail("unsupported native codec must never merge")}
-        with self.assertRaisesRegex(ValueError, "not qualified"):
+        with self.assertRaisesRegex(ValueError, "Unsupported native codec"):
             beta.merge_qualified(self.app, self.original[0], codec, self.loader)
 
     def test_qualified_hashes_do_not_bypass_placement_check(self):
@@ -113,8 +114,9 @@ class BetaToolsTests(unittest.TestCase):
                 patch.object(beta, "merge_qualified", return_value=(merged, wrapped, parsed, [])):
             package = beta.prepare(self.backup, self.label, self.release, destination)
             self.assertEqual(beta.validated_package(package, self.backup, self.label)[1], merged)
-            with self.assertRaisesRegex(ValueError, "never overwrite"):
-                beta.prepare(self.backup, self.label, self.release, destination)
+            before = {path.name: (path.read_bytes(), path.stat().st_mtime_ns) for path in destination.iterdir()}
+            self.assertEqual(beta.prepare(self.backup, self.label, self.release, destination), package)
+            self.assertEqual(before, {path.name: (path.read_bytes(), path.stat().st_mtime_ns) for path in destination.iterdir()})
             with self.assertRaisesRegex(ValueError, "inside build"):
                 beta.prepare(self.backup, self.label, self.release, self.base / "outside")
             original_json = package.read_bytes()
@@ -127,6 +129,8 @@ class BetaToolsTests(unittest.TestCase):
             (destination / beta.RAW_NAME).write_bytes(b"tampered")
             with self.assertRaisesRegex(ValueError, "mismatch"):
                 beta.validated_package(package, self.backup, self.label)
+            with self.assertRaisesRegex(ValueError, "never overwrite"):
+                beta.prepare(self.backup, self.label, self.release, destination)
 
     def test_verify_new_application_not_original_and_protect_calibration(self):
         merged = b"NEW BETA APPLICATION"

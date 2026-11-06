@@ -1,31 +1,33 @@
 # Beta feedback
 
-Use the radio normally within the [known scope](KNOWN_ISSUES.md). Repeated qualification is not required to participate. One clear reproduction with a useful comparison is more valuable than many undocumented attempts.
+Use the radio normally within the [known scope](KNOWN_ISSUES.md). Repeated qualification is not required. One clear reproduction with a useful comparison is more valuable than many undocumented attempts.
 
-## Suggested first checks
+## Useful first observations
 
-1. Confirm startup and your own channel/ID values. Change a harmless setting, wait for SAVED, restart and check retention.
-2. Compare a known local receive source with another receiver, if available. Note mode, received identity, screen wake and audio quality.
-3. Check a short transmit call with an independent receiver, then automatic return to reception. For DMR, record color code, slot, destination and direct/repeater selection.
-4. Try VFO/memory selection, A/B, keypad lock/unlock and light timeouts. Confirm PTT remains usable while locked.
-5. If using CPS, save the initial download, review an edit before writing, read it back and confirm retention after restart.
+1. Confirm startup/build and your own saved channel/ID values. After a harmless edit, wait for SAVED and check retention on restart.
+2. Compare a known receive source with another receiver if available. Note mode, RX identity, screen wake and audio quality.
+3. Check one short TX call and automatic RX return. For DMR record CC, slot, destination and direct/repeater.
+4. Try Frequency/Channel, encoder in the active zone, A/B, lock and lights. Keypad lock leaves PTT operational.
+5. For CPS, export initial JSON, review an edit, read back and check retention. V4's 256 channels/zones/lists are new hardware feedback areas.
+6. For scan, report Channel or P25 TG type, members/base, timing and reply policy. Note accepted/excluded TG behavior.
 
-These are optional feedback areas. FM RF/audio, repeater/split operation and mixed-mode scan remain unqualified; report them as new observations rather than established features.
+These are optional areas, not an exhaustive test checklist. Do not transmit merely to exercise a feature without an appropriate local setup.
 
 ## A useful issue report
 
 Open a [bug report](https://github.com/Speexvocon/DM32-Multimode/issues/new?template=bug_report.yml) with:
 
-- Firmware version/build ID from P2 → Radio status, radio model and any known hardware/stock baseline.
-- Mode, simplex or split, direct or repeater, frequencies and the relevant NAC or color code/timeslot/destination. Redact personal IDs if preferred.
-- What you expected, what happened, and the smallest sequence that repeats it.
-- Whether a reference receiver heard smooth/full audio, and whether the DM32 showed SYNC, received details, a warning, flicker or restart.
-- Whether the programming cable was connected during the symptom, and whether volume or settings changed during the call.
+- Package/build ID from **Tools → Diagnostics → Radio status** (P2 by default), hardware/stock baseline and detected codec profile if known.
+- Mode, simplex/split, direct/repeater, frequencies and NAC or CC/slot/destination. Redact personal IDs if preferred.
+- Expected behavior, actual behavior and the smallest repeatable sequence.
+- Reference-receiver result and any SYNC/details, cutouts, shortened call, fault, flicker or restart.
+- Whether the programming cable was connected, or volume/settings changed during the call.
+- For installation: command/step and exact error. Lines above the final hint often contain the useful codec/backup detail.
 
-If there is a fault, photograph the visible message or record its exact text before restarting when practical. Optional serial counters are helpful when requested; diagnostics are secondary to the normal radio controls.
+Photograph a fault or copy its text before restart when practical. Minimal status/fault counters help when requested; diagnostics remain secondary to ordinary controls.
 
 ## Files and privacy
 
-Do not attach a complete stock backup, calibration dump or locally merged native-codec image. A CPS JSON file can contain your radio ID, channel names and frequencies; inspect it before sharing. Send sensitive configuration privately to the maintainer if needed. Avoid posting recordings of other users without permission.
+Never attach stock backups, calibration or locally merged codec images. CPS JSON may contain IDs, names and frequencies; inspect it before sharing. CSV omits zones/lists/globals and cannot replace JSON for reproduction/rollback. Send sensitive configuration privately if needed. Avoid sharing others' recordings without permission.
 
-A reported hotspot “BER” or correction percentage is useful only with its source and context. It is not automatically a calibrated full-air BER or deviation measurement. Keep missing calls, partial audio and failed attempts in the report instead of reporting only a successful retry.
+A hotspot BER/correction percentage needs source/context; it is not automatically calibrated full-air BER or deviation. Include failed attempts alongside passing retries.

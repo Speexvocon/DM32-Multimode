@@ -17,6 +17,13 @@
     openCount: 0,
     closeCount: 0,
     connected: false,
+    protocol: 3,
+    async useV4() {
+      await this.ready;
+      if (this.connected) throw new Error('Disconnect the simulated radio before changing geometry');
+      const model = api.upgradeModel(api.decodePayload(this.payload, this.protocol));
+      this.payload = api.encodePayload(model); this.protocol = 4; this.discardStage();
+    },
     busy: false,
     dropCommitReply: false,
     openOptions: null,
@@ -33,9 +40,9 @@
   // Install synchronously so production feature detection cannot see native Web Serial.
   window.__cpsPeer = peer;
 
-  const ready = import('/model.js').then(modelApi => {
+  const ready = import(new URL('./model.js', document.baseURI).href).then(modelApi => {
     api = modelApi;
-    const model = api.createDefaultModel();
+    const model = api.createDefaultModel(3);
     Object.assign(model.settings, { sourceId: 1234567, micGainDb: 22, selectionA: 1, selectionB: 2 });
     Object.assign(model.vfos[0], { talkgroup: 10 });
     model.channels[0] = { ...structuredClone(model.vfos[0]), name: 'P25 TEST',
@@ -51,7 +58,8 @@
   function validRecord(index, record) {
     // Validate each PUT independently, as firmware does; selected-memory references
     // are checked against the whole staged image only at COMMIT.
-    const fixture = api.createDefaultModel();
+    if (peer.protocol === 4) return true; // Whole V4 descriptor/reference validation occurs at COMMIT.
+    const fixture = api.createDefaultModel(3);
     if (index === 34) fixture.channels = Array.from({ length: 32 }, () => structuredClone(fixture.vfos[0]));
     const isolated = api.encodePayload(fixture);
     isolated.set(record, index * api.RECORD_BYTES);
@@ -63,12 +71,12 @@
     if (peer.busy) return 'CPS ERR BUSY';
     if (command === 'CPS HELLO') {
       if (stage) return 'CPS ERR TRANSACTION';
-      return `CPS HELLO DM32P25 1 32 2 ${peer.revision} ${hex32(peer.crc)}`;
+      return `CPS HELLO DM32P25 ${peer.protocol} ${peer.protocol === 4 ? 256 : 32} 2 ${peer.revision} ${hex32(peer.crc)}`;
     }
     let match = /^CPS GET ([0-9]+)$/.exec(command);
     if (match) {
       const index = Number(match[1]);
-      if (index >= api.RECORD_COUNT) return 'CPS ERR RECORD';
+      if (index >= api.recordCount(peer.protocol)) return 'CPS ERR RECORD';
       return `CPS DATA ${index} ${hexBytes(peer.payload.subarray(index * 32, (index + 1) * 32))}`;
     }
     match = /^CPS BEGIN ([0-9A-F]{8}) ([0-9]+)$/.exec(command);
@@ -84,7 +92,7 @@
     match = /^CPS PUT ([0-9A-F]{8}) ([0-9]+) ([0-9A-F]{64})$/.exec(command);
     if (match) {
       const index = Number(match[2]);
-      if (match[1] !== transaction || index >= api.RECORD_COUNT) return 'CPS ERR RECORD';
+      if (match[1] !== transaction || index >= api.recordCount(peer.protocol)) return 'CPS ERR RECORD';
       const record = Uint8Array.from(match[3].match(/../g), byte => parseInt(byte, 16));
       if (!validRecord(index, record)) return 'CPS ERR INVALID';
       stage.set(record, index * 32);

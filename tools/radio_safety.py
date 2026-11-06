@@ -3,6 +3,7 @@ import argparse
 from datetime import datetime, timezone
 import hashlib
 import json
+import importlib
 from pathlib import Path
 import runpy
 import subprocess
@@ -95,6 +96,20 @@ def validate(directory, label):
                 or (directory / name).read_bytes() != content):
             raise ValueError("Backup checksum/content mismatch: " + name)
     return program, data
+
+
+def dependency_hint(error):
+    module = getattr(error, "name", None) or str(error)
+    return ("Missing Python dependency: " + str(module) + ". Install this repository's dependencies, then repeat the command:\n"
+            + '  & "' + sys.executable + '" -m pip install -r "' + str(ROOT / "requirements.txt") + '"')
+
+
+def require_serial_dependency():
+    # Importing the driver opens no serial port. Check before launching a RAM
+    # reader child process so a missing pyserial produces an actionable error.
+    driver = importlib.import_module("serial")
+    if not hasattr(driver, "Serial"):
+        raise ValueError("The Python 'serial' module is not pyserial. Reinstall the pinned requirements.txt dependency.")
 
 
 def tools():
@@ -203,6 +218,7 @@ def main():
         return
     if not args.port:
         parser.error("hardware access requires an explicit --port")
+    require_serial_dependency()
     print("Use the labeled radio. Turn it OFF; leave it off until the RAM tool asks you to power on.")
     if args.action == "backup":
         dump(stub, args.port, directory)
@@ -232,6 +248,9 @@ def main():
 if __name__ == "__main__":
     try:
         main()
+    except ModuleNotFoundError as error:
+        print("radio-safety: " + dependency_hint(error), file=sys.stderr)
+        sys.exit(1)
     except (ValueError, RuntimeError, OSError, subprocess.CalledProcessError) as error:
         print("radio-safety: " + str(error), file=sys.stderr)
         sys.exit(1)

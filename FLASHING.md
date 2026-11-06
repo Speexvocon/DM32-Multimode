@@ -1,22 +1,22 @@
-# Install the DM32 Multimode beta on Windows
+# Install or update the DM32 Multimode beta
 
-This guide is for the **DM-32UV / DM32 only**, using its USB serial programming
-cable. Beta 0.1.0-beta.1 contains P25 Phase 1 conventional, DMR and analog FM.
-The firmware binary in `firmware/` is an application, **not a complete file to
-flash directly**. First make your own backup and prepare a complete update with
-your radio's own native codec. No compiler or separate stock firmware download
-is needed when the backup contains the qualified codec.
+For **DM-32UV / DM32 only**, using its USB serial programming cable. The current package is **v0.2.0-beta.1 / build 2e0f18a**. Its bare application is **not directly flashable**: the offline preparer adds the correct native codec from your own sealed backup.
 
-Use a charged battery and a reliable cable. Keep PTT released throughout the
-installation. Close CPS, browser serial connections and other programs using the
-COM port. Keep the cable's normal USB serial driver; this procedure does not use
-USB DFU or require replacing the driver with Zadig.
+Use a charged battery and a reliable cable. Close CPS and every other program using the COM port. Keep the normal USB serial driver: **no DFU or Zadig driver replacement is needed**. PTT stays released except when entering the updater as directed.
+
+## Upgrading an existing beta
+
+1. Before flashing, open [DM32 Studio CPS](https://speexvocon.github.io/DM32-Studio/), **Read radio**, and export the complete JSON. Close its serial connection afterward. CSV is not a full backup.
+2. Reuse the **sealed original backup from this same physical radio** and its original radio label. Do not replace it with a backup of the beta or use another radio's backup. There is no need to repeat the two-read backup process if that backup is already sealed and intact.
+3. Update/download this repository, then follow setup, offline preparation, flash and independent verification below. Every flash still makes a **fresh preservation read** to check bootloader and factory calibration.
+
+V0.2.0 reads saved V1-V3 settings without a boot-time migration write. The first explicit save publishes V4. The new CPS reads legacy firmware/files; use **Upgrade codeplug** to convert an older JSON draft before writing it to V4 firmware. Review the resulting zones/lists and keep the original JSON.
+
+**Rollback:** earlier firmware cannot read V4's expanded memories/zones/lists. It may load a retained legacy fallback, which is not a complete copy of your latest configuration. To recover your earlier beta configuration, reinstall that version with its package, then write its saved compatible JSON using CPS. There is no lossless V4-to-legacy conversion. [Stock recovery](RECOVERY.md) restores your original application/codec separately.
 
 ## 1. Set up the tools
 
-Install Python **3.10 or later** and download/clone this repository. Open
-PowerShell in the repository folder. These commands use the virtual environment's
-Python directly, so activation and PowerShell execution-policy changes are unnecessary.
+Install Python **3.10 or later**, download/clone this repository, and open PowerShell in its root folder:
 
 ```powershell
 py -3 -m venv .venv
@@ -25,147 +25,111 @@ $python = '.\.venv\Scripts\python.exe'
 & $python -m serial.tools.list_ports
 ```
 
-If the `py` launcher is unavailable, use `python -m venv .venv` for the first
-command. Identify your cable in the port list or Windows Device Manager. Replace
-the following examples with your own port, unique physical radio label and
-actual currently installed firmware version:
+If `py` is unavailable, use `python -m venv .venv` for the first command. No environment activation or execution-policy change is required. If `.venv` already exists, reuse it and rerun the requirements command.
+
+Set your own port, unique physical-radio label, backup path and release. The examples are placeholders:
 
 ```powershell
 $radioPort = 'COM5'
 $radioLabel = 'my-dm32-serial'
 $backup = '.\backups\my-dm32-before-beta'
+$release = '.\firmware\v0.2.0-beta.1\release.json'
 ```
 
-Use a simple label containing letters, digits, `-` or `_`. It binds the generated
-package to this backup; it does not electronically authenticate the radio.
+Use letters, digits, `-` or `_` in the label. A returning user must keep the label already sealed with their backup. The label binds files together; it does not electronically authenticate the radio.
 
-## 2. Make and preserve your original backup
+## 2. Seal your original backup - new users only
 
-Switch the radio **OFF**, remove the battery for ten seconds, refit it with the
-switch still **OFF**, and connect the cable. Start this command while it remains
-off:
+If your existing original backup already passes `inspect`, skip this step.
+
+Switch **OFF**, remove the battery for ten seconds, refit it with the switch **OFF**, and connect the cable. With the radio still off, run:
 
 ```powershell
 & $python tools/radio-safety.py backup --directory $backup --radio-label $radioLabel --firmware 'ACTUAL INSTALLED VERSION' --port $radioPort --execute
 ```
 
-When the reader asks, turn the radio **ON normally, without holding any buttons**.
-A blank screen is expected: a temporary read-only monitor is running in RAM.
-The tool reads the complete **1 MiB program flash and 16 MiB data flash twice**.
-Do not restart, remove the battery or unplug between these reads. At the
-conservative transfer rate, allow tens of minutes; progress remains in the terminal.
+At the reader's cue, turn **ON normally, without holding buttons**. A blank screen is expected: a read-only monitor is running in RAM. The tool reads the complete **1 MiB program and 16 MiB data flash twice**. Allow tens of minutes at the conservative transfer speed; do not unplug, restart or remove the battery between reads.
 
-Continue only after `SEALED: two matching full reads` appears. It saves:
+Wait for **`SEALED: two matching full reads`**. Keep the entire folder, including `program.bin`, `data.bin`, `readback/`, `restore-application.bin`, calibration copies and checksum manifest. Copy it to another storage device. A stock CPS codeplug cannot replace it. Keep all backup and generated codec files private.
 
-- `program.bin`: original bootloader, application and native codec.
-- `data.bin`: original settings, contacts and calibration.
-- `readback/`: the second complete matching read.
-- `restore-application.bin`, calibration copies and the checksum manifest.
+After the reader closes, switch off. Remove/refit the battery if needed to exit the RAM monitor. An incomplete backup is never overwritten: retain it for diagnosis and choose a new folder for a retry. If the radio boots its normal interface instead of showing a blank screen, stop, power off, reseat the radio-side plug and retry from a cold start.
 
-Copy the **entire backup folder** to another storage device. A stock CPS codeplug
-alone cannot replace this backup. The backup and any locally prepared update
-remain private; do not upload them to GitHub or attach them to bug reports.
+## 3. Detect the codec and prepare offline
 
-The reader closes when finished. Switch off and leave the radio off for the
-later flash command. If the RAM monitor prevents switching off, remove/refit the
-battery after the tool has finished.
-
-An existing folder is never overwritten. For a failed/incomplete attempt, retain
-it for diagnosis and choose a new backup directory. If the screen boots normally
-instead of entering the reader, stop the tool, power off, reseat the plug and retry
-from a cold start; do not bypass the backup.
-
-## 3. Prepare your update, entirely offline
+These commands open **no serial port**:
 
 ```powershell
 & $python tools/radio-safety.py inspect --directory $backup --radio-label $radioLabel
-& $python tools/prepare-firmware.py --backup $backup --radio-label $radioLabel
-$package = ".\build\$radioLabel\package.json"
+& $python tools/prepare-firmware.py codec-info --backup $backup --radio-label $radioLabel --release $release
+& $python tools/prepare-firmware.py --backup $backup --radio-label $radioLabel --release $release
+$package = ".\build\$radioLabel\0.2.0-beta.1\package.json"
 ```
 
-The preparer checks the sealed backup and released application, recognizes the
-native codec in **your own program backup**, merges it into its reserved slot and
-checks the resulting package. It opens no serial port. The private files are:
+Codec selection is automatic. The tool accepts exact verified standard 046, standard 049, NRF/fanti 049 and HR046 contracts, checks code/tables and relocation layout, then validates the complete merged update. No separate stock download, manual selection or stock-049 upgrade is needed when your backup matches a profile. HR046 has offline layout/package checks; its voice behavior still needs physical feedback.
+
+If detection refuses an unknown/damaged codec, retain the exact error and ask the maintainer. **Do not force it, edit the manifest or substitute another radio's files.** Detection/preparation cannot erase or flash anything. Power-cycle normally if the radio is still in the RAM reader.
+
+Default private output for this release:
 
 ```text
-build/<radio-label>/package.json
-build/<radio-label>/application-codec.bin
-build/<radio-label>/application-codec_BFUV32.bin
+build/<radio-label>/0.2.0-beta.1/package.json
+build/<radio-label>/0.2.0-beta.1/application-codec.bin
+build/<radio-label>/0.2.0-beta.1/application-codec_BFUV32.bin
 ```
 
-The first beta accepts only the native codec variant already qualified with this
-firmware. If it reports an unsupported or unqualified codec, save the message and
-ask the maintainer about your stock version. **Do not force it or substitute a
-different radio's backup or calibration.** Broader codec support can be added later.
+A repeat command safely reuses an already verified package for the same backup/release. Changed or invalid existing output is never overwritten. To make a separate package, use `--output .\build\my-new-package`, then set `$package` to its `package.json`. Use the generated manifest with the flash helper; never hand the bare application to an updater.
 
-Preparation refuses an existing output directory. For a later package, select a
-new directory under `build/` with `--output`, then point `$package` to its
-`package.json`. The generated package must include the complete native codec:
-factory update mode erases that application/codec area.
+## 4. Review, then flash
 
-## 4. Review and flash
-
-First run the offline plan:
+First review the offline plan:
 
 ```powershell
 & $python tools/flash-firmware.py flash --backup $backup --radio-label $radioLabel --package $package --port $radioPort
 ```
 
-With the radio **OFF** and cable connected, repeat with `--execute`:
+Switch **OFF**, remove/refit the battery after ten seconds, leave the switch **OFF** and cable connected, then run:
 
 ```powershell
 & $python tools/flash-firmware.py flash --backup $backup --radio-label $radioLabel --package $package --port $radioPort --execute
 ```
 
-This command first enters the same RAM reader: turn **ON normally, without
-buttons**, only when the reader asks. It reads both memories and checks the
-bootloader and factory calibration against your sealed backup. Application or
-ordinary settings differences are allowed. Keep the same labeled radio connected.
+There are **two different power-on steps**, prompted in order:
 
-Only after preservation checks pass will the updater ask for factory update mode:
+| Phase | What to do | Expected result |
+| --- | --- | --- |
+| Preservation reader | Turn ON **normally, no buttons**, only at its cue | Blank screen; fresh program/data read and bootloader/calibration checks |
+| Factory updater, after checks pass | Switch OFF; hold **PTT + SK1** (side key immediately below PTT); turn ON; release both at **green LED** | Updater identifies **BFUV32-V2** |
 
-1. Switch the radio **OFF**.
-2. Hold **PTT + SK1**; SK1 is the side key immediately below PTT.
-3. Turn **ON** while holding both. When the **green LED** lights, release both keys.
-4. Keep the cable connected and press Enter in the PC terminal when prompted.
-5. Require loader identification **BFUV32-V2**. Let erase and transfer finish
-   without touching power or the cable.
+Keep the same labeled radio connected. At the updater prompt, press Enter in the terminal after entering factory mode. Review and answer its confirmation; allow erase/transfer to finish without touching power or cable. Application and ordinary setting differences from the original backup are allowed; protected bootloader/calibration mismatches stop the process.
 
-No `--force` or automatic confirmation is used. This writes only the application
-region starting at `0x0300C000`; the bootloader and external data flash are not
-written by this update. Transfer completion is followed by an independent check.
+Only the application/codec region starting at `0x0300C000` is written. The bootloader and external data flash are not written by this updater. **Transfer completion is not the final verification.**
 
-## 5. Verify what was installed
+## 5. Independently verify the installation
 
-After the flash tool finishes, switch **OFF**, remove the battery for ten
-seconds, refit it with the switch **OFF**, and keep the cable connected. Run:
+After transfer closes, switch **OFF**, remove the battery for ten seconds, refit it with the switch **OFF**, and keep the cable connected:
 
 ```powershell
 & $python tools/flash-firmware.py verify-installed --backup $backup --radio-label $radioLabel --package $package --port $radioPort --execute
 ```
 
-Again, wait for the reader's cue before turning **ON normally, without buttons**.
-The screen remains blank. The check reads both memories and requires the complete
-prepared application, original bootloader and factory calibration to match. It
-prints `VERIFIED` and retains `verification.json` with the readback in your backup
-folder. It does not require ordinary settings to remain identical after a normal boot.
+At the reader's cue, turn **ON normally, no buttons**. Its independent read must match the complete prepared application/codec, original bootloader and factory calibration. Wait for **`VERIFIED`**. The readback and `verification.json` stay in a new check folder inside your backup. Ordinary settings may legitimately differ after a normal boot.
 
-When the reader finishes and closes, switch off, remove/refit the battery if
-needed, then turn on normally with PTT released. The firmware home screen should
-appear. Keep the prepared package and verification result with your backup.
+When the reader closes, switch off, remove/refit the battery, then turn on normally with PTT released. The home screen should return; find build **2e0f18a** under **Tools → Diagnostics → Radio status**. Keep the package and verification result with your original backup.
 
-## 6. Configure and try the beta
+## 6. Configure and use
 
-Use the grouped radio menu or the included [browser CPS](docs/CPS.md) to set your
-own channel, mode, radio ID and talkgroup. Do not assume a stock codeplug has been
-imported. Confirm frequency and TX settings before using PTT; normal operating
-mode does not require PC arming. Test inhibition and diagnostics are menu choices.
+Open [DM32 Studio CPS](https://speexvocon.github.io/DM32-Studio/) or follow [QUICK_START.md](QUICK_START.md). Set your own radio ID, frequencies, signaling, power and TX permission. Stock codeplugs are **not automatically imported**. New-user defaults are neutral examples, not the maintainer's personal channels or ID and not a ready-to-transmit configuration. Normal calls need no PC arming; test modes/inhibit remain menu choices.
 
-The programming plug can redirect/mute the internal microphone or speaker.
-Disconnect the **radio-side plug** for normal audio tests after closing the PC's
-serial session. On first use, confirm reception before a short authorized
-transmission to a known receiver. For an issue, record the beta version, mode,
-frequency, DMR CC/slot/TG or P25 NAC/TG, and the observed behavior.
+Close the PC serial session and remove the **radio-side programming plug** for normal mic/speaker use: it affects audio routing. Check a known receive source, then one short call to a known receiver. Codec compatibility checks do not establish RF/audio qualification on every variant.
 
-If boot or installation fails, follow [RECOVERY.md](RECOVERY.md). Do not flash
-`program.bin` as an application or write another radio's calibration.
+## Common installation questions
+
+| Symptom | Action |
+| --- | --- |
+| COM port busy / access denied | Click Disconnect in browser CPS, close stock CPS/serial terminals and retry with the radio off at the required cue |
+| Blank screen after reading | Expected RAM-monitor state; let the tool finish/close, then remove/refit the battery and boot normally |
+| Unsupported codec | Update this repository and run `codec-info` against the existing sealed backup; send its exact output. No extra backup read or stock upgrade is required for diagnosis |
+| No internal mic/speaker audio | Close the PC serial session and remove the radio-side programming plug |
+| Wrong/stale channels after rollback | Restore the older version's compatible JSON through CPS; expanded V4 is not readable by older firmware |
+
+For a failure, keep the full error, detected codec name, version and logs. Use [RECOVERY.md](RECOVERY.md); never flash the complete `program.bin` as an application or copy another radio's calibration.

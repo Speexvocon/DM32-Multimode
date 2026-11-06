@@ -1,6 +1,7 @@
 import {
   createDefaultModel, decodePayload, encodePayload, validateModel,
-  exportFile, importFile, crc32, setChannelMode,
+  exportFile, importFile, crc32, setChannelMode, POWER_LEVELS, BUTTON_ACTIONS,
+  modelVersion, upgradeModel, createScanList, clearChannels, moveChannel, bulkEditChannels, exportChannelsCsv, importChannelsCsv,
 } from './model.js';
 import { CpsClient } from './transport.js';
 import { History } from './vendor/undo.js';
@@ -110,6 +111,8 @@ function problems() {
 function encoded() { try { return encodePayload(S.model); } catch { return null; } }
 function sameBytes(a, b) { return a?.length === b?.length && Array.from(a).every((value, i) => value === b[i]); }
 function radioChanged() { return S.baseline ? !sameBytes(encoded(), S.baseline.payload) : true; }
+function expanded() { return modelVersion(S.model) === 4; }
+function channelMembership(index) { return expanded() ? S.model.scanLists.flatMap((list, i) => list?.type === 'channel' && list.channels.includes(index + 1) ? [i] : []) : S.model.channels[index]?.scanLists ?? []; }
 function occupied() { return S.model.channels.filter(Boolean).length; }
 function fmtFrequency(hz) { return hz ? (hz / 1e6).toFixed(6) : '—'; }
 function fmtNac(nac) { return Number(nac).toString(16).toUpperCase().padStart(3, '0'); }
@@ -121,7 +124,7 @@ function parseFrequency(text) {
 }
 function defaultChannel(name = '') {
   return { name, rxHz: 145700000, txHz: 145700000, mode: 'P25', nac: 0x293,
-    talkgroup: 1, filter: 'PROM', rxOnly: false, scanLists: [], squelch: 3,
+    talkgroup: 1, filter: 'PROM', rxOnly: false, scanLists: [], squelch: 3, powerLevel: 0,
     txTone: { type: 'none', value: 0 }, rxTone: { type: 'none', value: 0 } };
 }
 function normalizedMode(channel, mode) {
@@ -157,6 +160,7 @@ function load(model, name, source, origin = null) {
 }
 
 function render() {
+  if (S.tab === 'zones' && !expanded()) S.tab = 'channels';
   const issues = problems();
   const isConnected = connected();
   replace(root,
@@ -197,8 +201,9 @@ function render() {
   const sidebar = root.querySelector('.sidebar');
   sidebar.replaceChildren(h('div', { class: 'eyebrow sidebar-label' }, 'Codeplug'),
     h('nav', { class: 'tab-list', role: 'tablist', 'aria-label': 'Codeplug sections' },
-      [['channels', 'Channels', 'channels', occupied()], ['vfos', 'VFO A / B', 'vfo', 2],
-        ['scan', 'Scan lists', 'scan', 4], ['settings', 'Radio settings', 'settings', null],
+      [['channels', 'Channels', 'channels', occupied()], ['vfos', 'Frequency A / B', 'vfo', 2],
+        ...(expanded() ? [['zones', 'Zones', 'folder', 16]] : []), ['scan', 'Scan lists', 'scan', expanded() ? 16 : 4], ['settings', 'Radio settings', 'settings', null],
+        ['functions', 'Functions', 'radio', null],
         ['problems', 'Problems', issues.length ? 'alert' : 'check', issues.length]].map(([id, title, glyph, count]) =>
         h('button', { type: 'button', class: `tab-button ${S.tab === id ? 'active' : ''}`, role: 'tab',
           'aria-selected': String(S.tab === id), 'aria-controls': 'main-view', disabled: S.busy,
@@ -215,16 +220,18 @@ function renderContent(issues = problems()) {
   const view = document.getElementById('main-view');
   const labels = {
     channels: ['Channels', 'Build a useful radio, one memory at a time. Frequencies are in MHz.'],
-    vfos: ['VFO A / B', 'Two independent profiles, with one active receiver. Choose the starting context in Radio settings.'],
-    scan: ['Scan lists', 'Keep up to four overlapping groups of channels. Membership is saved; scanning is started on the radio.'],
-    settings: ['Radio settings', 'Radio identity, startup selection and everyday display behavior.'],
+    vfos: ['Frequency (VFO A / B)', 'Edit the Frequency profiles here. Radio settings chooses Frequency or a saved Channel for each side. A/B share one receiver.'],
+    zones: ['Zones', 'Name up to 16 groups of memories. Channels keep their global order inside each zone.'],
+    scan: ['Scan lists', expanded() ? 'Channel scan visits frequencies. P25 talkgroup scan stays on one receive channel and follows an independent TG list.' : 'Legacy channel membership. Upgrade explicitly for named lists and P25 talkgroup scan.'],
+    settings: ['Radio settings', 'Digital radio identity, microphone gain and starting mode for each side.'],
+    functions: ['Functions', 'Transmit controls, programmable buttons, FM broadcast and display behavior.'],
     problems: ['Codeplug checks', 'Resolve these settings before saving or writing. Checks never transmit or change the radio.'],
   };
   const [title, subtitle] = labels[S.tab];
   replace(view,
     h('div', { class: 'page-heading' }, h('div', {}, h('h1', {}, title), h('p', {}, subtitle)),
       S.tab === 'channels' ? h('div', { class: 'page-heading-actions' },
-        button('Add channel', addChannel, { kind: 'primary', glyph: 'plus', disabled: occupied() === 32 })) :
+        button('Add channel', addChannel, { kind: 'primary', glyph: 'plus', disabled: occupied() === S.model.channels.length })) :
         S.tab === 'problems' ? badge(issues.length ? `${issues.length} TO RESOLVE` : 'ALL CHECKS PASS', issues.length ? 'red' : '') : null),
     h('div', { class: 'document-state' }, h('span', { class: 'file-name' }, S.name),
       badge(dirty() ? 'UNSAVED EDITS' : S.source === 'radio' ? 'READ FROM RADIO' : S.source === 'file' ? 'FILE LOADED' : S.source === 'demo' ? 'EXAMPLE' : 'NEW', dirty() ? 'warn' : 'neutral'),
@@ -233,6 +240,7 @@ function renderContent(issues = problems()) {
       h('div', { class: 'history-actions' },
         button('Undo', undo, { kind: 'quiet', small: true, glyph: 'undo', disabled: !S.history.canUndo, title: S.history.past.at(-1)?.label || 'No edit to undo' }),
         button('Redo', redo, { kind: 'quiet', small: true, glyph: 'redo', disabled: !S.history.canRedo }))),
+    !expanded() ? h('div', {class:'banner'}, 'Legacy 32-channel codeplug. Editing and uploads to existing radios remain supported.', button('Upgrade codeplug', upgradeDraft, {small:true})) : null,
     S.notice ? h('div', { class: `notice ${S.notice.error ? 'error' : ''}`, role: S.notice.error ? 'alert' : 'status' },
       icon(S.notice.error ? 'alert' : 'check', 17), h('span', {}, S.notice.message),
       button('×', () => { S.notice = null; render(); }, { kind: 'quiet', 'aria-label': 'Dismiss message' })) : null,
@@ -240,9 +248,9 @@ function renderContent(issues = problems()) {
       h('div', {}, h('strong', {}, 'Start with your radio or a local example. '),
         'Read an existing configuration, add a channel, or explore the editor. Nothing is written automatically.'),
       h('div', { class: 'banner-actions' }, button('Load example', loadDemo, { small: true }))) : null,
-    S.tab === 'channels' ? channelsView() : S.tab === 'vfos' ? vfoView() : S.tab === 'scan' ? scanView() :
-      S.tab === 'settings' ? settingsView() : problemsView(issues),
-    h('div', { class: 'footer-hint' }, h('span', {}, 'Custom DM32 firmware only · 32 memories · 4 scan lists'),
+    S.tab === 'channels' ? channelsView() : S.tab === 'vfos' ? vfoView() : S.tab === 'scan' ? scanView() : S.tab === 'zones' ? zonesView() :
+      S.tab === 'settings' ? settingsView() : S.tab === 'functions' ? functionsView() : problemsView(issues),
+    h('div', { class: 'footer-hint' }, h('span', {}, `Custom DM32 firmware only · ${S.model.channels.length} memories · ${expanded() ? '16 zones · 16 scan lists' : '4 scan lists · legacy'}`),
       h('span', {}, 'Editing is local. Only “Review & write” changes the radio.')));
 }
 
@@ -256,7 +264,9 @@ function channelsView() {
         event => { S.mode = event.target.value; renderChannelRows(); }, { 'aria-label': 'Filter by mode' }),
       check('Show empty', S.showEmpty, event => { S.showEmpty = event.target.checked; renderChannelRows(); }),
       h('div', { class: 'bulk-toolbar' },
-        button('Duplicate', duplicateSelected, { small: true, disabled: S.selected.size !== 1 || occupied() === 32 }),
+        button('Duplicate', duplicateSelected, { small: true, disabled: S.selected.size !== 1 || occupied() === S.model.channels.length }),
+        button('Bulk edit', bulkEditDialog, {small:true, disabled:!S.selected.size}),
+        button('Move', moveDialog, {small:true, disabled:S.selected.size !== 1}),
         button('Clear selected', clearSelected, { small: true, disabled: !S.selected.size }))),
     h('div', { class: 'channel-table-wrap' }, h('table', { class: 'channel-table' },
       h('thead', {}, h('tr', {},
@@ -271,7 +281,7 @@ function channelsView() {
     h('div', { class: 'table-footer' }, h('span', { id: 'channel-count' }),
       h('span', {}, 'Edit a cell · Open details for TX, tones & filters')));
   queueMicrotask(renderChannelRows);
-  return h('div', {}, panel,
+  return h('div', {}, h('div', {class:'csv-actions'}, button('Import CSV', importCsvDialog, {small:true}), button('Export CSV', exportCsv, {small:true})), panel,
     h('div', { class: 'section-footer' }, icon('info', 14),
       'Digital call settings belong to each channel. P25 PROM accepts supported clear calls across NACs. DMR PROM accepts any color code and destination on the selected timeslot; it does not monitor both slots.'));
 }
@@ -291,7 +301,7 @@ function renderChannelRows() {
   body.replaceChildren(...indices.map(channelRow));
   if (!indices.length) body.append(h('tr', {}, h('td', { colspan: 9, class: 'empty-result' }, 'No channels match this search.')));
   const count = document.getElementById('channel-count');
-  if (count) count.textContent = `${occupied()} of 32 memories used${S.selected.size ? ` · ${S.selected.size} selected` : ''}`;
+  if (count) count.textContent = `${occupied()} of ${S.model.channels.length} memories used${S.selected.size ? ` · ${S.selected.size} selected` : ''}`;
 }
 function channelRow(index) {
   const channel = S.model.channels[index];
@@ -328,8 +338,7 @@ function channelRow(index) {
     h('td', {}, channel.mode === 'P25' ? input(channel.talkgroup, parse('talkgroup', value => /^\d+$/.test(value) ? Number(value) : NaN),
       { class: 'mono', inputmode: 'numeric', 'aria-label': `Memory ${index + 1} transmit talkgroup` }) : channel.mode === 'DMR' ?
       input(channel.destinationId, parse('destinationId', Number), { type: 'number', min: 1, max: 16777215, 'aria-label': `Memory ${index + 1} destination ID` }) : h('span', { class: 'muted' }, '—')),
-    h('td', {}, h('div', { class: 'list-dots', 'aria-label': `Scan lists ${channel.scanLists.map(i => i + 1).join(', ') || 'none'}` },
-      [0, 1, 2, 3].map(i => h('span', { class: `list-dot ${channel.scanLists.includes(i) ? 'member' : ''}` }, i + 1)))),
+    h('td', {}, h('span', {class: 'muted'}, channelMembership(index).map(i => i + 1).join(', ') || '—')),
     h('td', {}, button(icon('edit', 15), () => editChannel('channels', index), { kind: 'icon-button quiet',
       title: `Edit memory ${index + 1} details`, 'aria-label': `Edit memory ${index + 1} details` })));
 }
@@ -349,13 +358,9 @@ function duplicateSelected() {
 async function clearSelected() {
   if (S.busy || !S.selected.size) return;
   const indices = [...S.selected].filter(index => S.model.channels[index]);
-  if (!await confirmDialog('Clear selected memories?', `${indices.length} memor${indices.length === 1 ? 'y' : 'ies'} will be cleared in the working copy. Radio changes still require Review & write.`, 'Clear memories', true)) return;
+  if (!await confirmDialog('Clear selected memories?', `${indices.length} memor${indices.length === 1 ? 'y' : 'ies'} will be cleared in the working copy. References are removed; TG lists using a cleared base are removed and fixed replies revert to Selected. Radio changes still require Review & write.`, 'Clear memories', true)) return;
   change('Clear selected memories', () => {
-    for (const index of indices) {
-      S.model.channels[index] = null;
-      if (S.model.settings.selectionA === index + 1) S.model.settings.selectionA = 0;
-      if (S.model.settings.selectionB === index + 1) S.model.settings.selectionB = 0;
-    }
+    clearChannels(S.model, indices.map(i => i + 1));
     S.selected.clear();
   });
 }
@@ -364,7 +369,7 @@ function editChannel(table, index) {
   if (S.busy) return;
   const exists = Boolean(S.model[table][index]);
   const candidate = clone(S.model[table][index] || defaultChannel(table === 'channels' ? `CH ${index + 1}` : `VFO ${index ? 'B' : 'A'}`));
-  const title = table === 'channels' ? `Memory ${String(index + 1).padStart(2, '0')}` : `VFO ${index ? 'B' : 'A'}`;
+  const title = table === 'channels' ? `Memory ${String(index + 1).padStart(2, '0')}` : `Frequency (VFO ${index ? 'B' : 'A'})`;
   const form = h('form');
   const errors = h('div', { class: 'dialog-error', role: 'alert', hidden: true });
   const name = input(candidate.name, null, { maxlength: 12, required: false, autocomplete: 'off' });
@@ -372,6 +377,8 @@ function editChannel(table, index) {
   const rx = input(fmtFrequency(candidate.rxHz), null, { required: true, inputmode: 'decimal' });
   const tx = input(fmtFrequency(candidate.txHz), null, { required: true, inputmode: 'decimal' });
   const rxOnly = h('input', { type: 'checkbox', checked: candidate.rxOnly });
+  const power = select(POWER_LEVELS.map((label, index) => [index, label]), candidate.powerLevel, null,
+    { 'aria-label': 'Transmit power level' });
   const nac = input(fmtNac(candidate.nac ?? 0x293), null, { maxlength: 3, pattern: '[0-9a-fA-F]{1,3}', class: 'mono' });
   const tg = input(candidate.talkgroup ?? 1, null, { type: 'number', min: 1, max: 65535, step: 1 });
   const filter = select([['PROM', 'PROM · all supported clear calls'], ['NAC', 'Match NAC · all talkgroups'], ['NAC+TG', 'Match NAC + selected talkgroup']], candidate.filter, null);
@@ -411,12 +418,13 @@ function editChannel(table, index) {
     button('×', () => dialog.close(), { kind: 'quiet', 'aria-label': 'Close channel editor' })),
   h('div', { class: 'dialog-body' }, errors,
     h('div', { class: 'field-grid' }, field('Channel name', name, 'Up to 12 printable ASCII characters.'), field('Mode', mode),
-      field('Receive frequency · MHz', rx), field('Transmit frequency · MHz', tx)),
+      field('Receive frequency · MHz', rx), field('Transmit frequency · MHz', tx),
+      field('Transmit power', power, 'Calibrated hardware levels. Actual output depends on band, battery and calibration.')),
     h('div', { style: 'display:flex;gap:13px;align-items:center;margin-top:14px' },
       button('Use simplex', () => { tx.value = rx.value; }, { small: true }),
       h('label', { class: 'check-label' }, rxOnly, 'Receive only')),
     p25Section, dmrSection, analogSection,
-    h('h3', {}, 'Scan membership'), h('div', { class: 'inline-options' }, membership)),
+    expanded() ? h('p', {class:'settings-note'}, 'Channel scan membership is edited in Scan lists; zones are edited in Zones.') : [h('h3', {}, 'Scan membership'), h('div', { class: 'inline-options' }, membership)]),
   h('div', { class: 'dialog-footer' }, h('span', { class: 'dialog-note' }, 'Local edit · no radio write'),
     button('Cancel', () => dialog.close()), h('button', { type: 'submit', class: 'primary' }, 'Apply channel')));
   const dialog = h('dialog', { 'aria-label': `${exists ? 'Edit' : 'Add'} ${title}` }, form);
@@ -439,8 +447,8 @@ function editChannel(table, index) {
     if (S.busy) return;
     try {
       const channel = { ...candidate, name: name.value,
-        rxHz: parseFrequency(rx.value), txHz: parseFrequency(tx.value), rxOnly: rxOnly.checked,
-        scanLists: membership.flatMap((label, i) => label.querySelector('input').checked ? [i] : []) };
+        rxHz: parseFrequency(rx.value), txHz: parseFrequency(tx.value), rxOnly: rxOnly.checked, powerLevel: Number(power.value),
+        scanLists: expanded() ? [] : membership.flatMap((label, i) => label.querySelector('input').checked ? [i] : []) };
       normalizedMode(channel, mode.value);
       if (channel.mode === 'P25') {
         if (!/^[0-9a-f]{1,3}$/i.test(nac.value)) throw new Error('NAC must be one to three hexadecimal digits.');
@@ -487,7 +495,7 @@ function vfoView() {
     const selection = index ? S.model.settings.selectionB : S.model.settings.selectionA;
     return h('section', { class: 'panel vfo-card' },
       h('div', { class: 'panel-heading' }, h('div', { class: 'vfo-title' }, h('span', { class: 'vfo-letter' }, index ? 'B' : 'A'),
-        h('h2', {}, `VFO ${index ? 'B' : 'A'}`)), badge(selected ? 'ACTIVE CONTEXT' : 'STANDBY', selected ? '' : 'neutral')),
+        h('h2', {}, `Frequency · VFO ${index ? 'B' : 'A'}`)), badge(selected ? 'ACTIVE SIDE' : 'STANDBY', selected ? '' : 'neutral')),
       h('div', { class: 'panel-body' }, channel ? [
         h('div', { class: 'frequency-display mono' }, fmtFrequency(channel.rxHz), h('span', {}, 'MHz')),
         h('div', { class: 'vfo-name' }, channel.name || 'Unnamed VFO', ' · ', channel.mode === 'NFM' ? 'Narrow FM' : channel.mode === 'FM' ? 'Wide FM' : channel.mode === 'DMR' ? 'DMR digital' : 'P25 digital'),
@@ -496,18 +504,19 @@ function vfoView() {
             channel.mode === 'DMR' ? [['Destination', `${channel.destinationId} / ${channel.privateCall ? 'Private' : 'Group'}`],
               ['Color code / slot', `${channel.colorCode} / ${channel.timeslot}`], ['Operation', channel.repeater ? 'Repeater / hotspot' : 'Direct']] :
             [['TX / RX tone', `${toneText(channel.txTone) || 'None'} / ${toneText(channel.rxTone) || 'None'}`], ['Squelch', channel.squelch]]),
-          ['Context selection', selection ? `Memory ${selection}` : `VFO ${index ? 'B' : 'A'}`]].map(([key, value]) =>
+          ['Transmit power', POWER_LEVELS[channel.powerLevel]],
+          ['Side starts in', selection ? `Channel · memory ${String(selection).padStart(2, '0')}` : `Frequency · VFO ${index ? 'B' : 'A'}`]].map(([key, value]) =>
           h('div', { class: 'definition-row' }, h('dt', {}, key), h('dd', {}, value)))),
-      ] : [h('div', { class: 'frequency-display muted' }, 'Not configured'), h('p', { class: 'section-intro' }, 'Give this VFO its own frequency and mode.')],
-      h('div', { class: 'card-actions' }, button(channel ? 'Edit VFO' : 'Configure VFO', () => editChannel('vfos', index), { kind: 'primary', glyph: 'edit' }),
-        button('Use this VFO', () => change(`Select VFO ${index ? 'B' : 'A'}`, () => {
+      ] : [h('div', { class: 'frequency-display muted' }, 'Not configured'), h('p', { class: 'section-intro' }, 'Give this Frequency profile its own frequency and mode.')],
+      h('div', { class: 'card-actions' }, button(channel ? 'Edit frequency' : 'Configure frequency', () => editChannel('vfos', index), { kind: 'primary', glyph: 'edit' }),
+        button('Use Frequency', () => change(`Select Frequency VFO ${index ? 'B' : 'A'}`, () => {
           S.model.settings.activeVfo = index;
           S.model.settings[index ? 'selectionB' : 'selectionA'] = 0;
         }), { disabled: !channel || (selected && !selection) }))));
   }));
 }
 
-function scanView() {
+function legacyScanView() {
   return h('div', {},
     h('div', { class: 'banner' }, icon('scan', 19), 'A channel can belong to more than one list. PTT stops scanning and uses the current channel. This editor changes membership, not on-air scan state.'),
     h('div', { class: 'scan-grid' }, [0, 1, 2, 3].map(list => {
@@ -528,6 +537,144 @@ function scanView() {
     })));
 }
 
+async function upgradeDraft() {
+  if (!await confirmDialog('Upgrade codeplug to V4?', 'Keep all existing channels and settings, expand to 256 memories and convert the four legacy scan memberships into named Channel lists. Save a copy first if you still program legacy radios. Expanded data cannot be written to old firmware.', 'Upgrade to V4')) return;
+  change('Upgrade codeplug to V4', () => { S.model = upgradeModel(S.model); });
+}
+
+function channelChoices(p25 = false) {
+  return [[0, 'Choose a channel'], ...S.model.channels.flatMap((channel, i) => channel && (!p25 || channel.mode === 'P25') ? [[i + 1, `${i + 1} · ${channel.name || 'Unnamed'} · ${fmtFrequency(channel.rxHz)}`]] : [])];
+}
+
+function collectionView(table) {
+  const zone = table === 'zones', title = zone ? 'Zone' : 'Scan list';
+  const selected = S[`${table}Index`] ?? 0, item = S.model[table][selected];
+  return h('div', {class:'collection-layout'},
+    h('section', {class:'panel'}, h('div', {class:'panel-body'},
+      field(`${title} slot`, select(S.model[table].map((entry, i) => [i, `${i + 1} · ${entry?.name || 'Unused'}`]), selected, event => { S[`${table}Index`] = Number(event.target.value); render(); }, {'aria-label':`${title} slot`})),
+      h('p', {class:'settings-note'}, zone ? 'Zones organize channel selection. They do not start scanning.' : 'Scan type belongs to each list. P25 TG scan requires only one base receive channel; duplicate memories are unnecessary.'),
+      button(item ? `Edit ${title.toLowerCase()}` : `Create ${title.toLowerCase()}`, () => editCollection(table, selected), {kind:'primary'}),
+      !zone && item ? button(S.model.settings.scanList === selected ? 'Selected list' : 'Use list', () => change('Select scan list', () => { S.model.settings.scanList = selected; }), {small:true,disabled:S.model.settings.scanList === selected}) : null,
+      item ? button(`Clear ${title.toLowerCase()}`, async () => {
+        if (!await confirmDialog(`Clear ${title.toLowerCase()}?`, 'This clears the definition in your working copy. Saved channel records remain.', 'Clear definition', true)) return;
+        change(`Clear ${title}`, () => {
+          S.model[table][selected] = null;
+          if (zone) for (const key of ['zoneA', 'zoneB']) if (S.model.settings[key] === selected + 1) S.model.settings[key] = 0;
+        });
+      }, {small:true}) : null)),
+    h('section', {class:'panel'}, h('div', {class:'panel-heading'}, h('div', {}, h('h2', {}, item?.name || `Unused ${title.toLowerCase()} ${selected + 1}`),
+      h('p', {}, item ? zone ? `${item.channels.length} channels` : `${item.type === 'p25-tg' ? 'TG SCAN · P25 talkgroups' : 'CH SCAN · Channels'} · ${item.reply} reply` : 'Create a named definition to get started.'))),
+      h('div', {class:'panel-body'}, item ? [
+        !zone ? h('p', {}, `Dwell ${item.dwellMs} ms · post-call hold ${item.holdMs} ms${item.replyChannel ? ` · reply CH${item.replyChannel}` : ''}`) : null,
+        !zone && item.type === 'p25-tg' ? [h('p', {}, `Base receive channel: ${item.baseChannel} · ${S.model.channels[item.baseChannel - 1]?.name || 'Invalid / empty'}`),
+          h('div', {class:'tg-chips'}, item.talkgroups.length ? item.talkgroups.map(tg => badge(`TG ${tg}`, 'neutral')) : h('p', {}, 'No talkgroups yet. This list cannot start scanning.'))] :
+          h('div', {class:'scan-member-list'}, item.channels.length ? item.channels.map(number => h('div', {class:'scan-member'}, h('span', {class:'channel-number'}, number),
+            h('span', {class:'member-name'}, S.model.channels[number - 1]?.name || 'Invalid / empty'), h('span', {class:'member-detail mono'}, fmtFrequency(S.model.channels[number - 1]?.rxHz)))) : h('p', {}, zone ? 'No zone members yet.' : 'No channels yet. This list cannot start scanning.')),
+      ] : h('p', {class:'settings-note'}, 'Unused definitions occupy no configured channels.'))));
+}
+function zonesView() { return collectionView('zones'); }
+function scanView() { return expanded() ? collectionView('scanLists') : legacyScanView(); }
+
+function editorDialog(title, build, apply) {
+  const errors = h('div', {class:'dialog-error', role:'alert', hidden:true});
+  const form = h('form'), body = h('div', {class:'dialog-body'}, errors);
+  const fields = build(body);
+  const dialog = h('dialog', {'aria-label':title}, form);
+  form.append(h('div', {class:'dialog-header'}, h('div', {}, h('h2', {}, title), h('p', {}, 'Local draft only · review before writing to radio.')),
+    button('×', () => dialog.close(), {kind:'quiet', 'aria-label':'Close editor'})), body,
+    h('div', {class:'dialog-footer'}, button('Cancel', () => dialog.close()), h('button', {type:'submit',class:'primary'}, 'Apply')));
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    if (S.busy) return;
+    try { apply(fields); dialog.close(); } catch(error) { errors.hidden = false; errors.textContent = error.message || String(error); }
+  });
+  document.body.append(dialog); dialog.showModal();
+  dialog.addEventListener('close', () => dialog.remove(), {once:true});
+}
+
+function editCollection(table, index) {
+  const zone = table === 'zones', candidate = clone(S.model[table][index] || (zone ? {name:`Zone ${index + 1}`, channels:[]} : createScanList(`Scan ${index + 1}`)));
+  editorDialog(`${zone ? 'Zone' : 'Scan list'} ${index + 1}`, body => {
+    const name = input(candidate.name, null, {maxlength:12, required:true, 'aria-label':`${zone ? 'Zone' : 'Scan list'} name`});
+    const memberships = S.model.channels.flatMap((channel, i) => channel ? [check(`${i + 1} · ${channel.name || 'Unnamed'} · ${channel.mode}`, candidate.channels.includes(i + 1), null, {'data-channel':i + 1})] : []);
+    const membership = h('div', {class:'membership-editor'}, memberships);
+    body.append(field('Name', name, '1–12 printable ASCII characters.'));
+    if (zone) { body.append(h('h3', {}, 'Channel members'), membership); return {name, memberships}; }
+    const type = select([['channel', 'Channel scan · CH SCAN'], ['p25-tg', 'P25 talkgroup scan · TG SCAN']], candidate.type, update, {'aria-label':'Scan type'});
+    const reply = select([['selected', 'Selected / base channel'], ['last-heard', 'Last heard'], ['fixed', 'Fixed reply channel']], candidate.reply, update, {'aria-label':'Reply policy'});
+    const base = select(channelChoices(true), candidate.baseChannel, null, {'aria-label':'Base receive channel'});
+    const fixed = select(channelChoices(), candidate.replyChannel, null, {'aria-label':'Fixed reply channel'});
+    const dwell = input(candidate.dwellMs, null, {type:'number',min:100,max:5000,step:1,'aria-label':'Channel dwell ms'});
+    const hold = input(candidate.holdMs, null, {type:'number',min:0,max:10000,step:1,'aria-label':'Post-call hold ms'});
+    const tgs = h('textarea', {rows:5, 'aria-label':'P25 talkgroup IDs', placeholder:'1, 10, 100, 1000'}, candidate.talkgroups.join(', '));
+    const channelSection = h('section', {}, h('h3', {}, 'Channel members'), membership);
+    const tgSection = h('section', {}, field('Base P25 receive channel', base, 'Frequency and NAC come from this channel; this list supplies strict TG acceptance.'),
+      field('Talkgroup IDs', tgs, 'Up to 64 unique decimal IDs, 1–65535. Separate with commas or whitespace.', true));
+    body.append(h('div', {class:'field-grid'}, field('Scan type', type), field('Reply policy', reply), field('Fixed reply channel', fixed), field('Channel dwell · milliseconds', dwell), field('Post-call hold · milliseconds', hold)), channelSection, tgSection,
+      h('p', {class:'settings-note'}, 'Last-heard TG reply is temporary; saved transmit talkgroups are preserved. Encrypted and unsupported calls stay muted.'));
+    function update() { channelSection.hidden = type.value !== 'channel'; tgSection.hidden = type.value !== 'p25-tg'; fixed.disabled = reply.value !== 'fixed'; dwell.disabled = type.value !== 'channel'; }
+    update();
+    return {name, memberships, type, reply, base, fixed, dwell, hold, tgs};
+  }, controls => {
+    const result = {name:controls.name.value, channels:controls.memberships.flatMap(label => label.querySelector('input').checked ? [Number(label.querySelector('input').dataset.channel)] : [])};
+    if (!zone) {
+      const text = controls.type.value === 'p25-tg' ? controls.tgs.value.trim() : '', tgs = text ? text.split(/[,\s]+/).map(token => { if (!/^\d+$/.test(token)) throw new Error('Talkgroups must be decimal integers.'); return Number(token); }) : [];
+      Object.assign(result, {type:controls.type.value, reply:controls.reply.value, baseChannel:controls.type.value === 'p25-tg' ? Number(controls.base.value) : 0,
+        replyChannel:controls.reply.value === 'fixed' ? Number(controls.fixed.value) : 0, dwellMs:Number(controls.dwell.value), holdMs:Number(controls.hold.value), talkgroups:controls.type.value === 'p25-tg' ? tgs : []});
+      if (result.type === 'p25-tg') result.channels = [];
+    }
+    const test = clone(S.model); test[table][index] = result;
+    encodePayload(test);
+    change(`Edit ${zone ? 'zone' : 'scan list'} ${index + 1}`, () => { S.model = test; });
+  });
+}
+
+function bulkEditDialog() {
+  editorDialog('Bulk edit channels', body => {
+    const valueField = h('div'); let value;
+    const fieldName = select([['powerLevel','Transmit power'], ['rxOnly','Receive only'], ['filter','Receive filter'], ['nac','P25 NAC (decimal)'], ['talkgroup','P25 talkgroup'], ['colorCode','DMR color code'], ['timeslot','DMR timeslot'], ['destinationId','DMR destination ID'], ['squelch','Analog squelch']], 'powerLevel', updateValue, {'aria-label':'Bulk field'});
+    function updateValue() {
+      const options = {powerLevel:POWER_LEVELS.map((label,index)=>[index,label]),rxOnly:[['false','Transmit allowed'],['true','Receive only']],filter:[['NAC','Match NAC / CC'],['PROM','PROM'],['NAC+TG','Match NAC + TG / CC + destination']],timeslot:[[1,'Timeslot 1'],[2,'Timeslot 2']]};
+      const ranges = {nac:[0,4095,659],talkgroup:[1,65535,1],colorCode:[0,15,1],destinationId:[1,16777215,1],squelch:[0,9,5]}, key = fieldName.value;
+      value = options[key] ? select(options[key],options[key][0][0],null,{'aria-label':'Bulk value'}) : input(ranges[key][2],null,{type:'number',min:ranges[key][0],max:ranges[key][1],step:1,'aria-label':'Bulk value'});
+      replace(valueField,field('Value',value,key==='nac'?'Decimal NAC (e.g. 659 = hexadecimal 293).':''));
+    }
+    updateValue();
+    body.append(h('p', {}, `${S.selected.size} selected channel(s). A field incompatible with any selected mode refuses the entire edit.`), field('Field',fieldName),valueField);
+    return {fieldName,get value(){return value;}};
+  }, controls => {
+    const key = controls.fieldName.value, text = controls.value.value.trim();
+    let value = text;
+    if (key === 'rxOnly') { if (!['true','false'].includes(text)) throw new Error('Use true or false.'); value = text === 'true'; }
+    else if (key !== 'filter') { if (!/^\d+$/.test(text)) throw new Error('Use a whole decimal integer.'); value = Number(text); }
+    const test = clone(S.model); bulkEditChannels(test, [...S.selected].map(i => i + 1), {[key]:value});
+    change('Bulk edit channels', () => { S.model = test; });
+  });
+}
+function moveDialog() {
+  if (S.selected.size !== 1) return;
+  const from = [...S.selected][0] + 1;
+  editorDialog('Move channel', body => {
+    const target = input(from, null, {type:'number',min:1,max:S.model.channels.length,'aria-label':'Move to channel'});
+    body.append(h('p', {}, `Move CH${from} and shift intervening slots. All zone, scan, base, fixed-reply and starting-channel references follow their channel records.`),field('Destination channel number',target)); return {target};
+  }, ({target}) => { const test = clone(S.model), to = Number(target.value); moveChannel(test,from,to); change('Move channel', () => { S.model = test; S.selected = new Set([to - 1]); }); });
+}
+function downloadText(text, filename, type) {
+  const url = URL.createObjectURL(new Blob([text], {type})), link = h('a', {href:url,download:filename});
+  document.body.append(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url),1000);
+}
+function exportCsv() { try { downloadText(exportChannelsCsv(S.model),'DM32-channels.csv','text/csv;charset=utf-8'); } catch(error) { say(error.message,true); } }
+function importCsvDialog() {
+  editorDialog('Import channel CSV', body => {
+    const text = h('textarea', {rows:12,'aria-label':'Channel CSV text',spellcheck:false});
+    const fileError = h('p', {role:'alert',class:'dialog-error',hidden:true});
+    const file = h('input',{type:'file',accept:'.csv,text/csv','aria-label':'Choose channel CSV',onchange:async event => {
+      try { const selected = event.target.files?.[0]; if (selected) { if (selected.size > 1024 * 1024) throw new Error('CSV exceeds 1 MiB.'); text.value = await selected.text(); fileError.hidden = true; } } catch(error) { fileError.hidden = false; fileError.textContent = error.message; }
+    }});
+    body.append(h('p',{},'Export CSV for the exact column header. Frequencies are integer Hz, NAC is decimal, tones use wire integers (CTCSS tenths of Hz; DCS decimal). Matching channel slots are replaced only in the local draft; absent slots, zones and lists remain. Incompatible references refuse the entire import.'),field('CSV file',file),fileError,field('Or paste CSV',text,'',true)); return {text};
+  }, ({text}) => { const test = importChannelsCsv(text.value,S.model); change('Import channel CSV', () => { S.model = test; }); });
+}
+
 function settingsView() {
   const settings = S.model.settings;
   const update = key => event => {
@@ -535,24 +682,56 @@ function settingsView() {
     change('Edit radio settings', () => { settings[key] = value; });
   };
   const numeric = (key, min, max, suffix = '') => input(settings[key], update(key), { type: 'number', min, max, step: 1, 'aria-label': suffix || key });
-  const choices = index => [[0, `VFO ${index ? 'B' : 'A'}`], ...S.model.channels.flatMap((channel, i) => channel ? [[i + 1, `${String(i + 1).padStart(2, '0')} · ${channel.name || 'Unnamed'}`]] : [])];
+  const choices = index => [[0, `Frequency · VFO ${index ? 'B' : 'A'}`], ...S.model.channels.flatMap((channel, i) => channel ? [[i + 1, `Channel ${String(i + 1).padStart(2, '0')} · ${channel.name || 'Unnamed'}`]] : [])];
   return h('div', { class: 'settings-grid' },
-    settingPanel('Radio identity', 'Identity used by your P25 transmissions.',
+    settingPanel('Radio identity', 'Identity shared by P25 and DMR transmissions.',
       field('Source / radio ID', numeric('sourceId', 1, 16777215, 'Digital source radio ID'), '1–16777215. Confirm the ID appropriate for your network.'),
-      field('Digital microphone gain · dB', numeric('micGainDb', 0, 42, 'Digital microphone gain dB'), '0–42 dB for P25 and DMR. Analog FM uses its native microphone gain.')),
-    settingPanel('Display & keypad', 'Independent light timers, without stopping reception.',
-      field('Screen backlight · seconds', numeric('screenSeconds', 0, 600, 'Screen backlight timeout seconds'), '0 = always on. Allowed range: 0–600 seconds.'),
-      field('Keypad light · seconds', numeric('keypadSeconds', 0, 600, 'Keypad light timeout seconds'), '0 = always on. The first key press wakes a dark screen.')),
-    settingPanel('Starting context', 'These selections are saved with the codeplug.',
-      field('Active VFO context', select([[0, 'A'], [1, 'B']], settings.activeVfo, update('activeVfo'))),
-      field('Context A uses', select(choices(0), settings.selectionA, update('selectionA'))),
-      field('Context B uses', select(choices(1), settings.selectionB, update('selectionB'))),
-      field('Selected scan list', select([0, 1, 2, 3].map(i => [i, `List ${i + 1}`]), settings.scanList, update('scanList')))),
-    h('section', { class: 'panel' }, h('div', { class: 'panel-heading' }, h('div', {}, h('h2', {}, 'Transmit behavior'),
-      h('p', {}, 'Normal radio operation, with an optional owner inhibit.'))),
-      h('div', { class: 'panel-body' }, check('Inhibit all transmission', settings.txInhibit, update('txInhibit')),
-        h('p', { class: 'settings-note' }, 'When unchecked, normal PTT operation is available. Per-channel receive-only settings still apply. The held-PTT boot guard and 30-second call limit remain active.'),
-        h('p', { class: 'settings-note' }, 'The radio has one RF receiver. VFO A/B are independent profiles, not simultaneous receivers.'))));
+      field('Digital microphone gain · dB', numeric('micGainDb', 0, 42, 'Digital microphone gain dB'), '0–42 dB, shared by P25 and DMR. Analog FM uses its native microphone gain.')),
+    settingPanel('Starting mode & side', 'Frequency uses an editable VFO; Channel recalls a saved memory.',
+      field('Active side', select([[0, 'A'], [1, 'B']], settings.activeVfo, update('activeVfo'))),
+      field('Side A starts in', select(choices(0), settings.selectionA, update('selectionA'))),
+      field('Side B starts in', select(choices(1), settings.selectionB, update('selectionB'))),
+      ...(expanded() ? ['A', 'B'].map(side => field(`Side ${side} zone`, select([[0, 'All channels'], ...S.model.zones.flatMap((zone, i) => zone ? [[i + 1, `${i + 1} · ${zone.name}`]] : [])], settings[`zone${side}`], update(`zone${side}`)))) : []),
+      field('Selected scan list', select(Array.from({length: expanded() ? 16 : 4}, (_, i) => [i, `${i + 1} · ${S.model.scanLists?.[i]?.name || 'List ' + (i + 1)}`]), settings.scanList, update('scanList')))));
+}
+function functionsView() {
+  const settings = S.model.settings;
+  const update = key => event => change('Edit radio functions', () => {
+    settings[key] = event.target.type === 'checkbox' ? event.target.checked : Number(event.target.value);
+  });
+  const numeric = (key, min, max, label, fallback = 0) => input(settings[key] || fallback, update(key),
+    { type: 'number', min, max, step: 1, 'aria-label': label });
+  const buttonFields = [['p1Action', 'P1', 'Frequency / Channel'], ['p2Action', 'P2', 'Radio status'],
+    ['sk1Action', 'SK1', 'FM broadcast'], ['sk2Action', 'SK2', 'Switch A / B']];
+  return h('div', {},
+    S.client && S.client.protocolVersion < 3 ? h('div', { class: 'banner warning' }, icon('info', 19),
+      'The connected firmware supports the earlier codeplug format. New power and function settings can be saved locally; writing them requires protocol 3 firmware.') : null,
+    h('div', { class: 'settings-grid' },
+      h('section', { class: 'panel' }, h('div', { class: 'panel-heading' }, h('div', {},
+        h('h2', {}, 'Transmit'), h('p', {}, 'Set the call timeout and optional owner inhibit.'))),
+        h('div', { class: 'panel-body' }, h('div', { class: 'field-grid' },
+          field('Time-out timer · seconds', numeric('totSeconds', 15, 600, 'Transmit timeout seconds', 30),
+            '15–600 seconds. The default is 30 seconds; each new PTT press starts a new timer.', true)),
+          check('Inhibit all transmission', settings.txInhibit, update('txInhibit')),
+          h('p', { class: 'settings-note' }, 'Power is saved per channel and VFO in its editor. Per-channel receive-only settings and the held-PTT startup guard still apply.'),
+          button('Use default timeout', () => change('Restore default timeout', () => { settings.totSeconds = 0; }), { small: true }))),
+      settingPanel('Programmable buttons', 'Choose everyday shortcuts independently for each button.',
+        buttonFields.map(([key, label, fallback]) => field(label,
+          select(BUTTON_ACTIONS.map((action, index) => [index, index === 0 ? `Default · ${fallback}` : action]),
+            settings[key], update(key), { 'aria-label': `${label} button action` }))),
+        h('p', { class: 'function-help' }, 'Assign Frequency / Channel to SK1 or SK2 to switch modes. These are the side keys below PTT. Keypad lock remains available with OK + *; PTT is not locked.')),
+      h('section', { class: 'panel' }, h('div', { class: 'panel-heading' }, h('div', {},
+        h('h2', {}, 'FM broadcast'), h('p', {}, 'A separate receive-only broadcast tuner.'))),
+        h('div', { class: 'panel-body' }, h('div', { class: 'field-grid' },
+          field('FM broadcast frequency · MHz', input(((settings.broadcastKHz || 87500) / 1000).toFixed(3), event => {
+            change('Edit FM broadcast frequency', () => { settings.broadcastKHz = Number((Number(event.target.value) * 1000).toFixed(6)); });
+          }, { type: 'number', min: 65, max: 108, step: 0.05, 'aria-label': 'FM broadcast frequency MHz' }),
+          '65–108 MHz in 0.05-MHz steps. Default: 87.500 MHz. Assign FM broadcast to a button to open the tuner.', true)),
+          button('Use default frequency', () => change('Restore FM broadcast default', () => { settings.broadcastKHz = 0; }), { small: true }),
+          h('p', { class: 'settings-note' }, 'Broadcast reception is separate from two-way FM channels. PTT does not transmit broadcast audio.'))),
+      settingPanel('Display & keypad', 'Independent light timers; receiving a call wakes the screen.',
+        field('Screen backlight · seconds', numeric('screenSeconds', 0, 600, 'Screen backlight timeout seconds'), '0 = always on. Allowed range: 0–600 seconds.'),
+        field('Keypad light · seconds', numeric('keypadSeconds', 0, 600, 'Keypad light timeout seconds'), '0 = always on. The first key press wakes a dark screen.'))));
 }
 function settingPanel(title, subtitle, ...fields) {
   return h('section', { class: 'panel' }, h('div', { class: 'panel-heading' }, h('div', {}, h('h2', {}, title), h('p', {}, subtitle))),
@@ -590,7 +769,7 @@ async function newFile() {
 }
 async function loadDemo() {
   if (!await canReplace()) return;
-  const demo = createDefaultModel();
+  const demo = createDefaultModel(3);
   demo.channels[0] = { ...defaultChannel('P25 SIMPLEX'), rxHz: 145700000, txHz: 145700000, talkgroup: 10, scanLists: [0] };
   demo.channels[1] = { ...defaultChannel('UHF P25'), rxHz: 440075000, txHz: 440075000, filter: 'NAC', scanLists: [0, 1] };
   demo.channels[2] = { ...defaultChannel('VHF CALL'), mode: 'NFM', rxHz: 146520000, txHz: 146520000, scanLists: [1] };
@@ -598,7 +777,7 @@ async function loadDemo() {
     txTone: { type: 'ctcss', value: 1000 }, scanLists: [1] };
   demo.vfos[0] = { ...defaultChannel('VFO A'), talkgroup: 10 };
   demo.vfos[1] = { ...defaultChannel('VFO B'), rxHz: 440075000, txHz: 440075000 };
-  load(demo, 'Example codeplug', 'demo');
+  load(upgradeModel(demo), 'Example codeplug', 'demo');
   say('Example channels are for exploring the editor. Review frequencies, tones and your radio ID before any upload.');
 }
 async function openSelectedFile(event) {
@@ -678,7 +857,7 @@ async function readRadio() {
     if (problemsFor(model).length) throw new Error('The radio returned an invalid codeplug. No write baseline was accepted.');
     S.baseline = { payload: new Uint8Array(result.payload), revision: result.revision, crc: result.crc };
     load(model, 'DM32 radio codeplug', 'radio');
-    S.notice = { message: `Read complete. Revision ${result.revision}; all 35 records checked. You can now edit and review changes.`, error: false };
+    S.notice = { message: `Read complete. Revision ${result.revision}; all ${result.payload.length / 32} records checked. You can now edit and review changes.`, error: false };
   } catch (error) {
     S.baseline = null;
     S.notice = { message: `Read failed: ${error.message || error} Your working edits are retained. Read the radio again before writing.`, error: true };
@@ -697,6 +876,7 @@ function channelValue(channel, key) {
   if (key === 'rxOnly') return value ? 'On · receive only' : 'Off · transmit allowed';
   if (key === 'scanLists') return value.length ? value.map(index => `List ${index + 1}`).join(', ') : 'None';
   if (key === 'squelch') return value === 0 ? 'Open (0)' : `Level ${value}`;
+  if (key === 'powerLevel') return POWER_LEVELS[value];
   if (key === 'txTone' || key === 'rxTone') return value.type === 'none' ? 'None' : value.type === 'ctcss' ?
     `${toneText(value)} Hz CTCSS` : `${toneText(value)} DCS${value.type === 'dcs-inv' ? ' inverted' : ''}`;
   return String(value);
@@ -705,14 +885,17 @@ function settingValue(model, key) {
   const value = model.settings[key];
   if (key === 'micGainDb') return `${value} dB`;
   if (key === 'screenSeconds' || key === 'keypadSeconds') return value ? `${value} seconds` : 'Always on';
-  if (key === 'activeVfo') return `Context ${value ? 'B' : 'A'}`;
+  if (key === 'activeVfo') return `Side ${value ? 'B' : 'A'}`;
   if (key === 'selectionA' || key === 'selectionB') {
-    if (!value) return `VFO ${key === 'selectionA' ? 'A' : 'B'}`;
+    if (!value) return `Frequency · VFO ${key === 'selectionA' ? 'A' : 'B'}`;
     const name = model.channels[value - 1]?.name;
-    return `Memory ${String(value).padStart(2, '0')}${name ? ` · ${name}` : ''}`;
+    return `Channel ${String(value).padStart(2, '0')}${name ? ` · ${name}` : ''}`;
   }
   if (key === 'scanList') return `List ${value + 1}`;
   if (key === 'txInhibit') return value ? 'Inhibited' : 'PTT enabled';
+  if (key === 'totSeconds') return `${value || 30} seconds${value === 0 ? ' (default)' : ''}`;
+  if (key === 'broadcastKHz') return `${((value || 87500) / 1000).toFixed(3)} MHz${value === 0 ? ' (default)' : ''}`;
+  if (['p1Action', 'p2Action', 'sk1Action', 'sk2Action'].includes(key)) return BUTTON_ACTIONS[value];
   return String(value);
 }
 function diffItems(original, current) {
@@ -724,7 +907,7 @@ function diffItems(original, current) {
       const label = table === 'channels' ? `Memory ${i + 1}` : `VFO ${i ? 'B' : 'A'}`;
       const kind = !before ? 'Add' : !after ? 'Clear' : 'Update';
       const fieldLabels = { rxHz: 'RX frequency', txHz: 'TX frequency', rxOnly: 'Receive only', scanLists: 'Scan membership',
-        txTone: 'TX tone', rxTone: 'RX tone', talkgroup: 'Talkgroup', nac: 'NAC', filter: 'Receive filter', destinationId: 'Destination ID', colorCode: 'Color code', timeslot: 'Timeslot', privateCall: 'Private call', repeater: 'Repeater / hotspot', name: 'Name', mode: 'Mode', squelch: 'Squelch' };
+        txTone: 'TX tone', rxTone: 'RX tone', talkgroup: 'Talkgroup', nac: 'NAC', filter: 'Receive filter', destinationId: 'Destination ID', colorCode: 'Color code', timeslot: 'Timeslot', privateCall: 'Private call', repeater: 'Repeater / hotspot', name: 'Name', mode: 'Mode', squelch: 'Squelch', powerLevel: 'Transmit power' };
       const changed = before && after ? Object.keys(after).filter(key => signature(before[key]) !== signature(after[key]))
         .map(key => `${fieldLabels[key] || key}: ${channelValue(before, key)} → ${channelValue(after, key)}`) :
         [after ? `${after.name || 'Unnamed'} · ${fmtFrequency(after.rxHz)} MHz · ${after.mode}` : before?.name || 'Unnamed'];
@@ -732,10 +915,22 @@ function diffItems(original, current) {
     }
   }
   const labels = { sourceId: 'Radio ID', micGainDb: 'Digital mic gain (dB)', screenSeconds: 'Screen timeout (seconds)', keypadSeconds: 'Keypad timeout (seconds)',
-    activeVfo: 'Active context', selectionA: 'Context A selection', selectionB: 'Context B selection', scanList: 'Selected scan list', txInhibit: 'TX inhibit' };
+    activeVfo: 'Active side', selectionA: 'Side A starting mode', selectionB: 'Side B starting mode', scanList: 'Selected scan list', txInhibit: 'TX inhibit',
+    totSeconds: 'Transmit timeout', p1Action: 'P1 button', p2Action: 'P2 button', sk1Action: 'SK1 button', sk2Action: 'SK2 button', broadcastKHz: 'FM broadcast frequency' };
   for (const key of Object.keys(current.settings)) if (signature(original.settings[key]) !== signature(current.settings[key]))
     entries.push({ title: labels[key] || key, details: [`${settingValue(original, key)} → ${settingValue(current, key)}`] });
+  for (const table of ['zones', 'scanLists']) for (let i = 0; i < (current[table]?.length ?? 0); i++) {
+    if (signature(original[table]?.[i]) !== signature(current[table][i])) entries.push({title: `${table === 'zones' ? 'Zone' : 'Scan list'} ${i + 1}`, details: [`Before: ${collectionSummary(table, original[table]?.[i])}`, `After: ${collectionSummary(table, current[table][i])}`]});
+  }
+  if (modelVersion(original) !== modelVersion(current)) entries.unshift({title: 'Explicit V4 codeplug upgrade', details: ['256 channels, 16 zones and 16 independent scan lists']});
   return entries;
+}
+function collectionSummary(table, item) {
+  if (!item) return 'Unused';
+  const channels = `Channels ${item.channels.join(', ') || 'none'}`;
+  if (table === 'zones') return `${item.name} · ${channels}`;
+  const reply = item.reply === 'fixed' ? `Fixed CH${item.replyChannel}` : item.reply === 'last-heard' ? 'Last heard' : 'Selected / base';
+  return `${item.name} · ${item.type === 'p25-tg' ? `TG SCAN · base CH${item.baseChannel} · TGs ${item.talkgroups.join(', ') || 'none'}` : `CH SCAN · ${channels}`} · Reply ${reply} · Dwell ${item.dwellMs} ms · Hold ${item.holdMs} ms`;
 }
 async function reviewWrite() {
   if (S.busy || !connected() || !S.baseline || problems().length) return;

@@ -1,36 +1,17 @@
 # Maintaining beta packages
 
-The initial package is prepared for owner review. No initial commit, tag or
-GitHub release was created during preparation. The owner will add collaborators.
+The repository is published privately; the owner adds collaborators. Preserve previous release directories/qualification scope. Current: **v0.2.0-beta.1 / 2e0f18a**.
 
-## First publication
+Checked-in applications exclude the proprietary codec. Never commit/attach generated `build/` packages, owner backups, contacts or calibration. Testers prepare their own complete updates via [FLASHING.md](FLASHING.md).
 
-1. Review the files, flashing guide, known issues and native-codec restriction.
-2. Obtain the owner's requested approval **before making the initial commit**.
-3. Commit and push the approved contents to the private repository.
-4. Let the validation workflow pass. Tag/publish a prerelease only when the
-   owner chooses to distribute that beta; creating the repository is separate.
+## Adding a release
 
-The checked-in application deliberately has no proprietary native codec. Never
-attach an owner's generated `build/` package, backup, contacts or calibration to
-a repository, issue or release. A collaborator prepares their own complete image
-locally following [FLASHING.md](FLASHING.md).
-
-## Adding another firmware
-
-1. Select the exact source revision and successful target/host build evidence.
-2. Add a new `firmware/<version>/` directory; retain the previous version.
-3. Include the codec-free application and a `release.json` with its exact bytes,
-   SHA-256, source revision, upstream pins and qualification limits.
-4. Add the matching project source archive, any changed dependency source and
-   notices. Update [SOURCE.md](SOURCE.md) and its source manifest/checksums.
-5. Review native-codec compatibility before changing the qualified hashes in
-   the local package builder. A codec recognized upstream is not automatically
-   qualified with this application's native host.
-6. Update release notes, known issues and the default release selected by the
-   preparation tool. Preserve earlier manifests and evidence of their scope.
-7. Update root `SHA256SUMS` for all applications, release manifests and source
-   archives. Run the checks below before publication.
+1. Select an exact source revision and passing host/processor/package evidence.
+2. Add `firmware/<version>/` with codec-free application, README and `release.json`: bytes/hash, build/source IDs, pins and qualification limits. Keep older versions.
+3. Include matching project/dependency source/notices; update [SOURCE.md](SOURCE.md), its manifest and root checksums.
+4. Review exact codec hashes/maps. Upstream recognition alone is insufficient. Separate offline equivalence/layout checks from physical qualification; preserve older releases' narrower gates.
+5. Update default preparation release, notes, issues, quick start and CPS. Private output is versioned; never overwrite older packages. Leave installed hardware unchanged unless flashing is requested.
+6. Check source/distribution consistency and privacy, then run validation and commit/push the authorized changes. A GitHub tag/prerelease is separate; documentation must not claim one unless it exists.
 
 ## Local checks
 
@@ -38,13 +19,11 @@ locally following [FLASHING.md](FLASHING.md).
 python -m pip install -r requirements.txt
 python tools/check-release.py
 python -m unittest discover -s tests -p "test_beta_tools*.py" -v
-node --test cps/tests/model.test.js cps/tests/transport.test.js
+node --test cps/tests/*.test.js
 ```
 
-These checks do not open a serial port. They validate distribution integrity,
-host protocol behavior and refusal paths; they do not qualify a new firmware on
-hardware. Record hardware results separately without committing private captures.
+These checks open no serial port. They cover integrity, codec/installer refusal paths and CPS host behavior, not new hardware qualification. Record physical results separately without committing private captures.
 
-Rebuilding source uses a C-SKY toolchain and pinned dependencies, as explained
-in [SOURCE.md](SOURCE.md). The beta repository's validation workflow does not
-rebuild firmware or merge a codec.
+Review fresh installation and **existing sealed backup** paths. Returning testers must not need another original backup, stock upgrade, manual codec choice or compiler. Every real update still needs a fresh preservation read and independent postflash readback. Check `--help`, offline plan, exact errors and safe repeat preparation.
+
+Hosted CPS: [DM32 Studio](https://speexvocon.github.io/DM32-Studio/). Match the bundled copy to its declared revision and verify published hashes. It supports legacy geometry without silently truncating V4. Rebuilding needs the pinned C-SKY toolchain/dependencies in [SOURCE.md](SOURCE.md); beta CI does not rebuild firmware or merge a codec.

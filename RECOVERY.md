@@ -4,7 +4,13 @@ Use the complete, sealed backup made from **this same physical radio** before
 installing the beta. The recovery helper restores its saved application and
 native codec. It does not replace the bootloader or write external data flash.
 
-## Restore your original application
+## Roll back to an earlier beta
+
+Keep the full JSON exported before upgrading. Prepare/install the earlier release using its explicit `--release firmware/<version>/release.json` and that version's `package.json`, then independently verify it using [FLASHING.md](FLASHING.md). Close CPS before flashing. Earlier release folders remain available; v0.1.0 retains its original NRF/fanti-only codec contract.
+
+Older firmware cannot read V4's extra memories, zones and scan records. Its legacy fallback may be stale. After restoring a compatible earlier beta, use DM32 Studio to read the radio and write the saved older-format JSON; never force or truncate a V4 file. New V4-only data has no lossless older-format conversion.
+
+## Restore your original stock application
 
 Close CPS and serial sessions. Use a charged battery and keep the same radio and
 cable connected. From PowerShell in this repository, with your actual values:
@@ -39,7 +45,7 @@ The helper flashes `restore-application.bin`: bytes from program offset `0xC000`
 through the end of flash. It deliberately excludes the bootloader. **Never pass
 the complete 1 MiB `program.bin` as an application image.**
 
-After completion, cold-restart normally with PTT released. Original firmware
+After completion, perform the readback below if practical, then cold-restart normally with PTT released. Original firmware
 should return. Ordinary settings or channels may need reloading with the
 appropriate original CPS if you changed them. The beta's retained settings are
 separate from the stock codeplug; restoring the application is not a data-flash restore.
@@ -82,5 +88,6 @@ further writes; a separate service-tool/programmer procedure would need validati
 
 The underlying factory-update and readback procedure passed on the development
 DM32 using the development tools. These portable beta wrappers have offline
-host-test coverage and reproduce that installed package exactly, but have not
-yet been used for a physical flash or complete stock restore on a second radio.
+host-test coverage. The current 2e0f18a/V4 package and additional codec profiles
+have offline build/package validation, not a physical installation pass. A complete
+stock restore on a second radio has not been qualified.

@@ -20,4 +20,4 @@ jobs:
       - name: Exercise package refusal paths and offline behavior
         run: python -m unittest discover -s tests -p 'test_beta_tools*.py' -v
       - name: Validate browser model and serial protocol without hardware
-        run: node --test cps/tests/model.test.js cps/tests/transport.test.js
+        run: node --test cps/tests/*.test.js

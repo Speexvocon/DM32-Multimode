@@ -38,6 +38,8 @@ def checksum_file(path):
 
 
 def main():
+    sys.path.insert(0, str(ROOT / "tools"))
+    import beta_tools
     releases = sorted((ROOT / "firmware").glob("*/release.json"))
     require(bool(releases), "No release manifest")
     root_checksums = checksum_file(ROOT / "SHA256SUMS")
@@ -50,6 +52,18 @@ def main():
         require(release.get("schema") == "dm32-multimode-release/1", "Unknown release schema")
         require(release.get("board") == "dm32", "Wrong release board")
         require(re.fullmatch(r"[0-9a-f]{40}", release.get("source_commit", "")), "Missing exact source commit")
+        require(path.parent.name == "v" + release.get("version", ""), "Release directory/version mismatch")
+        require(release.get("firmware_display_id") == release["source_commit"][:7], "Firmware display/source mismatch")
+        supported_codecs = beta_tools.release_supported_codecs(release)
+        if "supported_native_codecs" in release:
+            require(release.get("codeplug_geometry") == {
+                "version": 4, "channels": 256, "vfos": 2, "records": 387,
+                "zones": 16, "scan_lists": 16, "p25_talkgroups_per_list": 64,
+            }, "Expanded release codeplug geometry mismatch")
+            cps = release.get("cps", {})
+            require(cps.get("url") == "https://speexvocon.github.io/DM32-Studio/"
+                    and cps.get("source_commit") == release["source_commit"],
+                    "Hosted CPS does not match expanded firmware source")
         app = release["application"]
         require(isinstance(app.get("file"), str) and Path(app["file"]).name == app["file"], "Unsafe application path")
         application = path.parent / app["file"]
@@ -69,7 +83,10 @@ def main():
             require("scripts/build-dm32.sh" in archive.namelist(), "Build script missing")
             require("research/references/nostar/imbe_vocoder/imbe_vocoder.cc" in archive.namelist(), "IMBE source missing")
         versions.append({"version": release["version"], "build": release["source_commit"][:7],
-                         "application_bytes": len(content)})
+                         "application_bytes": len(content), "supported_native_profiles": sorted(supported_codecs)})
+
+    require(beta_tools.DEFAULT_RELEASE in releases, "Default firmware release is missing")
+    require(len({row["version"] for row in versions}) == len(versions), "Duplicate firmware version")
 
     archives = sorted((ROOT / "source").glob("*.zip"))
     require(len(archives) >= 3, "Project and dependency source archives are required")
