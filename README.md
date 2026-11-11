@@ -1,6 +1,6 @@
 # DM32 Multimode
 
-Private beta firmware bringing conventional **P25 Phase 1, DMR and analog FM** into one DM32 interface.
+Beta firmware bringing conventional **P25 Phase 1, DMR and analog FM** into one DM32 interface.
 
 The current package is **v0.2.0-beta.2**, source `32f973f77e3b898c8e7bb7b6e3bb9fa64d865a25` (radio build `32f973f`). Previous v0.2.0-beta.1 and v0.1.0-beta.1 packages remain available. This is an early, non-mission-critical beta; read the version-specific qualification limits before installing.
 
