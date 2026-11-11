@@ -1,6 +1,6 @@
 # Install or update the DM32 Multimode beta
 
-For **DM-32UV / DM32 only**, using its USB serial programming cable. The current package is **v0.2.0-beta.1 / build 2e0f18a**. Its bare application is **not directly flashable**: the offline preparer adds the correct native codec from your own sealed backup.
+For **DM-32UV / DM32 only**, using its USB serial programming cable. The current package is **v0.2.0-beta.2 / build 32f973f**. Its bare application is **not directly flashable**: the offline preparer adds the correct native codec from your own sealed backup.
 
 Use a charged battery and a reliable cable. Close CPS and every other program using the COM port. Keep the normal USB serial driver: **no DFU or Zadig driver replacement is needed**. PTT stays released except when entering the updater as directed.
 
@@ -10,9 +10,11 @@ Use a charged battery and a reliable cable. Close CPS and every other program us
 2. Reuse the **sealed original backup from this same physical radio** and its original radio label. Do not replace it with a backup of the beta or use another radio's backup. There is no need to repeat the two-read backup process if that backup is already sealed and intact.
 3. Update/download this repository, then follow setup, offline preparation, flash and independent verification below. Every flash still makes a **fresh preservation read** to check bootloader and factory calibration.
 
-V0.2.0 reads saved V1-V3 settings without a boot-time migration write. The first explicit save publishes V4. The new CPS reads legacy firmware/files; use **Upgrade codeplug** to convert an older JSON draft before writing it to V4 firmware. Review the resulting zones/lists and keep the original JSON.
+Updating v0.2.0-beta.1 to beta.2 keeps the same V4 format and CPS. No conversion is required for an existing V4 codeplug.
 
-**Rollback:** earlier firmware cannot read V4's expanded memories/zones/lists. It may load a retained legacy fallback, which is not a complete copy of your latest configuration. To recover your earlier beta configuration, reinstall that version with its package, then write its saved compatible JSON using CPS. There is no lossless V4-to-legacy conversion. [Stock recovery](RECOVERY.md) restores your original application/codec separately.
+When coming from pre-V4 firmware, V0.2.0 reads saved V1-V3 settings without a boot-time migration write. The first explicit save publishes V4. The new CPS reads legacy firmware/files; use **Upgrade codeplug** to convert an older JSON draft before writing it to V4 firmware. Review the resulting zones/lists and keep the original JSON.
+
+**Rollback to pre-V4 firmware:** V0.2.0-beta.1 and beta.2 share V4. Earlier V1-V3 firmware cannot read V4's expanded memories/zones/lists. It may load a retained legacy fallback, which is not a complete copy of your latest configuration. To recover your earlier beta configuration, reinstall that version with its package, then write its saved compatible JSON using CPS. There is no lossless V4-to-legacy conversion. [Stock recovery](RECOVERY.md) restores your original application/codec separately.
 
 ## 1. Set up the tools
 
@@ -33,7 +35,7 @@ Set your own port, unique physical-radio label, backup path and release. The exa
 $radioPort = 'COM5'
 $radioLabel = 'my-dm32-serial'
 $backup = '.\backups\my-dm32-before-beta'
-$release = '.\firmware\v0.2.0-beta.1\release.json'
+$release = '.\firmware\v0.2.0-beta.2\release.json'
 ```
 
 Use letters, digits, `-` or `_` in the label. A returning user must keep the label already sealed with their backup. The label binds files together; it does not electronically authenticate the radio.
@@ -62,7 +64,7 @@ These commands open **no serial port**:
 & $python tools/radio-safety.py inspect --directory $backup --radio-label $radioLabel
 & $python tools/prepare-firmware.py codec-info --backup $backup --radio-label $radioLabel --release $release
 & $python tools/prepare-firmware.py --backup $backup --radio-label $radioLabel --release $release
-$package = ".\build\$radioLabel\0.2.0-beta.1\package.json"
+$package = ".\build\$radioLabel\0.2.0-beta.2\package.json"
 ```
 
 Codec selection is automatic. The tool accepts exact verified standard 046, standard 049, NRF/fanti 049 and HR046 contracts, checks code/tables and relocation layout, then validates the complete merged update. No separate stock download, manual selection or stock-049 upgrade is needed when your backup matches a profile. HR046 has offline layout/package checks; its voice behavior still needs physical feedback.
@@ -72,9 +74,9 @@ If detection refuses an unknown/damaged codec, retain the exact error and ask th
 Default private output for this release:
 
 ```text
-build/<radio-label>/0.2.0-beta.1/package.json
-build/<radio-label>/0.2.0-beta.1/application-codec.bin
-build/<radio-label>/0.2.0-beta.1/application-codec_BFUV32.bin
+build/<radio-label>/0.2.0-beta.2/package.json
+build/<radio-label>/0.2.0-beta.2/application-codec.bin
+build/<radio-label>/0.2.0-beta.2/application-codec_BFUV32.bin
 ```
 
 A repeat command safely reuses an already verified package for the same backup/release. Changed or invalid existing output is never overwritten. To make a separate package, use `--output .\build\my-new-package`, then set `$package` to its `package.json`. Use the generated manifest with the flash helper; never hand the bare application to an updater.
@@ -114,7 +116,7 @@ After transfer closes, switch **OFF**, remove the battery for ten seconds, refit
 
 At the reader's cue, turn **ON normally, no buttons**. Its independent read must match the complete prepared application/codec, original bootloader and factory calibration. Wait for **`VERIFIED`**. The readback and `verification.json` stay in a new check folder inside your backup. Ordinary settings may legitimately differ after a normal boot.
 
-When the reader closes, switch off, remove/refit the battery, then turn on normally with PTT released. The home screen should return; find build **2e0f18a** under **Tools → Diagnostics → Radio status**. Keep the package and verification result with your original backup.
+When the reader closes, switch off, remove/refit the battery, then turn on normally with PTT released. The home screen should return; find build **32f973f** under **Tools → Diagnostics → Radio status**. Keep the package and verification result with your original backup.
 
 ## 6. Configure and use
 

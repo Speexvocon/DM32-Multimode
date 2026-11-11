@@ -1,6 +1,6 @@
 # Maintaining beta packages
 
-The repository is published privately; the owner adds collaborators. Preserve previous release directories/qualification scope. Current: **v0.2.0-beta.1 / 2e0f18a**.
+The repository is published privately; the owner adds collaborators. Preserve previous release directories/qualification scope. Current: **v0.2.0-beta.2 / 32f973f**.
 
 Checked-in applications exclude the proprietary codec. Never commit/attach generated `build/` packages, owner backups, contacts or calibration. Testers prepare their own complete updates via [FLASHING.md](FLASHING.md).
 

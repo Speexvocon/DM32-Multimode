@@ -6,7 +6,7 @@ headers; the license text copies below are supplied for convenience.
 
 | Component | Revision / source | Applicable notices |
 | --- | --- | --- |
-| Project unified P25/DMR/FM firmware and browser CPS | Development source `05c496514bf9efe9bbb1a8f219b284228c814a60`; corresponding project ZIP in `source/` | Many firmware, generator and CPS files explicitly declare `GPL-3.0-or-later`. Follow each file's notice; the original tree has no blanket project license. [GPLv3](licenses/GPL-3.0.txt) |
+| Project unified P25/DMR/FM firmware and browser CPS | Current source `32f973f77e3b898c8e7bb7b6e3bb9fa64d865a25`; each retained firmware release has its matching project ZIP and exact revision in `source/SOURCE_MANIFEST.json` | Many firmware, generator and CPS files explicitly declare `GPL-3.0-or-later`. Follow each file's notice; the original tree has no blanket project license. [GPLv3](licenses/GPL-3.0.txt) |
 | Fixed-point IMBE vocoder | `nostar/imbe_vocoder`, `03423cb00b8e9ba1be164493e8b98b5bd7c1508c`; included in project ZIP | GPL-3.0-or-later source notices; Pavel Yazev and other upstream copyright notices retained. [GPLv3](licenses/GPL-3.0.txt) |
 | RadioFoundry HAL, drivers, native DMR call/FEC/audio stack, board/linker/startup files and tools | `RadioFoundry/RadioFoundry`, `75c46ea46d5ebf6406f5b4ce0bbe2443b7649f91`; complete tracked source ZIP | MIT, Copyright 2026 The RadioFoundry Authors; [notice](licenses/RadioFoundry-MIT.txt) |
 | FreeRTOS Kernel | `3a22924e0a9ddbbc8b0758881c33b3422a5cc20d`; separate complete source ZIP | MIT; preserve the Kernel's [notice](licenses/FreeRTOS-MIT.txt) and any individual port notices in the archive |

@@ -1,3 +1,34 @@
+# v0.2.0-beta.2 — preserve DMR audio after P25
+
+Firmware source: `32f973f77e3b898c8e7bb7b6e3bb9fa64d865a25`; radio build **32f973f**. Previous release packages remain unchanged.
+
+## Correction
+
+A persistent P25 speaker worker could disable the shared PCM interrupt/output after P25 stopped, interrupting DMR playback even when DMR frames decoded correctly. The stopped worker now leaves that hardware alone. This fixes the shared output ownership; the vocoder, air framing and CPS format are unchanged.
+
+Use the existing [DM32 Studio CPS](https://speexvocon.github.io/DM32-Studio/). V0.2.0-beta.1 and beta.2 share V4: 256 memories, 16 zones, 16 scan lists and up to 64 TGs per P25 list. There is no conversion or CPS update between these two releases. Keep an exported JSON backup and reuse your sealed original backup for preparation; see [FLASHING.md](FLASHING.md).
+
+## Exact-build validation
+
+- Host CI **43106099351** and processor CI **43106099505** passed at the exact source revision; the shared-output transition has host regression coverage, including the P25 scan transition.
+- Application **302,868 bytes** (+12 from beta.1). Linked RAM remains **162,632 / 211,456 bytes**, with **48,824 bytes** headroom.
+- Installed and independently read back on the development radio. Application/native-codec matching and bootloader, calibration and retained-settings checks passed; normal startup returned.
+- One controlled hardware transition from **P25 LISTENING → Channel / Modulation → DMR CC1/TS2**, without power cycling, played a full steady nominal five-second hotspot tone on TG98638.
+
+| DMR observation | Result |
+| --- | ---: |
+| Voice frames | 252 / 252 |
+| PCM samples | 40,320 / 40,320 |
+| PCM interrupts | 504 |
+| Maximum interrupt gap | 10,031 µs |
+| Lost / concealed frames | 0 / 0 |
+| Queue starvation / overflow | 0 / 0 |
+| Reset | 0 |
+
+This is **one local tone/transition pass using the NRF/fanti 049 native codec**, not extended qualification or an RF BER measurement. P25 scan was **not running** in this hardware test; its transition is covered by host tests only. The test began with the retained existing four-channel configuration and included normal menu saves; it does not qualify full 256-channel/zone/list capacity. Other codec profiles retain their existing offline checks, without new physical voice/RF evidence. Two-way FM, repeater/split operation and broader hardware/band coverage remain as described in [KNOWN_ISSUES.md](KNOWN_ISSUES.md).
+
+---
+
 # v0.2.0-beta.1 — expanded codeplug and installer compatibility
 
 Firmware source: `2e0f18ad2d47a20b78d00c0702fbe2307dddfd09`; radio build **2e0f18a**. The package version labels this exact application; it is not a rebuilt firmware version string. Previous v0.1.0-beta.1 is retained.

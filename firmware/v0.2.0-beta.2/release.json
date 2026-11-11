@@ -1,0 +1,203 @@
+{
+  "schema": "dm32-multimode-release/1",
+  "version": "0.2.0-beta.2",
+  "board": "dm32",
+  "channel": "private-beta",
+  "source_commit": "32f973f77e3b898c8e7bb7b6e3bb9fa64d865a25",
+  "source_description": "Exact source-validated V4 unified build with P25-to-DMR speaker ownership correction. Host CI, target/package checks, owner installation, independent readback and one local known-tone mode-transition check passed. Qualification scope is recorded separately for each codec profile.",
+  "firmware_display_id": "32f973f",
+  "application": {
+    "file": "dm32-multimode-0.2.0-beta.2-32f973f.application.bin",
+    "bytes": 302868,
+    "sha256": "b165b351578f457f432d82c40b9a589cc83e10c8401b235a6a19397480829ad0",
+    "load_address": "0x0300C000",
+    "contains_native_codec": false,
+    "directly_flashable": false
+  },
+  "upstream": {
+    "radiofoundry_commit": "75c46ea46d5ebf6406f5b4ce0bbe2443b7649f91",
+    "freertos_commit": "3a22924e0a9ddbbc8b0758881c33b3422a5cc20d"
+  },
+  "supported_native_codecs": [
+    {
+      "id": "dm32-046",
+      "name": "Standard 046 (01.01 / 01.02)",
+      "code_sha256": "9720ec0c923ac32bc909d06a0d4c414c6a1e80c3eaa6e9c5b5df0d0bf5ff5665",
+      "tables_sha256": "10684c33e3cc8238376e455fd96b1c15a863a864420dbbaa4589803c4eb0b0e1",
+      "code_bytes": 83456,
+      "tables_bytes": 12152,
+      "run": 93404,
+      "tables_ram": 402656936,
+      "stock_tag": 46,
+      "entries": {
+        "decode": 0,
+        "encode": 608,
+        "dec_init": 180,
+        "dec_set": 132,
+        "enc_init": 788,
+        "enc_set": 740,
+        "fec_init": 7160
+      },
+      "relocations": [
+        6868,
+        6872,
+        11916
+      ],
+      "slot_bytes": 95748
+    },
+    {
+      "id": "dm32-049",
+      "name": "Standard 049",
+      "code_sha256": "355ca9061979eceb2991826da9d39c95b4a9d40466245923d541a6556ceeafd1",
+      "tables_sha256": "10684c33e3cc8238376e455fd96b1c15a863a864420dbbaa4589803c4eb0b0e1",
+      "code_bytes": 83456,
+      "tables_bytes": 12152,
+      "run": 93404,
+      "tables_ram": 402656936,
+      "stock_tag": 49,
+      "entries": {
+        "decode": 0,
+        "encode": 608,
+        "dec_init": 180,
+        "dec_set": 132,
+        "enc_init": 788,
+        "enc_set": 740,
+        "fec_init": 7160
+      },
+      "relocations": [
+        6868,
+        6872,
+        11916
+      ],
+      "slot_bytes": 95748
+    },
+    {
+      "id": "dm32-nrf-049",
+      "name": "NRF / fanti 049",
+      "code_sha256": "cd0820a18df0b53bf011907a02d5b649bfbccf030c3d0432f4e363077d67a2c0",
+      "tables_sha256": "10684c33e3cc8238376e455fd96b1c15a863a864420dbbaa4589803c4eb0b0e1",
+      "code_bytes": 83456,
+      "tables_bytes": 12152,
+      "run": 93404,
+      "tables_ram": 402656944,
+      "stock_tag": 49,
+      "entries": {
+        "decode": 0,
+        "encode": 608,
+        "dec_init": 180,
+        "dec_set": 132,
+        "enc_init": 788,
+        "enc_set": 740,
+        "fec_init": 7160
+      },
+      "relocations": [
+        6868,
+        6872,
+        11916
+      ],
+      "slot_bytes": 95748
+    },
+    {
+      "id": "dm32-046hr",
+      "name": "HR Vocoder 046",
+      "code_sha256": "02743cf4b3d252b8764fe083fb808b00ab42f0f0ab76935e62ca59fd5c5e64fb",
+      "tables_sha256": "cd5a4d270f555cdbd586bca8de89e4e845789ed7aa2a2bb7414b6c3a270ef803",
+      "code_bytes": 82140,
+      "tables_bytes": 12152,
+      "run": 112696,
+      "tables_ram": 402656840,
+      "stock_tag": 46,
+      "entries": {
+        "decode": 0,
+        "encode": 608,
+        "dec_init": 180,
+        "dec_set": 132,
+        "enc_init": 788,
+        "enc_set": 740,
+        "fec_init": 7628
+      },
+      "relocations": [
+        7336,
+        7340,
+        12384
+      ],
+      "slot_bytes": 94432
+    }
+  ],
+  "native_codec_validation": {
+    "scope": "Offline preparation supports all four declared native contracts. The exact application was installed and tested on one owner radio using NRF/fanti 049; other native profiles have no new hardware qualification.",
+    "hardware_or_rf_qualification_for_this_release": true,
+    "required_source": "Tester own verified stock program-flash backup; never distributed in this repository.",
+    "unrecognized_contract": "Refuse preparation; do not guess firmware family from a version label.",
+    "hardware_qualified_profiles": [
+      "dm32-nrf-049"
+    ],
+    "offline_only_profiles": [
+      "dm32-046",
+      "dm32-049",
+      "dm32-046hr"
+    ]
+  },
+  "build_validation": {
+    "host_ci": 43106099351,
+    "target_ci": 43106099505,
+    "host_conclusion": "success",
+    "target_conclusion": "success",
+    "application_bytes": 302868,
+    "static_ram_bytes": 162632,
+    "static_ram_limit": 211456,
+    "static_ram_margin": 48824
+  },
+  "codeplug_geometry": {
+    "version": 4,
+    "channels": 256,
+    "vfos": 2,
+    "records": 387,
+    "zones": 16,
+    "scan_lists": 16,
+    "p25_talkgroups_per_list": 64
+  },
+  "cps": {
+    "url": "https://speexvocon.github.io/DM32-Studio/",
+    "source_commit": "32f973f77e3b898c8e7bb7b6e3bb9fa64d865a25",
+    "public_commit": "25453260847760b543410181287c5bff03c229b1",
+    "runtime_changed_since": false,
+    "compatibility": "Bundled and hosted CPS runtime is unchanged from beta.1 and supports this firmware; no new CPS deployment is required.",
+    "runtime_equivalent_to_source_commit": "2e0f18ad2d47a20b78d00c0702fbe2307dddfd09"
+  },
+  "distribution": {
+    "proprietary_codec_included": false,
+    "per_radio_backup_included": false,
+    "matching_source": "../../source/0.2.0-beta.2-project.zip"
+  },
+  "status": "Private beta repository package; no separate GitHub tag or release is claimed.",
+  "hardware_validation": {
+    "profile": "dm32-nrf-049",
+    "local_radio_count": 1,
+    "preservation_readback_passed": true,
+    "bootloader_codec_calibration_settings_preserved": true,
+    "transition": "P25 listening to DMR via Channel / Modulation without a power cycle",
+    "frequency_hz": 145700000,
+    "color_code": 1,
+    "timeslot": 2,
+    "received_talkgroup": 98638,
+    "user_observation": "Steady throughout",
+    "voice_frames_received": 252,
+    "voice_frames_played": 252,
+    "submitted_samples": 40320,
+    "consumed_samples": 40320,
+    "pcm_interrupts": 504,
+    "maximum_pcm_interrupt_gap_us": 10031,
+    "corrected_voice_bits": 1,
+    "voice_frames_lost": 0,
+    "concealed_frames": 0,
+    "speaker_overflow": 0,
+    "speaker_starvation": 0,
+    "resets": 0,
+    "limits": [
+      "One local known-tone mode transition; P25 scan was not running in this hardware check.",
+      "Scan-transition regression is covered by host tests, not a new physical scan test.",
+      "Not a calibrated RF BER/deviation, weak-signal, repeater or full 256-channel capacity qualification."
+    ]
+  }
+}

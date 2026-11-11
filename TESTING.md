@@ -2,6 +2,8 @@
 
 Use the radio normally within the [known scope](KNOWN_ISSUES.md). Repeated qualification is not required. One clear reproduction with a useful comparison is more valuable than many undocumented attempts.
 
+The current **v0.2.0-beta.2 / 32f973f** fixes DMR playback after switching from P25. One local ordinary LISTENING-to-DMR tone transition passed; a P25 scan-to-DMR transition is covered by host regression, not that hardware pass. Existing V4 codeplugs/CPS remain compatible.
+
 ## Useful first observations
 
 1. Confirm startup/build and your own saved channel/ID values. After a harmless edit, wait for SAVED and check retention on restart.
@@ -9,7 +11,7 @@ Use the radio normally within the [known scope](KNOWN_ISSUES.md). Repeated quali
 3. Check one short TX call and automatic RX return. For DMR record CC, slot, destination and direct/repeater.
 4. Try Frequency/Channel, encoder in the active zone, A/B, lock and lights. Keypad lock leaves PTT operational.
 5. For CPS, export initial JSON, review an edit, read back and check retention. V4's 256 channels/zones/lists are new hardware feedback areas.
-6. For scan, report Channel or P25 TG type, members/base, timing and reply policy. Note accepted/excluded TG behavior.
+6. For scan, report Channel or P25 TG type, members/base, timing and reply policy. Note accepted/excluded TG behavior. For mode-switch audio issues, include the previous mode, whether scan was running and whether a power cycle changed the result.
 
 These are optional areas, not an exhaustive test checklist. Do not transmit merely to exercise a feature without an appropriate local setup.
 

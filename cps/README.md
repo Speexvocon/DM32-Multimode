@@ -1,7 +1,8 @@
 # Browser CPS
 
 **[Open the hosted CPS](https://speexvocon.github.io/DM32-Studio/)** in desktop
-Chrome or Edge. This editor matches firmware source `2e0f18a`, supporting V4's
+Chrome or Edge. This unchanged editor comes from source `2e0f18a` and supports firmware
+v0.2.0-beta.1 and v0.2.0-beta.2 (`32f973f`), including V4's
 256 channels, 16 zones and 16 Channel/P25 TG scan lists. Legacy V1–V3 radios/files
 retain their original 32-channel format until an explicit working-copy upgrade.
 Expanded data is never silently truncated onto older firmware.

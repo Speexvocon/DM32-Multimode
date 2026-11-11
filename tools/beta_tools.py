@@ -10,7 +10,7 @@ import struct
 import radio_safety as safety
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_RELEASE = ROOT / "firmware/v0.2.0-beta.1/release.json"
+DEFAULT_RELEASE = ROOT / "firmware/v0.2.0-beta.2/release.json"
 QUALIFIED_CODE = "cd0820a18df0b53bf011907a02d5b649bfbccf030c3d0432f4e363077d67a2c0"
 QUALIFIED_TABLES = "10684c33e3cc8238376e455fd96b1c15a863a864420dbbaa4589803c4eb0b0e1"
 SLOT_OFFSET = 0xE8000 - safety.APP_START

@@ -1,8 +1,2100 @@
 {
   "schema": "dm32-beta-source-bundle/1",
-  "release": "0.2.0-beta.1",
-  "project_revision": "2e0f18ad2d47a20b78d00c0702fbe2307dddfd09",
+  "release": "0.2.0-beta.2",
+  "project_revision": "32f973f77e3b898c8e7bb7b6e3bb9fa64d865a25",
   "artifacts": [
+    {
+      "file": "0.2.0-beta.2-project.zip",
+      "upstream_url": "https://github.com/Speexvocon/dm32-p25",
+      "revision": "32f973f77e3b898c8e7bb7b6e3bb9fa64d865a25",
+      "git_tree": "b991c2074de427fc7650778721f4ef806fa86eaf",
+      "bytes": 780263,
+      "sha256": "89b8356de915998058a518bb9b9ff43bd4a7600461f6dbd5e97c9146833776e6",
+      "tracked_files": 334,
+      "selection": "Existing curated beta source selection plus production V4/broadcast headers and build-required tests; no analysis/captures/backups/downloads/native probe research",
+      "git_archive_line_ending_conversions": [],
+      "files": {
+        ".gitattributes": {
+          "bytes": 440,
+          "sha256": "5becb97c8d0491779828d9a11092719f123b19cb7ab1aeb95b17d8f61564b47a",
+          "git_blob": "d74761a0c39489c95976a11622e1c1bc075901e4",
+          "source_match": "exact Git blob"
+        },
+        ".github/workflows/dm32-firmware.yml": {
+          "bytes": 3699,
+          "sha256": "c292b49d041523d888bfc05859c6a34c686629b8264874cdafb3b2e8fe5f2e5c",
+          "git_blob": "5250f21ffb0e1ec6573bd3f698828cb6ceb1fe40",
+          "source_match": "exact Git blob"
+        },
+        ".github/workflows/host-codec.yml": {
+          "bytes": 5465,
+          "sha256": "52a02723710fbdb75b3e118eb11c38e797959aad5b388d65a40f83bc6f807192",
+          "git_blob": "24b23145d4e10b3210d4dec49ced8d53ea17a507",
+          "source_match": "exact Git blob"
+        },
+        ".gitignore": {
+          "bytes": 286,
+          "sha256": "17890c0cb43472cf5f4026b263a328530c61c3877f062a94054928fa5b397bb1",
+          "git_blob": "60441961f4935a14ac4a139d60b273c023675018",
+          "source_match": "exact Git blob"
+        },
+        "THIRD_PARTY.md": {
+          "bytes": 1658,
+          "sha256": "ba064dc0f531ceff840aca520205da99b6ad4dc1ffd876028f95247755100e7a",
+          "git_blob": "b2fac84c21041d03633be49b0716c811d932f6b9",
+          "source_match": "exact Git blob"
+        },
+        "docs/CPS_PROTOCOL.md": {
+          "bytes": 10706,
+          "sha256": "32e50157271f47a61d5cd425310ddd05644edeb37ebcb9789faba957b86d268d",
+          "git_blob": "69746c5829b2ff43ea4e9041845d2bd8593f66bb",
+          "source_match": "exact Git blob"
+        },
+        "fixtures/dmr-1031/call.bin": {
+          "bytes": 2838,
+          "sha256": "b159eec00cbcabd265d606cd30329f7176cd48a475e3ab61d802df692339509e",
+          "git_blob": "c0e47ffb35cf1bd6da7f3c20ef8783bb7376eed9",
+          "source_match": "exact Git blob"
+        },
+        "fixtures/dmr-1031/manifest.json": {
+          "bytes": 2332,
+          "sha256": "8431f3000afe68e60048f1ff001b304ce4637bf3a9371b99e840082318d6a96a",
+          "git_blob": "34c343b0484e649aa5db8f3c3e49496c93520dec",
+          "source_match": "exact Git blob"
+        },
+        "fixtures/dmr-1031/tg98638/call.bin": {
+          "bytes": 2838,
+          "sha256": "41d6a62d6e20013fa5aeae510a9730773d95c4c8906611c230e920544ace1757",
+          "git_blob": "6f352492d2a74198a53065e0655ad87167530549",
+          "source_match": "exact Git blob"
+        },
+        "fixtures/dmr-1031/tg98638/manifest.json": {
+          "bytes": 3303,
+          "sha256": "0796b20cb35e8022b1e70024e66cf32849ff3e3ef25d39faa5cde96eb86d0880",
+          "git_blob": "e9058d641ea279f25d339d62a75ce475808d470b",
+          "source_match": "exact Git blob"
+        },
+        "fixtures/p25-1011/README.md": {
+          "bytes": 2145,
+          "sha256": "d0aa51d43dfe0d1d3d57270a3812f913d5a49ebb77d662ef30633d0afba7261b",
+          "git_blob": "f6091507dfc0518430962d4ad32fb7d3131a6a4a",
+          "source_match": "exact Git blob"
+        },
+        "fixtures/p25-1011/audio-validation.json": {
+          "bytes": 173,
+          "sha256": "630a3bcf3e3b305557964c195568de8b0bfffcf0c429d20f92c18558cbd3c7ef",
+          "git_blob": "0f2888d3993f5a30f5a099b81b0cd8875e4d3908",
+          "source_match": "exact Git blob"
+        },
+        "fixtures/p25-1011/call.bin": {
+          "bytes": 12213,
+          "sha256": "d058dc3d06eaf3d249decb885466a3d35ed6d796993a653557e116e7741a4d06",
+          "git_blob": "2930ef98ed4e3c2905aefce6d2ebb9c3ac9e9853",
+          "source_match": "exact Git blob"
+        },
+        "fixtures/p25-1011/manifest.json": {
+          "bytes": 1544,
+          "sha256": "7ea335996baa11a6b1c2c1f5631ef50f4ffb2bd7c25b6ea8fff978161096242b",
+          "git_blob": "e13677aa8b22ac6e0f1252f5434b4776d8c00c2e",
+          "source_match": "exact Git blob"
+        },
+        "fixtures/p25-1011/p25_test_vectors.h": {
+          "bytes": 3894,
+          "sha256": "42f8b51f57f4124b3d9def12dfd7b5cf3c5614541bee354e1fe7c43e29c7c4b0",
+          "git_blob": "2a88684e89381fd823d5e55e250b6997ebeba77f",
+          "source_match": "exact Git blob"
+        },
+        "fixtures/p25-1011/tx-stream.bin": {
+          "bytes": 12453,
+          "sha256": "c26771901b571973e8740fc9a412834ec802d541de0d5f383d7e7a22efe456ec",
+          "git_blob": "a5f53df6d02c61d3112c6eb2c9251722b2a463a7",
+          "source_match": "exact Git blob"
+        },
+        "fixtures/p25-1011/voice-ldu-pair.bin": {
+          "bytes": 432,
+          "sha256": "91064a76b59ecaf7c301a73c34b6f90c451e487551c51c16134f62720284a497",
+          "git_blob": "59b7aa18adaecbe2bc89a6a6b26b37b33b411695",
+          "source_match": "exact Git blob"
+        },
+        "fixtures/p25-rx-qualification/damaged-ess.bin": {
+          "bytes": 6165,
+          "sha256": "7baa34d2f94f904dd8f7430c1d565fd811a045d911d0d536b7880930a6426d8e",
+          "git_blob": "eec64c596573449302bb9515c6487bbc99416c31",
+          "source_match": "exact Git blob"
+        },
+        "fixtures/p25-rx-qualification/damaged-hdu.bin": {
+          "bytes": 6165,
+          "sha256": "a5b6a968a94c3b978ff4a170278b1737735e992c0e1bf3718617348604f4ba8a",
+          "git_blob": "375160455f575edc3e6486c3d680bf66727c7ffc",
+          "source_match": "exact Git blob"
+        },
+        "fixtures/p25-rx-qualification/damaged-lc.bin": {
+          "bytes": 6165,
+          "sha256": "2aef0d87f968d2449f90e7b92563272b537f047de75550b90773a546a98edaeb",
+          "git_blob": "cc170a1ee5296cc94e5feada9be5e9602d10f08d",
+          "source_match": "exact Git blob"
+        },
+        "fixtures/p25-rx-qualification/encrypted-hdu.bin": {
+          "bytes": 6165,
+          "sha256": "50436bd6e166994cd5648b7a702e4edbd6d63eb5ae6d0d63614d6c2dd9f60fc5",
+          "git_blob": "29b08524003dd9ba9f36341cef3f46d1b6d43234",
+          "source_match": "exact Git blob"
+        },
+        "fixtures/p25-rx-qualification/late-entry.bin": {
+          "bytes": 6066,
+          "sha256": "9f3a6e8cb3835b628f84929aa0dccc2a1aef086ca60488c8012e8fb66ff771df",
+          "git_blob": "602b5e0cd1c7ba34ac29d20b641b6988154a52fc",
+          "source_match": "exact Git blob"
+        },
+        "fixtures/p25-rx-qualification/manifest.json": {
+          "bytes": 90294,
+          "sha256": "3f1b8e3be43d98b0c2cb85b03ae4e25953eeea3409069b27fafe6c83036e71af",
+          "git_blob": "ddd100df96138c319697d48c79b48ed668808b1f",
+          "source_match": "exact Git blob"
+        },
+        "fixtures/p25-rx-qualification/unsupported-lc.bin": {
+          "bytes": 6165,
+          "sha256": "42bebe17cab0153c0dd4b6db9fd9bfdd549416abf55caac9896d3dd746c473d8",
+          "git_blob": "ae56d380f31fd80925901be8738be7b3bd5fffcf",
+          "source_match": "exact Git blob"
+        },
+        "integrations/web-cps/README.md": {
+          "bytes": 11225,
+          "sha256": "e2477c8c8352f30afda00f0783ec8262506c8706d1a7d825bdce8726a396e874",
+          "git_blob": "5573eccd8fcee6e9d6a6f9257d3dfc0396bc1f12",
+          "source_match": "exact Git blob"
+        },
+        "integrations/web-cps/UPSTREAM.md": {
+          "bytes": 1587,
+          "sha256": "291820dcaa8711dffd12213d8ca597907c26e74a7c9c7ad93f4ce0c5b6dad663",
+          "git_blob": "e9c176fdeeb9d5e32f7930a74cce522df5d59a83",
+          "source_match": "exact Git blob"
+        },
+        "integrations/web-cps/app.js": {
+          "bytes": 74003,
+          "sha256": "e01bb24c3d818ba3d7eced4f4c229258a51c28f2d955b688899f88d62ea4aa5b",
+          "git_blob": "287eb5a125b20644869e870c0ac4d2dac80ee476",
+          "source_match": "exact Git blob"
+        },
+        "integrations/web-cps/index.html": {
+          "bytes": 860,
+          "sha256": "de1b90e7f5d289a86905c10e076c78f27f9f6f405714b83e5ff0b6c55ef766a7",
+          "git_blob": "9d1fccc6c2bef3b939d6b3f48841e23d6afaa0a5",
+          "source_match": "exact Git blob"
+        },
+        "integrations/web-cps/model.js": {
+          "bytes": 37538,
+          "sha256": "7967aa5733eb1f37feff315dc18d6bbb9187d7cec877fc7f708629d6a3ab08dd",
+          "git_blob": "00ce35e9789c1a1bdc1784558148558b5ce81663",
+          "source_match": "exact Git blob"
+        },
+        "integrations/web-cps/package.json": {
+          "bytes": 134,
+          "sha256": "cbe15385f1fd34376c75890119bd079b1bc609774f215ade938d694ea1a6d444",
+          "git_blob": "622b63c3090558ef4a15398f0b230f2efc952c5a",
+          "source_match": "exact Git blob"
+        },
+        "integrations/web-cps/styles.css": {
+          "bytes": 18697,
+          "sha256": "ad8b2a135bd3c54826e60db49ab17e3ea6de9aef0ee7c7fcfd933cd896aa7d3c",
+          "git_blob": "0ae13ed686f57e23a8840c39778595597ac412c5",
+          "source_match": "exact Git blob"
+        },
+        "integrations/web-cps/tests/browser_serial_fixture.js": {
+          "bytes": 7417,
+          "sha256": "c909a34653e409649ca6fff582a0e72a4abefeb976ca0b8c8e04c608abd65d46",
+          "git_blob": "0ef250891d39cc79b3f95ee50482c5142dc4acd6",
+          "source_match": "exact Git blob"
+        },
+        "integrations/web-cps/tests/expanded.test.js": {
+          "bytes": 7535,
+          "sha256": "414a295ad6df871eaaee13631c3a896bd02a7c25eb8df04b65c24ca7cc82af6b",
+          "git_blob": "4f90b84098e9786cae0037e4591ec4b3ad852442",
+          "source_match": "exact Git blob"
+        },
+        "integrations/web-cps/tests/firmware.test.js": {
+          "bytes": 7152,
+          "sha256": "aa36582afeca47de9fc837dd32c8b5f63be0805fa3e785c2fd73cacea2e5c487",
+          "git_blob": "0793ee90e11901c295af47a5289f29a1ae42acf7",
+          "source_match": "exact Git blob"
+        },
+        "integrations/web-cps/tests/model.test.js": {
+          "bytes": 23656,
+          "sha256": "d9dbfe412ad2fb24fe891beca61e09b061f69def7a019bf42447befad517c232",
+          "git_blob": "5c13c2ae46532999a8888a81ba7d58e80e336ed7",
+          "source_match": "exact Git blob"
+        },
+        "integrations/web-cps/tests/transport.test.js": {
+          "bytes": 25539,
+          "sha256": "d7d009fd5f33c91029786c6298c1fcca9d3bf235d8e600863238456c73bbd101",
+          "git_blob": "92d906ca7f2f340475db4fb168a76a689602d007",
+          "source_match": "exact Git blob"
+        },
+        "integrations/web-cps/transport.js": {
+          "bytes": 15542,
+          "sha256": "c8f6de10cfa11754d140f1588857c281a1509d0882bcd6eaed23479570a9be0d",
+          "git_blob": "951fd6e111b20c142417c750e10408a13d68149f",
+          "source_match": "exact Git blob"
+        },
+        "integrations/web-cps/vendor/LICENSE.RadioFoundry": {
+          "bytes": 1095,
+          "sha256": "9988da23b503eebd9b627eca5bea80742257eec657c2a6916a705a301de42f67",
+          "git_blob": "52026eece1fcf14fc763629cbcbdc1558195acff",
+          "source_match": "exact Git blob"
+        },
+        "integrations/web-cps/vendor/undo.js": {
+          "bytes": 1437,
+          "sha256": "034fd4a3439add324b0d1205fc0e840c9e2f2db31b64eebb5ec4874e9661b4ed",
+          "git_blob": "766d6f90b4098753c8d837ae6221d22bb6274a2e",
+          "source_match": "exact Git blob"
+        },
+        "requirements-bench.txt": {
+          "bytes": 14,
+          "sha256": "0b81718d1cbe8a7696e45a9388c9205272b5e345cd79d0cf1ccfb7a9fd1925e9",
+          "git_blob": "d0dfd58b57b68cf15ccf5fd94bc77ed735f03272",
+          "source_match": "exact Git blob"
+        },
+        "research/examples/imbe_roundtrip.cpp": {
+          "bytes": 2380,
+          "sha256": "b7f02354ec8686ea998657e2d6edcbaa294cde6ef8c6fc1ab1a4f6f11fb18544",
+          "git_blob": "e6dd8e264044c6b6d67cf776697fc6709476f8d9",
+          "source_match": "exact Git blob"
+        },
+        "research/references/UPSTREAMS.json": {
+          "bytes": 331,
+          "sha256": "6fb769be1936bc74f721e24c65f243e0b9b5e1841fcf53350f58142893284111",
+          "git_blob": "7243230ff9945df8e230548a2d86403b6718796f",
+          "source_match": "exact Git blob"
+        },
+        "research/references/boatbod/op25/op25/gr-op25_repeater/apps/tx/p25craft.py": {
+          "bytes": 74066,
+          "sha256": "27079a321f75bda5db8d3ef6dd30d65992dbf8b6c73a2c608b43f3f745e9e2d9",
+          "git_blob": "105d9489f57597516e06279892df153a5ce5550e",
+          "source_match": "exact Git blob"
+        },
+        "research/references/boatbod/op25/op25/gr-op25_repeater/lib/op25_golay.h": {
+          "bytes": 17389,
+          "sha256": "20594ff5971a3ff58c94da8c0eb2c252723c943f68617956c526f936b6bd40cb",
+          "git_blob": "36a2aab88ae33dad70bd14d9da96fd1679fce1c4",
+          "source_match": "exact Git blob"
+        },
+        "research/references/boatbod/op25/op25/gr-op25_repeater/lib/op25_hamming.h": {
+          "bytes": 9465,
+          "sha256": "98f420948c6b64b620f1722c14c9614c6413d5886c3d45106187c85aa0b11b9c",
+          "git_blob": "b9589964ddc3babcc2c78bfdf5a84d127ad8e892",
+          "source_match": "exact Git blob"
+        },
+        "research/references/boatbod/op25/op25/gr-op25_repeater/lib/op25_imbe_frame.h": {
+          "bytes": 22173,
+          "sha256": "a33ff9f4ad9555d2a7ce0e20de445343fc03baa73b36c254eb19907b56c6d87e",
+          "git_blob": "c0d4c28b944a62046b5594d03153b81d706fcffd",
+          "source_match": "exact Git blob"
+        },
+        "research/references/boatbod/op25/op25/gr-op25_repeater/lib/op25_yank.h": {
+          "bytes": 3373,
+          "sha256": "098acd21450e4f2866226d6448ab406334034c7d8246bd1b685b6e02905e3fc8",
+          "git_blob": "f880d1c641496ce03a81ca114ba9635845ad97bc",
+          "source_match": "exact Git blob"
+        },
+        "research/references/boatbod/op25/op25/gr-op25_repeater/lib/p25_framer.cc": {
+          "bytes": 7658,
+          "sha256": "dc385ca2ec5720dc006208d0ef6021986476316e6c614171ddc7a3294eecb6d4",
+          "git_blob": "59b40d1d709a4b356eaf03d4989cecede5e19c6c",
+          "source_match": "exact Git blob"
+        },
+        "research/references/boatbod/op25/op25/gr-op25_repeater/lib/p25p1_fdma.cc": {
+          "bytes": 35844,
+          "sha256": "f91b3a29982278749318cf3c3d53f768aa5320ade16e93f868dddc836125c66a",
+          "git_blob": "d3a7b292aaa6c08b32787a4c200709ac5508cefb",
+          "source_match": "exact Git blob"
+        },
+        "research/references/boatbod/op25/op25/gr-op25_repeater/lib/p25p1_voice_encode.cc": {
+          "bytes": 41411,
+          "sha256": "06a9eafd14b06385d1cd1577d0063962e749a3617bce002bbe20405d0d9c7a27",
+          "git_blob": "abf5d8699ed92c66eecef25707544dfafa4f217f",
+          "source_match": "exact Git blob"
+        },
+        "research/references/boatbod/op25/op25/gr-op25_repeater/lib/p25p1_voice_encode.h": {
+          "bytes": 6183,
+          "sha256": "727905da678d991074fcd0669ebf5761920217cff1eda902da1217b6101cbf96",
+          "git_blob": "d188cd2bdeb3929617b6aa7cf369f841f0e098ef",
+          "source_match": "exact Git blob"
+        },
+        "research/references/g4klx/MMDVM/CalP25.cpp": {
+          "bytes": 5161,
+          "sha256": "d3fcd62f4105697c66c88e6b2ab95fbd4d495c07e85082f0276d65f49d45ef50",
+          "git_blob": "354339e08ff7e3aafaec96271e90f975a1a01e35",
+          "source_match": "exact Git blob"
+        },
+        "research/references/g4klx/MMDVM/IO.cpp": {
+          "bytes": 20076,
+          "sha256": "923814ae708612305697ae6480891b826cba91f9efad9c3f0463307ff46806ea",
+          "git_blob": "dc3e0c5a6182b7de76eea9015297e4aafcade18e",
+          "source_match": "exact Git blob"
+        },
+        "research/references/g4klx/MMDVM/P25Defines.h": {
+          "bytes": 4892,
+          "sha256": "5c9a907663c2b8fd9a369394efa7e621dc729e56d8ba4159c1099966bb5c863f",
+          "git_blob": "bb44914e2be7da22a377bb6944de7b0025d39f78",
+          "source_match": "exact Git blob"
+        },
+        "research/references/g4klx/MMDVM/P25RX.cpp": {
+          "bytes": 15548,
+          "sha256": "c406e941fe9d43c34f427bf7ac24c26ab1dece0219dfe67f85aafbae630bc44f",
+          "git_blob": "b8d0d5105b06f5bb986a7c2c806a97a4f9832115",
+          "source_match": "exact Git blob"
+        },
+        "research/references/g4klx/MMDVM/P25TX.cpp": {
+          "bytes": 5545,
+          "sha256": "cda78f83a66efbc83334344cab8a349551ca68918f082dee9060ef90c337c280",
+          "git_blob": "067c5de58da512b1a3360c01150f69235b2e61ee",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/Makefile": {
+          "bytes": 723,
+          "sha256": "f0636472b88ea6e81e84d07e223794c9f518ad6d5593e105d35126f375affcc2",
+          "git_blob": "94a63e5b47189043a059d74e69b68eb3266d0da6",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/README.md": {
+          "bytes": 549,
+          "sha256": "6cc87fe0c3f35d035158ddf93f794bdff3db310eb8c96d9f673051fa95fcb2f0",
+          "git_blob": "8390ba8a439f6c889913b32773c15ef54624cc78",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/aux_sub.cc": {
+          "bytes": 4728,
+          "sha256": "bca604aae000febe0bdb234d6a80b6c290a659ba4439b469ad4a4100ead06852",
+          "git_blob": "b5bfec99b62fa8163543db4d22a30506add7bf91",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/aux_sub.h": {
+          "bytes": 3830,
+          "sha256": "aed248d0ead812a9f9396d328a685e4d05363cb12938ae8ee43e8efeca7c8b4a",
+          "git_blob": "ada0cd2e6e1893df749669a80f9fff40876cb7fe",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/basic_op.h": {
+          "bytes": 4669,
+          "sha256": "2da864386e95d83b0a158c4a87e3d4f040055ac6024a50caedc433face210072",
+          "git_blob": "9132ba181d93000d0bd2c20a397d60a966a8266d",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/basicop2.cc": {
+          "bytes": 108273,
+          "sha256": "b81589ab4f4eca94e91470681546937f5048785cf4a8a12f9eb6cea57ab99950",
+          "git_blob": "25a795ec5d1a298c4012cc9daf5e25f2f059cd31",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/ch_decode.cc": {
+          "bytes": 5195,
+          "sha256": "0143264ba30e03c3090c943888f0df59e29b923428b93e6f55062e1100de99f4",
+          "git_blob": "da0b6cc6de542adb2130739b6051d69e196ff3e7",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/ch_decode.h": {
+          "bytes": 1104,
+          "sha256": "5587399543dccb8d97521999756e758f576a16513f022ac4d3cb26b77e475051",
+          "git_blob": "027ab11d785599dd3f0036b6b10fa7213013d995",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/ch_encode.cc": {
+          "bytes": 3061,
+          "sha256": "db1f89de858c1327a6025dfb84583a660f088d7aff9d1cddc23d253c2d79aaaf",
+          "git_blob": "6d1208322d457a41a5dd3483eba34a813d948ff1",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/ch_encode.h": {
+          "bytes": 1050,
+          "sha256": "9e50ef7e5ee9a7ac1cb2597a68c8470ae01bfc6454e5c5657314cdb526301b3d",
+          "git_blob": "0a9b8de5ec841b1cebddd1b8e27f1fe0f2c39152",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/dc_rmv.cc": {
+          "bytes": 1856,
+          "sha256": "c57cb89b7ef9f33e7042e185f516c5a4fa0817a4006a1ec6ccaa5f3a45257296",
+          "git_blob": "946174ce1959183e5d6e996bb54563c9cc4a36b5",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/dc_rmv.h": {
+          "bytes": 1499,
+          "sha256": "1e4b512f1957c769e745f6697ab1f5e8ec766dad87dd12102c25c4a1c12ae519",
+          "git_blob": "d36393b47715035796d1f1d6c15dfe460e72a70b",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/decode.cc": {
+          "bytes": 3377,
+          "sha256": "61b8fd9f3a3e58a5b454ca96079012ff5d1c27c840753ab2441438523fe987d3",
+          "git_blob": "5481697151228d49debc894135dca36830fe8c38",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/decode.h": {
+          "bytes": 1087,
+          "sha256": "b70cdc70b2c4632b504ed0287fcdef45c35fd3da3e7fa6dc7d9bbb60eadd2193",
+          "git_blob": "962be53ebca9076d3b58957a1f6e98a5d3125601",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/dsp_sub.cc": {
+          "bytes": 7134,
+          "sha256": "b7bd59180d6acae0135ae0e91b606ccbfba1b03bb9b856637a8776ac38961a94",
+          "git_blob": "2a02051facc8bf8a28d3d5920badb8143d26bd23",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/dsp_sub.h": {
+          "bytes": 2281,
+          "sha256": "6ff1999bc8b83431b26597a0c2f45b529dcb24968c2a601f206f490ed8298a60",
+          "git_blob": "53590e6ba05cbd3351caf8f25e22f7ee21b82e8c",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/encode.cc": {
+          "bytes": 4087,
+          "sha256": "a89a33ec155dbbbe95c1e6fe569b2df8f0555adab9b0faad9f2ef28036a86229",
+          "git_blob": "ef54dedfb1cd48d3527a12763710fc2d326d903a",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/encode.h": {
+          "bytes": 1104,
+          "sha256": "667b47e03a096412829d66de6fb3eef19ec62867e66a554c0980e758795d5c54",
+          "git_blob": "685c6a6836070f7e8957cfae5c8402f1bbe96abd",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/globals.h": {
+          "bytes": 1806,
+          "sha256": "7efea79628e0a0020d0b2af2de547131c89bca085a7d443d14f06d675bb30b6b",
+          "git_blob": "2010e7f3558c0ab25f3c1549a73e3abd225d7c65",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/imbe.h": {
+          "bytes": 2078,
+          "sha256": "1b9d2a785a122198fe103c0e0ec443bad268a91565f76e58daa18f1f3daee54f",
+          "git_blob": "e7f5f3a3920bd7d612eb81cf7db0f6b2a60d9ec3",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/imbe_vocoder.cc": {
+          "bytes": 689,
+          "sha256": "f39f2503c681eb834a4a13e440629e545745e7fbb79eaa6cd0a29e83287f9bf0",
+          "git_blob": "c9321606338498dbf15e5eec020137459914d0f1",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/imbe_vocoder.h": {
+          "bytes": 967,
+          "sha256": "baaf9f29cfcd117aaa4590577782996569aa05f1cae1a0cc7d99b3b4a9104401",
+          "git_blob": "2aa832e0c658ec0b87c97934ff96c17884375f67",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/imbe_vocoder_api.h": {
+          "bytes": 1976,
+          "sha256": "363003540bc0097e2ac900f5bb693ea758af97250ffe750666a1d5a223da54a9",
+          "git_blob": "b45fe10a29432230faad687a32a7485bb5000a60",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/imbe_vocoder_impl.cc": {
+          "bytes": 1084,
+          "sha256": "095ac167e6d0761a08021ea9d3cc863aadb02c34a269ee330b646189dc1b89e6",
+          "git_blob": "479388a19500559305c6124267d7dbecb7ec747e",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/imbe_vocoder_impl.h": {
+          "bytes": 3070,
+          "sha256": "b59189a27d5c9819c4b63d993f6c83c09de44c2c1218411c077213f71212e273",
+          "git_blob": "04d0e3abb4243247aec5dd349ca70ec687211a71",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/math_sub.cc": {
+          "bytes": 10455,
+          "sha256": "7efa68bd159b66d620b69c4800bb2b72c18a18e94fbb7a74fa596ceea3126155",
+          "git_blob": "6bbc2f8b4e4d367f944281d9577952aff37f5d42",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/math_sub.h": {
+          "bytes": 3785,
+          "sha256": "28d3e653da83f7a655cd43f677860f16281d1c029532e55a7dbb0774f58a4174",
+          "git_blob": "baf75fe009f089c12cbdbb4da56f15b3346dd5c8",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/pe_lpf.cc": {
+          "bytes": 2044,
+          "sha256": "7fc859cd4310655ed6202780a995e51e5ce3152e8b90354bae9b1aa8f2fe789c",
+          "git_blob": "b16547b1ba8fd06f263753d099cccbb5ce6bfda2",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/pe_lpf.h": {
+          "bytes": 1507,
+          "sha256": "c5ab3abe24c3232672b479a56cfa405de8aaa28bd4ecb0f2edbaf75770277768",
+          "git_blob": "54fd017b76fab4d0fb5c1a0b0f52f97268e7ae26",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/pitch_est.cc": {
+          "bytes": 10365,
+          "sha256": "b802037deb74086565f767060ee2e031ac5557ebd9e5ea890cd7b1a525f3c019",
+          "git_blob": "dba94d5c7f2ecfe23aa610d7b0f443deeda9f314",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/pitch_est.h": {
+          "bytes": 1006,
+          "sha256": "96ee18b1d0297a9f90e948f0da7a19cdf14911cc31d5153b5c475e3fb7df4003",
+          "git_blob": "b6b052dc150c1821b80083bbaa56744b62a527dc",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/pitch_ref.cc": {
+          "bytes": 4684,
+          "sha256": "b5afe091e7bd4bad835fa3b4482de36f7faeeffc3b33645c1f45888fb6df3359",
+          "git_blob": "85c5a1389c4bdc24747f4a9b726d1e940c715242",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/pitch_ref.h": {
+          "bytes": 976,
+          "sha256": "d2a3daa5c34c6578509b30ef1cbdeaac944ce8c32f2e3f5759b21d445d8aed84",
+          "git_blob": "29ccf8a92ad10d8b7d546ba155bd084a4ab225a6",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/qnt_sub.cc": {
+          "bytes": 3822,
+          "sha256": "94f9e1ef1b3a1958d6fa3bacdd563045fd17f605a6b180c398ac1a123446e6bc",
+          "git_blob": "bd0cbe856164963bd4364bca37924a974254d23c",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/qnt_sub.h": {
+          "bytes": 2549,
+          "sha256": "d3365368e44c630f50e367f05679916d214486a4470e7aeed3fd5290d431c971",
+          "git_blob": "ee3ac1ccf5ea33ba41abb6dfbe1e39584f71505d",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/rand_gen.cc": {
+          "bytes": 1558,
+          "sha256": "78e08517c180ed2966cf64b5233344ba078215233240a604a09261fa8de445ea",
+          "git_blob": "b818d64c8f0cb4ff23f73183682a72d6ef561c5a",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/rand_gen.h": {
+          "bytes": 1303,
+          "sha256": "7f278ddec2c797ef1d3c647d3cfcb196c7acee63982e21fb49dceaa812bed872",
+          "git_blob": "f67d15e11dba5ee8e8beba3abb6bb2c7a1770200",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/sa_decode.cc": {
+          "bytes": 5896,
+          "sha256": "a5e0310837138c596836cb51277c49e057eab354e63285babfc55f6e098b6f3d",
+          "git_blob": "94d8f461558822284ebd00c22cac257ef8be82b6",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/sa_decode.h": {
+          "bytes": 1786,
+          "sha256": "36ea5bda7c48499fb38783602b24b3ac99905bc0dbe55b371f36437d26a12c92",
+          "git_blob": "88d1e333c03f893d7c00000add7b42fdb2e47a8a",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/sa_encode.cc": {
+          "bytes": 8565,
+          "sha256": "56020621d402957c3069c9cc7d7f6c52296b0d60a62d48bfc15c6596b254e539",
+          "git_blob": "0525faeb908d248552caae73edc2d2cb7bc3ae0c",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/sa_encode.h": {
+          "bytes": 988,
+          "sha256": "d971d321c04f76429bc7adaafff17283e49e7e160ec73a5f824daa3e2ee3ae8b",
+          "git_blob": "06e4145f394b92dca08e7311cb1d97b7d63ec15a",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/sa_enh.cc": {
+          "bytes": 5302,
+          "sha256": "d0e9a3babfa2869f67c9b52b58902ba99de7905c74abc7e2168a3071089ebddd",
+          "git_blob": "c6586eb99049c223e12337bb7bb86c864b54a562",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/sa_enh.h": {
+          "bytes": 1526,
+          "sha256": "efafa3097f2deb7aae8a0ab644b4b595e7d4c865434f549516d00ed257b3d09a",
+          "git_blob": "6b3f277ba552d3449ae4601e5c6904703bff32be",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/tbls.cc": {
+          "bytes": 15603,
+          "sha256": "2b6801812acb3c9f9d5b879385e4733c4105023f157159c80d7212bb4ff9fa81",
+          "git_blob": "1819c8f8a0e23fea5c5232fed8a21e828b7c7bc2",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/tbls.h": {
+          "bytes": 3483,
+          "sha256": "ddb6337f710c18a60c3bc8771b7b9fd0126562b9c5b2fc6de677d7ff67f76fd3",
+          "git_blob": "fd0ade4cc493cd3aff565d869dffa6565aa23f6b",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/typedef.h": {
+          "bytes": 2134,
+          "sha256": "6f283c292261c3de9bd833510be0a117090e079a0c91bfe778f8281c4ee59815",
+          "git_blob": "fcf3b4c034599f173b23e566e8ad2e9ed968a917",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/typedefs.h": {
+          "bytes": 5636,
+          "sha256": "6adf532766656ad7abd4e5f357770f12ce80e8649d2676f0af8fb8915e8600b7",
+          "git_blob": "45fe1a01da6cb83e8f4444d6c1f420f0b4c15b78",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/uv_synt.cc": {
+          "bytes": 3314,
+          "sha256": "ad586db44e52725a55cee4fb1e1dcde4d24efbe409dc46496fa71c87389cc0ff",
+          "git_blob": "2c319d9a251371e02dc0dde6d0baa3db9acd4b16",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/uv_synt.h": {
+          "bytes": 1041,
+          "sha256": "c8b710245e393b584dedff8abee79b0b1f02bea2a74827074a601a76d3278220",
+          "git_blob": "ef04cb7384dcfef8ea12c4321e1b713c16bb801a",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/v_synt.cc": {
+          "bytes": 6504,
+          "sha256": "ba8f71d16da5a967311caf230b4a7a271da0f5fc1ee1d4aee60a84579c829eff",
+          "git_blob": "13b63a2522e7f4f99a5a361881e101cc6df6d885",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/v_synt.h": {
+          "bytes": 989,
+          "sha256": "b5ce971679f11a25fd5d1d31a8de57e5622072a2fd713c6acf5c6a9281f5d6c2",
+          "git_blob": "2139fb2204dbf5ceda8347d00305eff011552b75",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/v_uv_det.cc": {
+          "bytes": 10314,
+          "sha256": "3681a734172c2a10f40fb1ebedb3045ded88f23c93bfaaf3a16927c797371446",
+          "git_blob": "bf721cf5bb5a35f6472d01b033cb26be90bff19a",
+          "source_match": "exact Git blob"
+        },
+        "research/references/nostar/imbe_vocoder/v_uv_det.h": {
+          "bytes": 973,
+          "sha256": "f10e949d37af89220485f405182f7b033d60258adae7148a4dfae4295ae41ea3",
+          "git_blob": "ebe270f7d7121d815dbc495bc5ed06e7920ef688",
+          "source_match": "exact Git blob"
+        },
+        "scripts/analyze-imbe-build.py": {
+          "bytes": 14896,
+          "sha256": "3a89a225116334489e05908fce0b284754d934702bca0e5de3bec606603b4695",
+          "git_blob": "7cb3f77146c5148d3edf33675572d0e47bad6c70",
+          "source_match": "exact Git blob"
+        },
+        "scripts/analyze-mmdvm-p25.py": {
+          "bytes": 13218,
+          "sha256": "7b909b5e8d96f1769f1121cc9bc67915c14b125368f91563410903232d8372d4",
+          "git_blob": "2df7346fcdef74dab5bc4bd84e3794da7bdfbc91",
+          "source_match": "exact Git blob"
+        },
+        "scripts/analyze-p25-iq.py": {
+          "bytes": 4193,
+          "sha256": "a7ae08c625174bd1acced014e6202af888ca59ee077a61ee40415be677f465fb",
+          "git_blob": "b0144b7b5fa3cac6a8aab2e0bef7f935d19c4cc8",
+          "source_match": "exact Git blob"
+        },
+        "scripts/benchmark-dm32-rx.py": {
+          "bytes": 2406,
+          "sha256": "c65aa74727af47a178ed050ad9fcef6d9106dc16ab55a31ba4e975d7955fb338",
+          "git_blob": "d0a27a648d780a39c44e02411c098c4b9dc2a571",
+          "source_match": "exact Git blob"
+        },
+        "scripts/build-csky-cxx.sh": {
+          "bytes": 975,
+          "sha256": "b73d813991d19cbadeca6d7138fe06ac718268a16708ea22f67016e5d23bc895",
+          "git_blob": "da8c7ca31c28c3f9ed332c78ed610512e167705b",
+          "source_match": "exact Git blob"
+        },
+        "scripts/build-dm32.sh": {
+          "bytes": 5218,
+          "sha256": "7ae4ac38ce62823974c2bbd7a3c61ba5115f8eb7056a20551073e2bac9347613",
+          "git_blob": "abc97962f28a2583976865490db99bc0e30ea692",
+          "source_match": "exact Git blob"
+        },
+        "scripts/build-host-voice.ps1": {
+          "bytes": 868,
+          "sha256": "5db2a2259af80fd4082ce175c12dd9083fd9935d5cc2fd1d9e2cb74462f6a765",
+          "git_blob": "9d34c189c3560b194e5665a803264748f757f197",
+          "source_match": "exact Git blob"
+        },
+        "scripts/check-tone-audio.py": {
+          "bytes": 1503,
+          "sha256": "c3ee89caa078be7d932d18b89a1905cf2b12ea1cad6bd8ea679995812608757c",
+          "git_blob": "563319b53639ff1e1c9c93f3f93e8c764ba38390",
+          "source_match": "exact Git blob"
+        },
+        "scripts/dm32-rx-capture.py": {
+          "bytes": 5285,
+          "sha256": "efcaa25af3861e7f3956307354dc924a95345c59520d5b63cba56660d6c81184",
+          "git_blob": "48eb5614a9c329170d3c8a970f010bf60f6406c7",
+          "source_match": "exact Git blob"
+        },
+        "scripts/encode-p25-wav.py": {
+          "bytes": 3665,
+          "sha256": "cc1f3515af3fce46ba0c105b8a6a032faa75e59e04cef2421188304cce602a79",
+          "git_blob": "b89980d06cc095d969c74fc26c728530556846f6",
+          "source_match": "exact Git blob"
+        },
+        "scripts/export-p25-fixed.py": {
+          "bytes": 5897,
+          "sha256": "d0fb483c80eb0675ae92f3901693786d1ca9aa02db939dc4dd4a6f2e14700ad6",
+          "git_blob": "3670c6fc7d1495ffe21790e161e8cdf22b6551f4",
+          "source_match": "Privacy-only neutral test/example identifiers; encoded fixtures and independent CRCs regenerated where required",
+          "privacy_sanitized": true,
+          "distributed_git_blob": "38c88fe4a8485c04341dec24d1eb1c135020809e"
+        },
+        "scripts/generate-dmr-backports.py": {
+          "bytes": 4352,
+          "sha256": "d1da1c56fe57f75fe613f1764ff53ed24e92959238c67cb53d2b8c1ae423e5e1",
+          "git_blob": "502b52ff2553da04285d378dddf19028d08bf1b7",
+          "source_match": "exact Git blob"
+        },
+        "scripts/generate-dmr-tone.py": {
+          "bytes": 11662,
+          "sha256": "4211e4dd08446dd655c8f58cc89b291806ffe444739ab790c8a47c0d8a3838ab",
+          "git_blob": "fe5e542fff078b87fc4c615d7bc223f730d79c14",
+          "source_match": "exact Git blob"
+        },
+        "scripts/generate-drained-audio.py": {
+          "bytes": 9591,
+          "sha256": "823e0c0364c6fdcaf18acedbda4c1d8c6ccb592d5380f37d5ddc04f7530ff0d0",
+          "git_blob": "b4b5d6427246f6edc959535af29c5c202a3acc1e",
+          "source_match": "exact Git blob"
+        },
+        "scripts/generate-drained-dmr.py": {
+          "bytes": 5913,
+          "sha256": "80a47ca56ad487ad29648f1b05987b6d6a426d834e6d6ae4ad0991b6f236c723",
+          "git_blob": "24c39fcfd7b18a159263c8e8bd63459290727c06",
+          "source_match": "exact Git blob"
+        },
+        "scripts/generate-imbe-pitch.py": {
+          "bytes": 3547,
+          "sha256": "b531b4ac0ebb2a177e9a066801c51962325260fb70cf38257eb32acbbe36a6c4",
+          "git_blob": "55a683e81b625a88c3b47d123b686415fd33d0e8",
+          "source_match": "exact Git blob"
+        },
+        "scripts/generate-imbe-profile.py": {
+          "bytes": 1230,
+          "sha256": "524bd42921cd7b55dacc349632c72b7c8621d2eb87bec8e1b13817dfcce2cabd",
+          "git_blob": "643510b3fd45c73e9bd7d48c865e27dc3b3cbfa4",
+          "source_match": "exact Git blob"
+        },
+        "scripts/generate-p25-channel.py": {
+          "bytes": 3021,
+          "sha256": "2d04780f9b72c86210f71a5ca63734ed6d80b60f7bd153bd404ca77d4aa0120b",
+          "git_blob": "7bee8beae29bd2ab372dd91c44d04e02dd9c745d",
+          "source_match": "exact Git blob"
+        },
+        "scripts/generate-p25-interleave.py": {
+          "bytes": 847,
+          "sha256": "358fd8f011245355ee110db66dca4619db9b4d138bccd75d709c41faf8f06fb0",
+          "git_blob": "3732f148793294d6511e13681f1f8c9ff0e02ade",
+          "source_match": "exact Git blob"
+        },
+        "scripts/generate-p25-tone.py": {
+          "bytes": 4874,
+          "sha256": "ecc864a3fcc09cceee519e1a58091346abe5c29e3020fb04efbd988a29d2e5cd",
+          "git_blob": "2cff52da930adf07a2a6b36cbf0d2a5aefe836bb",
+          "source_match": "exact Git blob"
+        },
+        "scripts/generate-shared-vocoder.py": {
+          "bytes": 5510,
+          "sha256": "16a4242e597cb7e106214fd9a566266de517719f5e6870dd006ac6da81b904df",
+          "git_blob": "aac2749eb732b78936e64860ea0ffde09649971f",
+          "source_match": "exact Git blob"
+        },
+        "scripts/hotspot-dmr-replay.py": {
+          "bytes": 8415,
+          "sha256": "63614a59f52141745acdf6bade1981017cc31f4e3fa740b2706adfcbf0c1194a",
+          "git_blob": "0e1a6b4dc799969b842047366faf3b324cdfbbc0",
+          "source_match": "exact Git blob"
+        },
+        "scripts/hotspot-dmr-session.py": {
+          "bytes": 11390,
+          "sha256": "de47af4d7f3efb64eae55b9cb206fceab6676c3be0b1406fefdc52df9478c68d",
+          "git_blob": "3cb1d9e6e448287263d6a7c370f311439c790c4d",
+          "source_match": "exact Git blob"
+        },
+        "scripts/hotspot-dmr-trace-session.py": {
+          "bytes": 4588,
+          "sha256": "3513e8853a2eb403c762f1a2fb1053d7f4298344a4c217652d330b40d96d7f2b",
+          "git_blob": "cca8161bb1d802ef9dd4bdb951de0d9598fd3727",
+          "source_match": "exact Git blob"
+        },
+        "scripts/hotspot-p25-replay.py": {
+          "bytes": 13237,
+          "sha256": "a7398c56b59ca182fd0e602ff480cf2bfa56317d02a4ecb5aa0d6cee56d5b362",
+          "git_blob": "8abc6892815f7229e755dcfadffb773dfe62f2f8",
+          "source_match": "exact Git blob"
+        },
+        "scripts/hotspot-p25-session.sh": {
+          "bytes": 2187,
+          "sha256": "1caf27231407d5575d137ca719b50b92dc9e2935d198b11c6a62d3042d9eb66e",
+          "git_blob": "923e1919f3f3cea21c8d3ddc62da6a8822d91cd4",
+          "source_match": "exact Git blob"
+        },
+        "scripts/hotspot-p25-trace-session.py": {
+          "bytes": 20224,
+          "sha256": "6d29948e66ed029f80e6cdefacf1ec9ec0a7146fb9c8a0ac2f0f1f2cb24d6e8c",
+          "git_blob": "00fdd9c89f5146f4059f9092c2509a8b66d950e1",
+          "source_match": "exact Git blob"
+        },
+        "scripts/imbe-bench.py": {
+          "bytes": 6154,
+          "sha256": "40ead13143775aa0473bd50260c7f2aa6ae9919792499e6a59b8bd1371a81f12",
+          "git_blob": "be91cbb203e495f911a9f55e9ff6bfd5dde579ff",
+          "source_match": "exact Git blob"
+        },
+        "scripts/imbe-mic.py": {
+          "bytes": 8208,
+          "sha256": "3c1a6342f37aba4957e686f524aa9837b9b7ab181d8c07a0192deea3cc45286b",
+          "git_blob": "37aeb80aca3c9009b6fc83514084a62747815561",
+          "source_match": "exact Git blob"
+        },
+        "scripts/mmdvm-p25-fec-report.cpp": {
+          "bytes": 7333,
+          "sha256": "a3a030bd51fc0676d79bbbf385c7a491b033e5f61c4ad73b4fc976abede8d511",
+          "git_blob": "8a0593065361c83ab7c0b720a7fc28ddf355e03a",
+          "source_match": "exact Git blob"
+        },
+        "scripts/p25-bench.py": {
+          "bytes": 4188,
+          "sha256": "9018f6f7a1ba8538db9d72f5cf87e540fbabbf122c2f2f431faad6f87442baab",
+          "git_blob": "cba098eb719c2ca8d84d70194eaac8467754c95d",
+          "source_match": "exact Git blob"
+        },
+        "scripts/p25-live.py": {
+          "bytes": 3233,
+          "sha256": "b59d755a348395749a65baa4ac5a251e01976d09a5b8483fb863c0a3973b9f0e",
+          "git_blob": "98ff48e4a761e1a7a1cec7dc28a9ba54db6ff78b",
+          "source_match": "exact Git blob"
+        },
+        "scripts/p25-pcm-download.py": {
+          "bytes": 3796,
+          "sha256": "0f20efe6bc57386698ebd435665743b212e6f9f4fe20906362c44e4fbd418990",
+          "git_blob": "aab717723501cd46a0ccbba3197fd9d6906c5a39",
+          "source_match": "exact Git blob"
+        },
+        "scripts/p25-settings.py": {
+          "bytes": 8099,
+          "sha256": "6a7836b9093e69b206c384e51bc2bd0f0501bb7f74e0a9d5fe38d13fd20eeba5",
+          "git_blob": "85acf7f38c4604c962f9f5bb90e3c64c7595f97b",
+          "source_match": "exact Git blob"
+        },
+        "scripts/p25-tx-diagnostic.py": {
+          "bytes": 5050,
+          "sha256": "de599809c606c32f95868cc42d0b1ae85dc9335e60ed192e85d8e4121c145621",
+          "git_blob": "59b77ba2de61cdce554cfc757475076a992abd6d",
+          "source_match": "exact Git blob"
+        },
+        "scripts/p25_fm_search.py": {
+          "bytes": 3946,
+          "sha256": "ce091126828e2dd1b0385af29d7d925f8007c47fd7fa45804d3dc9947688a14e",
+          "git_blob": "d658041f4591ed41b7b3587d64f64cdcf0870791",
+          "source_match": "exact Git blob"
+        },
+        "scripts/place-imbe-ram.py": {
+          "bytes": 1597,
+          "sha256": "dca0e576ed032e24febc8cbb1bf2547a48fe3c52a6f3da8c18818d2d9370c36c",
+          "git_blob": "8ad481b7de41d97e620d4b853c1ead764a9db46e",
+          "source_match": "exact Git blob"
+        },
+        "scripts/radio-safety.py": {
+          "bytes": 11188,
+          "sha256": "b351884054711d3b03f1d417c34b42d61be9eab2652c1387a241fcefdb806976",
+          "git_blob": "7a7d403ffd97e59698b684eed565a7bbc1571cd4",
+          "source_match": "exact Git blob"
+        },
+        "scripts/render-diag-ui.ps1": {
+          "bytes": 908,
+          "sha256": "29c7c6613b4af17bf76df1be06751332e99ffed154d4690c8743d36e6e497f14",
+          "git_blob": "58b4e77f88d90c7561940d309889bb709bb68b42",
+          "source_match": "exact Git blob"
+        },
+        "scripts/render-imbe-ui.ps1": {
+          "bytes": 1092,
+          "sha256": "ea55bd12a5461db78aa1494f9b924e59228718ed4f800922621a68c23939c970",
+          "git_blob": "2a226561cc90ca1d6dbd79052452296bb0ac5606",
+          "source_match": "exact Git blob"
+        },
+        "scripts/render-live-ui.ps1": {
+          "bytes": 7881,
+          "sha256": "8803729eead09a3695db9200edfe3deca38ff149370dd85fd08e95d60217f7d8",
+          "git_blob": "52a6bf55eb3cb11545e40734e46ce1836db693ba",
+          "source_match": "exact Git blob"
+        },
+        "scripts/serve-web-cps.py": {
+          "bytes": 1285,
+          "sha256": "30b89805ac2405ddded3e369d072e4d1139fbd5fd21a32910b8a4d70d07fa3d5",
+          "git_blob": "964a32c8db0be8bfbee89a63e945bfe1ecd4c2b5",
+          "source_match": "exact Git blob"
+        },
+        "scripts/test-imbe-bench.ps1": {
+          "bytes": 7124,
+          "sha256": "65980b6e4bef494e258fad6ba01be26d832275055052886159c280e6145ae53d",
+          "git_blob": "6d370a001e576378d3c42c63ba65221c29600c79",
+          "source_match": "exact Git blob"
+        },
+        "scripts/test-p25-rx.ps1": {
+          "bytes": 1067,
+          "sha256": "f63774b1f1b0b297a8662151cb7ab0f333d6b49ea1d3c666a3cc3d4c4f286957",
+          "git_blob": "edda4665125cd763c734c332ca76ca664067754b",
+          "source_match": "exact Git blob"
+        },
+        "scripts/test-receive-policy.ps1": {
+          "bytes": 1641,
+          "sha256": "f3bb5769734853e59a432e3be2bef1e8eab6842202de80ee2985e94027e8da60",
+          "git_blob": "a183c369ff33db26febb989a3c011289228dc81f",
+          "source_match": "exact Git blob"
+        },
+        "scripts/test-stream-demod.ps1": {
+          "bytes": 6343,
+          "sha256": "4982cae25f2586e788c81dc9f0723ac5734adbed2f97a6c19a426479e231c807",
+          "git_blob": "c7cab02a47e0cce2b66ce0fc0629030bf8b7983f",
+          "source_match": "exact Git blob"
+        },
+        "scripts/test-transport.ps1": {
+          "bytes": 6186,
+          "sha256": "eaeee34bf84cdc5f49e040a7bfd71c6aa6c9f02a8848fa8201e39d24be41745d",
+          "git_blob": "325a6ed200b1d293bc5d27d754fa6e6152d43fa5",
+          "source_match": "exact Git blob"
+        },
+        "scripts/test-web-cps.ps1": {
+          "bytes": 2300,
+          "sha256": "32b1f4307274fda699df992f013088ab6e0c239ad6454fdb9fb310f0a9eda484",
+          "git_blob": "28df73d982b7d98b6bc747d02e3f7dac756d7792",
+          "source_match": "exact Git blob"
+        },
+        "scripts/verify-p25-tone.ps1": {
+          "bytes": 1010,
+          "sha256": "ad1ea634d64b297ed2d20be3442f6fe38ccd1b1abf4e9c6d0b05970a68104173",
+          "git_blob": "ab53f06ab40936eecdfcc2e46b69664708821a85",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/dm32_imbe_bench.c": {
+          "bytes": 11712,
+          "sha256": "23a9c315a8e2abe3c0db675811cc3f2773cc44d3c7cd7001d9bfc8bfb60ee568",
+          "git_blob": "dafea032d08a1cc2c5753a8e542d9ba43f5a2ae2",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/dm32_imbe_mic.c": {
+          "bytes": 8461,
+          "sha256": "b6b5bcbcdb70ead17189cf20f4a5d46f67df0091e06b692c730be11d44d7f019",
+          "git_blob": "2f60b782e99d705bdfc2eb62d35190d3b0c6604e",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/dm32_p25_diag.c": {
+          "bytes": 12790,
+          "sha256": "63b67a9dfd5f16cbc85c0b0aac8d41ab811ff5a75c678f443164ff85b132b76e",
+          "git_blob": "f0849f44f69d7120b2d2f25007bba876c12d39be",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/dm32_p25_live.c": {
+          "bytes": 157655,
+          "sha256": "54fe23f204dc867012e1bad04dff7884cc8e8be804b768dc4477a86412f18fb2",
+          "git_blob": "5566db8dc8d599fbb01170d290949ec7440c6540",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/freestanding-cxx/cfloat": {
+          "bytes": 149,
+          "sha256": "86694f329e4560fcdb63da2c815cd4edafd034cf38e9526ec78796fb74b69a04",
+          "git_blob": "58dbd1520ed463b73379157088571f335737e4c0",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/freestanding-cxx/climits": {
+          "bytes": 150,
+          "sha256": "840cba77aea901ad0238bb47096342fa09622ee6f02a0ea15ba06d4b796d1590",
+          "git_blob": "a77d1d2c7f391587bfaa084d8bb3e677eaf77fb9",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/freestanding-cxx/cmath": {
+          "bytes": 148,
+          "sha256": "4ef9d717aec7f4784889ccf8540f8d710fd4290b67a63de883d937ca48223628",
+          "git_blob": "669a8c5ce6aff14809bab617d640c36000964e78",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/freestanding-cxx/cstdint": {
+          "bytes": 150,
+          "sha256": "2163ebdc8c2b3ff6d98458090241e4b3db8d5c69c9828aea4598e381252d619a",
+          "git_blob": "295e20f883d1abfd7b75778eac3dbdbf94197166",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/freestanding-cxx/cstdio": {
+          "bytes": 149,
+          "sha256": "1841ed438b0d34a9e6d2ecdac3851dd7acc769055b044db2ca38ad65d7eb6a8a",
+          "git_blob": "88b81586da1fa3fffdce16f7c37617fdc4e5a845",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/freestanding-cxx/cstdlib": {
+          "bytes": 150,
+          "sha256": "5e19a32b921b74b3ac1f4b89b631933bb55658698c26b15153131fe7875f97fb",
+          "git_blob": "76b7c303bb9ab8e2643383119657d2eca62d2ca4",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/freestanding-cxx/cstring": {
+          "bytes": 150,
+          "sha256": "b25fc8b6debc844496057a0eba8fa06b6dbace7c867e776c60040aee042cc12f",
+          "git_blob": "65a0f5d537fb90af345c82ba000c7f989130bc7b",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/imbe_bench.cpp": {
+          "bytes": 3618,
+          "sha256": "c1733e0836cd0480f57c6efafdfe812cddb91e96ba0d87253878d07507751255",
+          "git_blob": "329b4045284a9af746de1b55c9164f6ac31ed619",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/imbe_bench.h": {
+          "bytes": 681,
+          "sha256": "6af5a0157aba0cba4c1b791cfbd29b949b430cae3977a81c85be32e4799b44f4",
+          "git_blob": "86009c0354d2f8bb4f8bd926abe70b5c4aeee71c",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/imbe_bench_expected.h": {
+          "bytes": 366,
+          "sha256": "f643013b4226bfa575d81661c1bfd1faa474a19659dd7b5cd3fea186ffbaf648",
+          "git_blob": "c498af785a53d63eae80b74e91afd5a8fccf98bd",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/imbe_encoder_unity.cpp": {
+          "bytes": 719,
+          "sha256": "f6f05df0f4d665a2f3b2339a14880c179c287d54debcd8315b3833f4158c0958",
+          "git_blob": "106d8d041407893ef88816a257e484ea845f845d",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/imbe_mic.h": {
+          "bytes": 391,
+          "sha256": "8fdc1991ca9ecbb3c4ee0d5e79a2a9d4a6e68bdf7d0107e08fce3038e7668fb1",
+          "git_blob": "9f62c4d56480af91cbea2067359ce9e68db9281c",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/imbe_mic_queue.h": {
+          "bytes": 1669,
+          "sha256": "69b44013eb3a5037fb6a4e33f2d3f8f241b90d240f57049fe162a27d5aa71665",
+          "git_blob": "ef78906958a16db02798da9ddcda63c81f277305",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/imbe_profile.h": {
+          "bytes": 342,
+          "sha256": "67e54c19ad28a75a6998c9483560730ca6de58862d47de8535f5cc6cc82a08d9",
+          "git_blob": "0df6f5d686b18d532f0c5ff575ad7c283a72a8f9",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/imbe_stream.h": {
+          "bytes": 3949,
+          "sha256": "8c9adeaa85a47d556c9ddbe15bc0fdee650f323355fdb880f32599e99fc9617f",
+          "git_blob": "6482476e6ac735c59a5c603b852007e85f620bff",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/p25_call.c": {
+          "bytes": 7168,
+          "sha256": "1ce9a2d49085e76fdf36139dacbe648e236b6b1acbd16729964ef23baaf2af58",
+          "git_blob": "0c75337f9dd4a43ba952517a1c8175472421dc2c",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/p25_call.h": {
+          "bytes": 1418,
+          "sha256": "70c8b69066abfff4c8432557d356ff8b77b2ae87d141ecdc57af5e079d770860",
+          "git_blob": "f916546aba67f88cc238117b767cd2534fd849f8",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/p25_channel_masks.h": {
+          "bytes": 20633,
+          "sha256": "cbc4d1223bd1c34bdf1b62fffae53820ff76f61771ed4d25c5a1dbb04e0d545a",
+          "git_blob": "6fc1864023fd6f4303236af720931843ffc8c296",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/p25_channel_store.h": {
+          "bytes": 22332,
+          "sha256": "93f2d987b37d4dcc6dcde46ff1555d690743ca19fbf7954b836a5bef5349d808",
+          "git_blob": "bc4db2b89fed421211bc88f19803d65b0211437c",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/p25_demod.c": {
+          "bytes": 8921,
+          "sha256": "37393b04f05341b656f41649d3be8bc2fa5ca5cd42ee344614f94927dfb7b793",
+          "git_blob": "3dc5777c364b898e717da4de32c99c31ab58e7c8",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/p25_demod.h": {
+          "bytes": 1622,
+          "sha256": "0b96f01d1f271843a301401e40490b6707e27f28be1693cab52f70c1a1a82bfa",
+          "git_blob": "84267c40be5cc8d05825988fe67a8b2c30b93dbe",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/p25_demod_filter.h": {
+          "bytes": 680,
+          "sha256": "257d2f70f7652d9ceb98020d05251277150c61d28081454629dad4447c72a283",
+          "git_blob": "096645ed45c8e96bf080cc246b53d8ba090cf890",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/p25_demod_math.h": {
+          "bytes": 1185,
+          "sha256": "ae4a10e7670fcfae3e69df017592771646d3f056226512e96954962c4a9e544c",
+          "git_blob": "86492ec307079139983d90078fd6004dc2efa1fe",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/p25_diag_ui.h": {
+          "bytes": 5268,
+          "sha256": "1ca0abce17b5bacbdab4e60c763b1dec9d8b650b3da07777c36833dc765a30fe",
+          "git_blob": "c23409ad8f882aaca1e7b7ce8ab7a9c6a9f4ca89",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/p25_diagnostics.h": {
+          "bytes": 437,
+          "sha256": "99799270ebb24b64c3b4e0eb05a456838a9832a71ac00947909e7d358e89110b",
+          "git_blob": "6bb3bb250e3c39c1b14ccd43b6c6b4f678315515",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/p25_fm.h": {
+          "bytes": 6480,
+          "sha256": "d901282116d14e7ecfcf44fad53db3cac47b3106ac293ae0980a15d987e44a53",
+          "git_blob": "13638dfa7c8856927abe1db320add6325d501bd1",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/p25_interleave.h": {
+          "bytes": 8143,
+          "sha256": "dd012dd162333cad55d95bbac10e2bbb431e2b60a3d52a559834747a6c001836",
+          "git_blob": "e71322b317f6f2239cfae7281944414e89198146",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/p25_live_frame.c": {
+          "bytes": 3125,
+          "sha256": "d453bb90de5781a6ab6f78d6209b94220abc53e7c151da7907c50ad688fec48b",
+          "git_blob": "88a047134de24fde98a6d337386d3dc2752b0ece",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/p25_live_frame.h": {
+          "bytes": 773,
+          "sha256": "a3b347fc5e076693fcabbe79e51b163fc251fc520ad60ab45b37b1cfc6d15bfa",
+          "git_blob": "d33ef93a40c36e481513dae2a0113c54ce01c3e1",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/p25_live_tx.c": {
+          "bytes": 3122,
+          "sha256": "7f7b88c9370eaf20f0c6a82447a48d57c0dea2895bb2d10c76e5ad22a97793ed",
+          "git_blob": "9e228fd7ec45be0e03f37757c2dc656334be57a9",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/p25_live_tx.h": {
+          "bytes": 1364,
+          "sha256": "7e7074b78c7de7d40cee1d6ac4c815e7d37385234d05f3df04ab08f8790accac",
+          "git_blob": "28d852d38075387cc6f8bac5ea5e0befb960b34b",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/p25_monitor.h": {
+          "bytes": 3929,
+          "sha256": "caa719dc198fb6ee4cead2dd28f6151e791589e4188c7930ca366436f871e222",
+          "git_blob": "38263369f84c2f93d625d5df2007b7aef6dbbf7b",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/p25_pcm_trace.h": {
+          "bytes": 1282,
+          "sha256": "d198328baac834140e8b77e143eaa807642c107b7287f816e133176d6caf45bc",
+          "git_blob": "db229e9d0892f3e5f48872f76a351b30fa87b662",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/p25_preferences.h": {
+          "bytes": 4587,
+          "sha256": "f52941329ba3f8b9cbb853c188b18c75d2b448d8743674d774376ab960ee4740",
+          "git_blob": "0afd88737ed4f2854166e31025e1cdde1ca698b2",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/p25_radio_features.h": {
+          "bytes": 39082,
+          "sha256": "98ba4444a210952ee92443cfc22a1cc88a7bc61442ef1e53da19b1459b961a79",
+          "git_blob": "ce6d548781061111476bb29ebbf16bfb2b1d38b5",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/p25_radio_ui.h": {
+          "bytes": 8966,
+          "sha256": "c609ecb9ed773c02fc6fd04c902883f47fe1c5d94a964ee08d8f056f313a804b",
+          "git_blob": "6e4717583b977112d0cd686ec160eebce5c7344b",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/p25_receive_bench.c": {
+          "bytes": 2577,
+          "sha256": "f12779c3c3f2f78f2d78dacb9dc061affc173dd281c0f7033b72f61560c038c1",
+          "git_blob": "45879646588a0f25200d477ce04d4945c274ce52",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/p25_receive_bench.h": {
+          "bytes": 1019,
+          "sha256": "399925096b27bd38fe7a7bf8e85c8b6a1ecdfc04122ab2a5c835cb95e9020b65",
+          "git_blob": "71bec2626bce717f50dac7a2a97c323565f74a22",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/p25_receive_policy.h": {
+          "bytes": 5444,
+          "sha256": "83bd7819f19cf72c27a0fde775b4bb54f5865e15f353131788fe452e587235fe",
+          "git_blob": "11730743d3ae88f41389046ae7792ad72d5f210e",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/p25_rx.c": {
+          "bytes": 7989,
+          "sha256": "238e3cbc8054f9756b8245f4c9fa5f603110dece87c0698f1eb010c81e8f70ee",
+          "git_blob": "2d86bb3f34496526a81f7e8021a2ff859fad712b",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/p25_rx.h": {
+          "bytes": 1750,
+          "sha256": "585b4aa41d29349b0e5996b66f661a3eee71ea0499378abda3b1853ed8280d64",
+          "git_blob": "f7932551936c905810f83e6f76ffa62421a61edf",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/p25_rx_golay.h": {
+          "bytes": 18854,
+          "sha256": "89ce974334a8503f76a5d7a586e3a3e57975d471ea4ef5dd0375a04faf09fabf",
+          "git_blob": "548943fc389c561006edc953b6d7b86b7b7808d0",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/p25_test_tone.h": {
+          "bytes": 955,
+          "sha256": "94d91c0dd55cf890658317bb90a451f62e6a34d24744c6302e880fd32f8b7b27",
+          "git_blob": "a7c081ff5e48410b3c7c3dc05eeaa8f12ed64c91",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/p25_test_tx.c": {
+          "bytes": 3975,
+          "sha256": "2b5624e46704ce921b836d77457738da37b6c28987341ff278ebbef180f7195d",
+          "git_blob": "584be022654c4d6d01ca63d6d827e79e35f20b38",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/p25_test_tx.h": {
+          "bytes": 1468,
+          "sha256": "de04b52f49493179fbf8dc8be472a7eba8100b7e6b6ed6d4fef115bb2220d330",
+          "git_blob": "f14c02116432125355819dcaccf0270e63429cc5",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/p25_voice_policy.h": {
+          "bytes": 3660,
+          "sha256": "e2c329bc6f5f88b466a5dd01497010048eced21dc0cede16f5c16ed5381b2249",
+          "git_blob": "a91b48a0fcc4d6938bb7b3e8c019be454a168393",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/radio_broadcast.h": {
+          "bytes": 3546,
+          "sha256": "8ff93127371439b2ab572c248f85eb6bd7a5f43881f93e90dc56bb3ad7f128a8",
+          "git_blob": "16ac48d019a6db04f334bc3937538629e25d6cdb",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/radio_broadcast_input.h": {
+          "bytes": 1802,
+          "sha256": "c029ba11cbeb0e936ce88726bee0bcbeb58a77111bb2baadc9a34f1a96af8c00",
+          "git_blob": "b447477618f0e228dc1dc099bf8cc04f48f9f89c",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/radio_channel.h": {
+          "bytes": 2967,
+          "sha256": "7926d27c7eb29f1e691ff421b5879efa62e9fb4c386514cb9f610a8f2bf59c3a",
+          "git_blob": "b38cd1396d2f2c7151273e85fa41def4754348e6",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/radio_codec_workspace.c": {
+          "bytes": 3318,
+          "sha256": "c20e74e4bfe1950a1c8a023ec277c8114ad9ae829f64fe3fb8af25674c38f438",
+          "git_blob": "09a9f305f7bad0acf531ad7ced4597a03de8515a",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/radio_codec_workspace.h": {
+          "bytes": 1602,
+          "sha256": "933a90cb31715ed9cf3149ffa99ff60afcda3d8594dd5c976dc42995d77bdbc5",
+          "git_blob": "8c32d01eb5bc3e64ac7049e454449757e995179b",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/radio_control.h": {
+          "bytes": 2008,
+          "sha256": "44225274679637220b62e47918263b0c0e16cc0f0de6a720a6379bc8b0cd0ff3",
+          "git_blob": "0bcf4555776ea6d0020a20f382ac88fe6d486e52",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/radio_dmr.c": {
+          "bytes": 12739,
+          "sha256": "94b257cd22a7e378c3cfa0f0cb137ad0e5eb01b3fb94cb26876b37cf0578d2e4",
+          "git_blob": "2285b37097767d4e44d7d3038d4f0920d3376d1c",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/radio_dmr.h": {
+          "bytes": 5239,
+          "sha256": "06116580afcc9a6cede449aa6118f3f59f39309a85df39239bf2faa663beaf24",
+          "git_blob": "a0058f8c4c32d6e824df709f298868188459b320",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/radio_dmr_metrics.h": {
+          "bytes": 3815,
+          "sha256": "05c1d0c017e596854ba5deae04664c0eafc9ba6e1c71f6b2cc03d415a9512d2d",
+          "git_blob": "e182d1f5d4974baa9f4ad2ca4fda382e86ad7706",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/radio_functions.h": {
+          "bytes": 4226,
+          "sha256": "73f7e387c97ea3998fe25e3094fac248af4868b11655a5d0f09246f3e54c5aab",
+          "git_blob": "3a5fa00bee8b8e4c124083421c71a90a88a6b489",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/radio_pcm_output.h": {
+          "bytes": 7301,
+          "sha256": "8f238092932b0f3865a754b6da625f4c5a33d576ddffdf5c276ea72327943ed5",
+          "git_blob": "0d948e81a57f23a26301ae78ea5913bd77814108",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/radio_service_schedule.h": {
+          "bytes": 615,
+          "sha256": "c3e1f9fdd4cb26132e78b1d5f5a3011ec0a33b9611263dcd68d33d6398ef671c",
+          "git_blob": "851779f447b4bb271f08750c1322853bcc3d68b2",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/radio_signal_meter.h": {
+          "bytes": 3017,
+          "sha256": "964756a4d9ece48a84d2c130e0e8b625974691e76cc90b91dc8013cd5df39e93",
+          "git_blob": "2c0262e12ce44b84769f31701d511786069da6f0",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/radio_tx_guard.h": {
+          "bytes": 882,
+          "sha256": "f168ee36d2ccf5c193fe0be069192c3ce50b6c82156ecb6160ab7ce34dd93755",
+          "git_blob": "3f48b683b275b1bbf9d4924ed76c0e7e12acff1b",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/radio_ux.h": {
+          "bytes": 3280,
+          "sha256": "9d9b32ed6ddf23a1054eedac40a673d8acac44a5a19202327cc689d6c7852396",
+          "git_blob": "c2a7c364b5fbcd681721f95fa2f39598280054b0",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/radiofoundry-diag.mk": {
+          "bytes": 1232,
+          "sha256": "5c97287c5e344e73d509ffdd21f2a00c8db9305312ce98e2846178470cdad301",
+          "git_blob": "81121096d21f5892e1d43f4e18f221fb3eb1a3f8",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/radiofoundry-imbe-bench.mk": {
+          "bytes": 11893,
+          "sha256": "09cd4bf62f774ec3eceded7bd41851bdc358bfd86f08af6bd864cb8373bf797a",
+          "git_blob": "8056515c1c87c2d7ede90f57e9e2990df51e81f9",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/radiofoundry-patches/4ba400af7a.patch": {
+          "bytes": 6767,
+          "sha256": "8dc0cf5a129a541afe469a2286cbcaa25bddd4ba5997713c7c2036eb309d0161",
+          "git_blob": "477f325dd132ee00df9df53007d0b409a8d8033b",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/radiofoundry-patches/b5d025d0ce.patch": {
+          "bytes": 3114,
+          "sha256": "4339a81c8aaaecc735bb9eda9fc395d3d05e2b7487aac55fda35d01abbb7fc03",
+          "git_blob": "b190ecd7af80ea315ab816015b8be98d005a3981",
+          "source_match": "exact Git blob"
+        },
+        "src/firmware/rx_capture.h": {
+          "bytes": 1443,
+          "sha256": "913e62a30dbd781b26b90e1d8930bac77acaba53150713580d94301582ca2074",
+          "git_blob": "992bba04a113690b725ac534137cc01f53bedf27",
+          "source_match": "exact Git blob"
+        },
+        "src/host/decode_test_pair.cpp": {
+          "bytes": 2012,
+          "sha256": "90d7bb87ea482536d8752c39f6039038a3bf86b61ead99e5e4f197bf4fa4cbab",
+          "git_blob": "f00f3301625c360cf26012bdccb225a162ce49c9",
+          "source_match": "exact Git blob"
+        },
+        "src/host/p25_demod_replay.c": {
+          "bytes": 1085,
+          "sha256": "1ddfff5229a2eb9161eab7683674c99a3541f3942fb417c83bb17b81a241a8c1",
+          "git_blob": "056ad0c2f36a4adb3b6773162d3eaa0a96ae5cd4",
+          "source_match": "exact Git blob"
+        },
+        "src/host/p25_pcm_replay.cpp": {
+          "bytes": 1023,
+          "sha256": "86a9be0feeb193c9a37a7960ccf344e53a542949f9b9abce02bc21c43d464d82",
+          "git_blob": "3f75da5f64a700214768c03f0d4d56edcaeec9f8",
+          "source_match": "exact Git blob"
+        },
+        "src/host/p25_qualified_replay.cpp": {
+          "bytes": 7785,
+          "sha256": "81ad92eeff19044f299df22fc415dbe6001f0bc78780e5c5a764c79bae40bca6",
+          "git_blob": "b7e25da4647e23a7a87f09f458b2e3d4b081300c",
+          "source_match": "exact Git blob"
+        },
+        "src/host/p25_receive_replay.cpp": {
+          "bytes": 854,
+          "sha256": "f4a01e0e1118ea26a64a0856968262b1a16659fe84aa236c752714eba0a9ead4",
+          "git_blob": "81e2883048b348eca1b71947235525960b9d78d0",
+          "source_match": "exact Git blob"
+        },
+        "src/host/p25_rx_replay.cpp": {
+          "bytes": 1015,
+          "sha256": "db4dd56e199f50837163430906bb5a6135c5b208a6b909dcca7aba7027bcdebe",
+          "git_blob": "662c862394d420df3fea7d582bac61b7b9abb9cd",
+          "source_match": "exact Git blob"
+        },
+        "src/host/p25_voice.cpp": {
+          "bytes": 6748,
+          "sha256": "d6d14f2cccd5839b95651ea8bcd4dc5e970a872a652d882e3e3232ab4455e9f1",
+          "git_blob": "b97a7798f36863bcc771e4d2ac29bd6c4819cf0b",
+          "source_match": "exact Git blob"
+        },
+        "tests/README.md": {
+          "bytes": 876,
+          "sha256": "9b3563fe3feb44d934172153e008819b247c8a27049b926cc6bf2f8ddbb18f2e",
+          "git_blob": "a24349cfc0ea63fc679d988db6cbfad7c3d27de5",
+          "source_match": "exact Git blob"
+        },
+        "tests/check_fm_search.py": {
+          "bytes": 3185,
+          "sha256": "797a87dfb9a01e69e7dab4aa26a041f494b3b78402e93e666d5b58a2f7e57e96",
+          "git_blob": "c9bd00c0118132c65c0ee73f768174c96f3df3b4",
+          "source_match": "exact Git blob"
+        },
+        "tests/check_imbe_bench.py": {
+          "bytes": 1339,
+          "sha256": "ed40e474a980d322a061ac3e82b13cc409b3249e696ed95f92cfb98429e34e50",
+          "git_blob": "4ab41745fba10d2ac079f4062e60d6e865229d1f",
+          "source_match": "exact Git blob"
+        },
+        "tests/check_imbe_stream.py": {
+          "bytes": 736,
+          "sha256": "17b295e6d2733a146f30b8249479cbee8d52f08217559002d234f17698e14c5a",
+          "git_blob": "ffe7550682ae0e1644e504269b2ef08a26fbad2c",
+          "source_match": "exact Git blob"
+        },
+        "tests/check_imbe_unity.py": {
+          "bytes": 2224,
+          "sha256": "9d9b1a66097894c6e7abe9dc2b41255a63647e7481b5e1d2c90b2a11698a5d28",
+          "git_blob": "55c6a35eb2b145886a5eff91d5b4a4353c3aaf01",
+          "source_match": "exact Git blob"
+        },
+        "tests/check_p25_rx_replay.py": {
+          "bytes": 1067,
+          "sha256": "fda4fdb7700feff662c50c1f42506cc37726ff1d9703f388e9a2f4e7ade8d0fb",
+          "git_blob": "e9bf6b80a45fd04fdc23e7a25363b9d5a6e176d1",
+          "source_match": "exact Git blob"
+        },
+        "tests/check_qualified_receive.py": {
+          "bytes": 11877,
+          "sha256": "b3588c1f1bec9bc3d726fe72e170d5cc86a616a23814425002cf14bc98fea991",
+          "git_blob": "790a5455803f264da364a167f1978237c1dd2136",
+          "source_match": "exact Git blob"
+        },
+        "tests/check_stream_demod.py": {
+          "bytes": 16432,
+          "sha256": "df8d637bb22deefa6a07206d0aa22b7ecbbe979ed578f97b18629afe3df0fcb6",
+          "git_blob": "8a9fbc0ebecce18a3c6b87d3836c6234ddf9a535",
+          "source_match": "exact Git blob"
+        },
+        "tests/demod_frame_probe.c": {
+          "bytes": 1187,
+          "sha256": "239cd84980d7d22617e628c2f701c919b63725d36fdedc2c81d1806667920975",
+          "git_blob": "27edf0ab9d8d1942fe63d7a6a01cb349a8eb43e6",
+          "source_match": "exact Git blob"
+        },
+        "tests/demod_lifetime_probe.c": {
+          "bytes": 4471,
+          "sha256": "946dced8cbcb51625aeed435deaf369a2db9ca810ccd5330eb31d3344880a199",
+          "git_blob": "3414f71bbeb5c30f14342f015648d940666c343d",
+          "source_match": "exact Git blob"
+        },
+        "tests/demod_nid_probe.c": {
+          "bytes": 1695,
+          "sha256": "91845fbfea7a8cc1f98433733299527541f7dab3d2d0b1764a89065e5c29a98d",
+          "git_blob": "b306333eb7fa4776135f603949970cfc65fce599",
+          "source_match": "exact Git blob"
+        },
+        "tests/diag-stubs/platform.h": {
+          "bytes": 894,
+          "sha256": "809b474b0a675732260380f0c088a22e33a837af2232df2982d5b5e93b5543d2",
+          "git_blob": "8066d25c9e42c2a609177b9c67893d644a22755d",
+          "source_match": "exact Git blob"
+        },
+        "tests/diag-stubs/radio_dmr_stub.c": {
+          "bytes": 9095,
+          "sha256": "7c670edba921e52249f5bae1de41aa42a5005646cab402c91145d29bec3e78de",
+          "git_blob": "e0809153f603d62a2f6d0bf48a724ef40e4761d6",
+          "source_match": "exact Git blob"
+        },
+        "tests/diag-stubs/radio_dmr_stub.h": {
+          "bytes": 669,
+          "sha256": "20f147d916fd227ab96b30312d41b563b48863991ea4a237f72646d9592a23bf",
+          "git_blob": "be999fb90485feb2d58da9cab42fec4b30b45a87",
+          "source_match": "exact Git blob"
+        },
+        "tests/dmr_tx_pacing_test.c": {
+          "bytes": 11633,
+          "sha256": "0283da660066fb74daac4a14514c60e3b1f5ed74e8b285bfbcc78c4cdc53d55f",
+          "git_blob": "041edf6f7958b8f427af8682436bb589d41daa09",
+          "source_match": "Privacy-only neutral test/example identifiers; encoded fixtures and independent CRCs regenerated where required",
+          "privacy_sanitized": true,
+          "distributed_git_blob": "ee09da14832fa9c88369e6cefa5729ee7b6e0e93"
+        },
+        "tests/fixtures/p25_call_vectors.h": {
+          "bytes": 11634,
+          "sha256": "0660e5df8b9eb77f79e80b5d4c23f8bb54884b64d63573a48cf397edf9191250",
+          "git_blob": "ca2ea061ebd07f9af0cae4b0bd1c5ac64a0b083f",
+          "source_match": "Privacy-only neutral test/example identifiers; encoded fixtures and independent CRCs regenerated where required",
+          "privacy_sanitized": true,
+          "distributed_git_blob": "b1824858b8e3153ce9609c0fbe0559028894620b"
+        },
+        "tests/generate_hotspot_fixtures.py": {
+          "bytes": 11188,
+          "sha256": "ad871e998b9db90d2fba0d6c27efa02476418a201ae925ea201c73f556d72212",
+          "git_blob": "359b55b7a80a8d2412945b184f7357f6b88ddb2c",
+          "source_match": "exact Git blob"
+        },
+        "tests/generate_pitch_cache_probe.py": {
+          "bytes": 2217,
+          "sha256": "dc21210da481f4380da378630a53f64429754cf404b545f9800bf96e493bc056",
+          "git_blob": "5d74371b0daa74b76bd77feda159bbde0d2af23b",
+          "source_match": "exact Git blob"
+        },
+        "tests/imbe_bench_probe.cpp": {
+          "bytes": 719,
+          "sha256": "5c669f24a391c49a9b383821be61e9095bb8dfcfd8c2a649cd25b9ad941ce2bb",
+          "git_blob": "c3927964c2e92222c2f8b0a9004738c480f2053c",
+          "source_match": "exact Git blob"
+        },
+        "tests/imbe_profile_probe.cpp": {
+          "bytes": 207,
+          "sha256": "0b21539a784ce08c5751b7f04cdf3e1fd76841cc123fc5d9d09206f7b7980d92",
+          "git_blob": "15e82a24949ba6c2ee3ff52a6d3431e3bede70c4",
+          "source_match": "exact Git blob"
+        },
+        "tests/imbe_stream_probe.cpp": {
+          "bytes": 1321,
+          "sha256": "61178589a1f59ddc31850f34070f47f930fcc6018b157d672fdfa08c98ff9fe0",
+          "git_blob": "aeb3f72b1f2d2992b0967f107c8a1ff0b270d4f4",
+          "source_match": "exact Git blob"
+        },
+        "tests/imbe_unity_probe.cpp": {
+          "bytes": 634,
+          "sha256": "1ab53ddcad549c66e494f61b6db6b47efa628724fdd1ec3868bb55e3ec6e8f9f",
+          "git_blob": "fecbb6b99e9b2fa7bd08c96ade38ea278505e04f",
+          "source_match": "exact Git blob"
+        },
+        "tests/p25_rx_exact_nid.c": {
+          "bytes": 396,
+          "sha256": "9749ba7263adc5c26b05ea1e0290cf226a3b3f75bef1bd59cfd0db507eca6b42",
+          "git_blob": "5bf2b4bf6bc412189d4262412d72884c396e30e9",
+          "source_match": "exact Git blob"
+        },
+        "tests/radio_dmr_test.c": {
+          "bytes": 22336,
+          "sha256": "12105a18283940b674929b4f45ca8ed8673f9f5960544b09c38158689c04650e",
+          "git_blob": "80456baf9f683e88bd4f9e70d75b4efaa86c7649",
+          "source_match": "Privacy-only neutral test/example identifiers; encoded fixtures and independent CRCs regenerated where required",
+          "privacy_sanitized": true,
+          "distributed_git_blob": "adf55b6a710085c82658acbc4752722881139dab"
+        },
+        "tests/radio_service_schedule_test.c": {
+          "bytes": 2025,
+          "sha256": "d37cad3b29f11610b881b916276272632413b0d57afc70461e890a8fecbdd683",
+          "git_blob": "c31e98024cab8a03aeb7609935f72a4cda71702c",
+          "source_match": "exact Git blob"
+        },
+        "tests/radio_signal_meter_test.c": {
+          "bytes": 3552,
+          "sha256": "1533438864d8e0f366b364328bdf3c9090b959e5830e7174563d3cf6aac30665",
+          "git_blob": "522b3a5eead8df7ce41b9b1cf40b3527eb63e475",
+          "source_match": "exact Git blob"
+        },
+        "tests/reference/README.md": {
+          "bytes": 491,
+          "sha256": "40b8f1050f7c36fd5b52c82ac756d8f8fe4401034d543d4e504c945e8ab79766",
+          "git_blob": "f8dad381ba2520b07594e416b5c4d62da7c95741",
+          "source_match": "exact Git blob"
+        },
+        "tests/reference/mmdvm_fec_audit.cpp": {
+          "bytes": 1930,
+          "sha256": "ca976d5b65d2705995f26ab729ef697e7dcaba0d7ae0928d6688c8073534bc81",
+          "git_blob": "d4fedba54a503fac78075d717d4d750a99dc2efc",
+          "source_match": "Privacy-only neutral test/example identifiers; encoded fixtures and independent CRCs regenerated where required",
+          "privacy_sanitized": true,
+          "distributed_git_blob": "e2a040ac9aff5b274808977da057243e47bf7a82"
+        },
+        "tests/reference/p25_demod.h": {
+          "bytes": 1031,
+          "sha256": "dad67bcf873fe76114beb2bbace4ff0afa828dcdaee257a45534c5ef1fed543e",
+          "git_blob": "ad356fa7fc0cf31cddb058d09c2076ad78b6cedb",
+          "source_match": "exact Git blob"
+        },
+        "tests/reference/p25_demod_filter.h": {
+          "bytes": 680,
+          "sha256": "257d2f70f7652d9ceb98020d05251277150c61d28081454629dad4447c72a283",
+          "git_blob": "096645ed45c8e96bf080cc246b53d8ba090cf890",
+          "source_match": "exact Git blob"
+        },
+        "tests/reference/p25_demod_reference.c": {
+          "bytes": 4846,
+          "sha256": "a7c8f32a0cce99ade4f1ad807e08237c07c8bc6613eee0f3718bde08a1b01a4a",
+          "git_blob": "cb20171110f1575e6fa2934e29325ed740ed56d3",
+          "source_match": "exact Git blob"
+        },
+        "tests/reference/p25_rx_reference.c": {
+          "bytes": 3957,
+          "sha256": "5b282dd2a3add376d76e04952131d91347ccc0d83856f07aacde729ae06f6d76",
+          "git_blob": "2908503f48176ac057c40c0f4f1726019f7053af",
+          "source_match": "exact Git blob"
+        },
+        "tests/render_diag_ui.c": {
+          "bytes": 2292,
+          "sha256": "c42ae10ae4a7f4cc543d2407de8af4c44d915013e3943b94deee1decdc2f46c6",
+          "git_blob": "f8f6b1d54ff24efc1bc9db366ccf12351adfa153",
+          "source_match": "exact Git blob"
+        },
+        "tests/render_imbe_ui.c": {
+          "bytes": 2166,
+          "sha256": "c27fd3c2ccb1f9d8b2fb32216977499065028421be7155a3e58875e06e1d8c95",
+          "git_blob": "cfdc4013553dfa31aa6a86c53e4a43b45c90a921",
+          "source_match": "exact Git blob"
+        },
+        "tests/render_live_ui.c": {
+          "bytes": 37633,
+          "sha256": "8c353b8fefdafb1f3d18a73ee596613db7e3e8418095d37a03a5ce75426d3f89",
+          "git_blob": "b0e481154382389ea129b6ea12e029cff77e3865",
+          "source_match": "Privacy-only neutral test/example identifiers; encoded fixtures and independent CRCs regenerated where required",
+          "privacy_sanitized": true,
+          "distributed_git_blob": "18cfe00e1b5e1c900683f51c1cb495cc74573370"
+        },
+        "tests/test_analyze_imbe_build.py": {
+          "bytes": 9388,
+          "sha256": "3be9411efb7a49c8dfa22b1bf568967442efeddd6abd5d35e25d203dc1efed29",
+          "git_blob": "80d2fa9709e6a44e4f090f3291e6d9859cdc5d69",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_cps_adapter.c": {
+          "bytes": 12893,
+          "sha256": "945a3508011544dee7628a6efa0550899005f9c267b1b95d99703099f19aba3f",
+          "git_blob": "c277c9628637fff5dd7f56c644405d4f080b8993",
+          "source_match": "Privacy-only neutral test/example identifiers; encoded fixtures and independent CRCs regenerated where required",
+          "privacy_sanitized": true,
+          "distributed_git_blob": "14a683842cac7913f7df3c6d73673cb8b2bfef22"
+        },
+        "tests/test_demod_candidates.c": {
+          "bytes": 5572,
+          "sha256": "e7a9ae8fe782f92cb82ff7a20a5289779f14131e7ee805ed1f7daed2eb6eed79",
+          "git_blob": "39bb8eb6c5f52bef8e624e1e770675f22821ed91",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_demod_lifetime.py": {
+          "bytes": 19466,
+          "sha256": "857ce8ca63c09500acc19d425eb50fc7242fce2405e262c763f4a2689accdda7",
+          "git_blob": "c81c9573abc9fa22051119785b1661cbe881b019",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_demod_math.c": {
+          "bytes": 826,
+          "sha256": "1c669a8fe10ca4ef141ad6875d0f4dc9fea6ae050516267eb7f28ba4b7de76a4",
+          "git_blob": "7263c5a86313a646f85680477786cd57d6e529d9",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_diag_adapter.c": {
+          "bytes": 10449,
+          "sha256": "3a3ce98d333b1bf981ec9f73f5e545943d13b272a8212c622f9abd8760bed409",
+          "git_blob": "23a8c61d5d34c57c4a34e0ed5b42b2c00aa5b4eb",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_dmr_backports.py": {
+          "bytes": 7304,
+          "sha256": "1ba30f8970915b3a8673251421381da0cb6272f2c53eddd0fe1f7a46ca9c4e1d",
+          "git_blob": "c16925b75748e1b87688a7c603e75616460a257d",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_dmr_tone.py": {
+          "bytes": 7399,
+          "sha256": "aa1f05d0d704dc37793b6fd0b25734c5d21c1ebedad083a6ebada6eac2e6e8ce",
+          "git_blob": "be3ff4bbfedc91295c3c4d2526999081e0b34469",
+          "source_match": "Privacy-only neutral test/example identifiers; encoded fixtures and independent CRCs regenerated where required",
+          "privacy_sanitized": true,
+          "distributed_git_blob": "d29437902656616e3c308d0470cd3f9f017c45bd"
+        },
+        "tests/test_dmr_tx_pacing.py": {
+          "bytes": 3000,
+          "sha256": "08d16f1b4a2801c3a5af84e17410381661e3d25f3c422e8158553ed91e1e2da8",
+          "git_blob": "630092085f787a4f0207ec58d07a155dfed928df",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_drained_audio.py": {
+          "bytes": 30006,
+          "sha256": "f15720159f26d56eb5ea8930301721ae9edae1c558b1536fe8495f06d89734d7",
+          "git_blob": "e204c6c1cf2bf423f92f88f0038b91a21d1552c6",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_drained_dmr.py": {
+          "bytes": 15433,
+          "sha256": "0a39031f33ec5855f72c17a49d11a8ae374f7a46832431e589c9919af9071338",
+          "git_blob": "4ad9c423b179f6e9dd4c17b20c634a41179f81e2",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_export_p25_fixed.py": {
+          "bytes": 7286,
+          "sha256": "cea7a932b22ce45a2471c9cb9b46af4756bd7e4b2afa484a8e79de1587ca555f",
+          "git_blob": "e5d6a0fcfd77b854f6759084575572413dd074ef",
+          "source_match": "Privacy-only neutral test/example identifiers; encoded fixtures and independent CRCs regenerated where required",
+          "privacy_sanitized": true,
+          "distributed_git_blob": "5b694ae099165eac67bcae319812da748fa849b0"
+        },
+        "tests/test_host_voice.py": {
+          "bytes": 5156,
+          "sha256": "c5b1851f6ee2cd73a4b39294be3eeaa4bfc4fe99414df2ead35fe352f3868444",
+          "git_blob": "93d0ea586d89cad0052c2a912973348c7dce53e4",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_hotspot_dmr_replay.py": {
+          "bytes": 17610,
+          "sha256": "721e42b104b5cf1fa2d4b1fb0c04942186c136ba46843ee4c00db60fb2b8b0fe",
+          "git_blob": "5ca26aacd5ba6b31997fdcb35328fcbd6823ac2b",
+          "source_match": "Privacy-only neutral test/example identifiers; encoded fixtures and independent CRCs regenerated where required",
+          "privacy_sanitized": true,
+          "distributed_git_blob": "21b99fbb9d29ba4f508c078e58a628134ef2bb49"
+        },
+        "tests/test_hotspot_dmr_trace.py": {
+          "bytes": 7265,
+          "sha256": "1b171d93a57548d8f5224ace4ad989b57a4975c7c00dee0f7d2d237e1c6051da",
+          "git_blob": "7dbaa729ed66adf0253300b8b725fcd847d91ec3",
+          "source_match": "Privacy-only neutral test/example identifiers; encoded fixtures and independent CRCs regenerated where required",
+          "privacy_sanitized": true,
+          "distributed_git_blob": "dc5327252380b98d3561d6e9ab087c4432cfa7a4"
+        },
+        "tests/test_hotspot_qualification_fixtures.py": {
+          "bytes": 10307,
+          "sha256": "2dc62dc42c876b0a7e090aa7517d4c05a1df7c492e8ad650ea9b666c33dce73f",
+          "git_blob": "77496a9d215a46b2c2d8733407a05eaddf89d6bf",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_hotspot_replay.py": {
+          "bytes": 11632,
+          "sha256": "70ba33b80e22c01f346dd247f6c663cf27ccc462724d2b63bfe100e39ddd2680",
+          "git_blob": "a7048b0dae22e3811ead851a8cdacbd89419a6a4",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_hotspot_trace_session.py": {
+          "bytes": 22344,
+          "sha256": "9bf5ebc89bfa659e0d5a83432af32af0ddc6507f2c4d128fbd1538b4ad46d7af",
+          "git_blob": "a82602e4442bf93e398685118e69e388918ab52a",
+          "source_match": "Privacy-only neutral test/example identifiers; encoded fixtures and independent CRCs regenerated where required",
+          "privacy_sanitized": true,
+          "distributed_git_blob": "8444fa3b9c70de3c8170134c40369477dd9cdcce"
+        },
+        "tests/test_imbe_benchmark.c": {
+          "bytes": 5158,
+          "sha256": "5a5c07d2cfb05680489fb3eaf2380deaaff9b3871cfc12c98ede015fb2a41bda",
+          "git_blob": "0637186cc224ac21bebd7f7078405d61042592b3",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_imbe_host.py": {
+          "bytes": 4165,
+          "sha256": "e378c29f18d74c2fc6ae83e547931c9e098871a2f524c390a808bf83790d5983",
+          "git_blob": "202e0c207058670d42cb894cae97a392edc24cc9",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_imbe_mic.c": {
+          "bytes": 5047,
+          "sha256": "a287c251e4ee09b85b2e4c4d237e7673cd5712e5a14718bd5d2d3cb7ae594dc5",
+          "git_blob": "44e9f7a2d9bb1ac1a040913fa94e0400e01c589d",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_imbe_mic_host.py": {
+          "bytes": 4930,
+          "sha256": "89120af5dd7701d127253304274d6ba4dbfd9dbea19029cb4c6c0a30abbc904e",
+          "git_blob": "8c3bca9f307aa3043e7a8913a1ad6c92c2ef6dd9",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_imbe_stream.c": {
+          "bytes": 2367,
+          "sha256": "7cb96aa3b9d4e3fe5954e346a5498357bf6022de39970093e0cfc8b146c65731",
+          "git_blob": "d347692e8ab4e8eef69412b11ff4b2379f842f5d",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_live_adapter.c": {
+          "bytes": 178523,
+          "sha256": "456f753b2799ff410763093921a5ea0b1ff4a4c57a844ba31c5640963afa4996",
+          "git_blob": "e3e2d87e177c82e2a6eb5c51ac8b6729d9fa4e2a",
+          "source_match": "Privacy-only neutral test/example identifiers; encoded fixtures and independent CRCs regenerated where required",
+          "privacy_sanitized": true,
+          "distributed_git_blob": "d8b77cf4c8f0d174cb9e5dee8f559437f1dd83d2"
+        },
+        "tests/test_minimal_diagnostics.py": {
+          "bytes": 5999,
+          "sha256": "4b0f965b65d0c1cb91c921dd4d70bf49bd45cabe800395289018eb9563968439",
+          "git_blob": "c7c1641d0cc172c08bf2c958e89f6bb939373993",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_mmdvm_trace.py": {
+          "bytes": 11609,
+          "sha256": "02a3c072cdadcfcb9009d02b7a619c79830e734d3b9317b0ff6de44d66e0d71a",
+          "git_blob": "be2b92d4224b407a1a60bae321d61723fd7f1a31",
+          "source_match": "Privacy-only neutral test/example identifiers; encoded fixtures and independent CRCs regenerated where required",
+          "privacy_sanitized": true,
+          "distributed_git_blob": "c75ff00e871984be7781062fab5c0dbc1b317641"
+        },
+        "tests/test_p25_call.py": {
+          "bytes": 11604,
+          "sha256": "41f3772d8d7b2a59f1bb46c86c1e9a91a78d1b01e63bff64cf815c53fce6499e",
+          "git_blob": "cbacaa91d33aea6a46a35ed2c1be9eef915c2cf1",
+          "source_match": "Privacy-only neutral test/example identifiers; encoded fixtures and independent CRCs regenerated where required",
+          "privacy_sanitized": true,
+          "distributed_git_blob": "a797fb91d95814ff24eeadcb2f826e39dba7bac5"
+        },
+        "tests/test_p25_channel.py": {
+          "bytes": 2076,
+          "sha256": "f28a11ea2a1d516745061f67741a459619e5b67b3ef7c5031921e4d6334b9bde",
+          "git_blob": "e60eba2ff2f9ab8142d102a4fa73bb7c49bf53ec",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_p25_channel_store.c": {
+          "bytes": 28499,
+          "sha256": "0454616ae049adb3bd0457bb7a14987e229bf119eb4ad623b29d09be59c5ba99",
+          "git_blob": "df3b1265106a00909e82028e396b0317c40126b1",
+          "source_match": "Privacy-only neutral test/example identifiers; encoded fixtures and independent CRCs regenerated where required",
+          "privacy_sanitized": true,
+          "distributed_git_blob": "e1c6e901a25065c73976eb0ed95f62f5672ba748"
+        },
+        "tests/test_p25_demod.c": {
+          "bytes": 2458,
+          "sha256": "d5bef65c9be68776d50bacfd5e9372c4eef3a39483620c7372ab9e03fad31881",
+          "git_blob": "11c03e977dded0eb8b39d3cea3eff46b6bdd3a66",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_p25_fm.c": {
+          "bytes": 8517,
+          "sha256": "1402a1d7eeba001fde61d9a738a834cf82e9830f852191e40ff00f71d61101e0",
+          "git_blob": "094932f0e12c833f06c8c4bc6f2917355e57c723",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_p25_iq.py": {
+          "bytes": 1504,
+          "sha256": "dd6cd90f089e2d3effad0a1d617d171b9c2a81bdf7d25d7705510660ecde82d9",
+          "git_blob": "e775a07b746125a09f04900ef00e9404391b6ce3",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_p25_live_frame.cpp": {
+          "bytes": 1539,
+          "sha256": "9094bbdd40468be030683917b9d2cd90bc3a2a5e1e750dcd2c8960b4312b4bb5",
+          "git_blob": "a259b83eba36a76b207ba01cd5def21eaaad45cd",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_p25_live_host.py": {
+          "bytes": 3022,
+          "sha256": "0f062197ec9630e55dd27da77a64f9535d44d074a7945cebdd3416a2c9ec7bec",
+          "git_blob": "a0e66db2049be61482d7e70611fa0451e6d6bb54",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_p25_live_tx.c": {
+          "bytes": 6697,
+          "sha256": "f967e165ae77e69952d8d846829c1deb84b68e187efddc5fe327c68f3251ec53",
+          "git_blob": "9a195667557eae699e8bee0ae0c727ac19e8935e",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_p25_monitor.c": {
+          "bytes": 4209,
+          "sha256": "b370d4f2ac19e8e58b949381134a058ac792ca14662f51ee4a91cc1e69a39e6a",
+          "git_blob": "a36c50b8edc4db5882044d8aaabe4c1c5fed9c61",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_p25_nid.cpp": {
+          "bytes": 5903,
+          "sha256": "575e823a41de19b9d3e3ece1201c8ba7af1443c92ef5ef5a0d1dd3cbd4d19d20",
+          "git_blob": "d53b4c0b8401ad2dcbb8a0a91788763a4aa063be",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_p25_preferences.c": {
+          "bytes": 12972,
+          "sha256": "257fc3040868c0a48f547e3b3bf986d69355466f7efbfdd0bfba10823025b113",
+          "git_blob": "ef47e9fa4e9a99b2d6bb6ed92cde2448eb74dc91",
+          "source_match": "Privacy-only neutral test/example identifiers; encoded fixtures and independent CRCs regenerated where required",
+          "privacy_sanitized": true,
+          "distributed_git_blob": "d87a285cbc5c066f4f17887f28f4e3303c05385a"
+        },
+        "tests/test_p25_receive_policy.c": {
+          "bytes": 14990,
+          "sha256": "99902e7ae6f80112d649d1d1583ae4d5bb28762a1032de9d47a5f8a63ac3e457",
+          "git_blob": "1397425e76f007970a7752c3800d259feb2d8f56",
+          "source_match": "Privacy-only neutral test/example identifiers; encoded fixtures and independent CRCs regenerated where required",
+          "privacy_sanitized": true,
+          "distributed_git_blob": "fe871ab192d6b6a2d9b26eb5ceb9c58006a3a7ff"
+        },
+        "tests/test_p25_rx.c": {
+          "bytes": 2283,
+          "sha256": "04ffb5dd86e02da6d4d1d41ff3544a332f3ecbbf4da3c1a046697392bccac15e",
+          "git_blob": "811db17f66b9f3a7dc17682534a7ebd520600560",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_p25_settings_host.py": {
+          "bytes": 18530,
+          "sha256": "b5c6d16a05df05a68ddb162bc026de4889a816e4f669084946adcbe5f3d7aea9",
+          "git_blob": "e9e939b2ec5061ea411a6546dca2d2070a7ededb",
+          "source_match": "Privacy-only neutral test/example identifiers; encoded fixtures and independent CRCs regenerated where required",
+          "privacy_sanitized": true,
+          "distributed_git_blob": "caca7569832a3535a8ff2b75b94ce6308f88a319"
+        },
+        "tests/test_p25_tx.c": {
+          "bytes": 2603,
+          "sha256": "e88928a79b96b86a9d6c3eef03a0ed8baeb6c117c97d142e70b1e99de99dc3e8",
+          "git_blob": "1621d0a61feb0332dee61cc5b20caf4ac8362013",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_p25_voice_policy.c": {
+          "bytes": 6465,
+          "sha256": "9b94f2507c61961e3ad7b4b26f08f4bce1acd0ce1a965b372ada07617db95f2c",
+          "git_blob": "fbd573696e58e2a92e0b11106ab5d7c0011772ec",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_pcm_download.py": {
+          "bytes": 2297,
+          "sha256": "bb824c40f8f0406a96f10085d8726a2e70a9066b9c23b476a35ed81a47d67b0b",
+          "git_blob": "e41de3330bd33cedaffbba636adf548a1eb7fcc8",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_radio_broadcast.c": {
+          "bytes": 5731,
+          "sha256": "260dc1a2d0e9efcf95ec1a772b21d3092eb43457fd82e142e3fa89b0093a2846",
+          "git_blob": "c0d9f9b98a6b59a73ef563bcbd0852fc32b80788",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_radio_broadcast.py": {
+          "bytes": 714,
+          "sha256": "18a87c7cda96c1f354b6f9e95fa43d9f4d37a1b22b35d79a92aa7603d24ecba9",
+          "git_blob": "469614420f8a059df98f854b2f9cb4a76c32de12",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_radio_broadcast_input.c": {
+          "bytes": 3200,
+          "sha256": "be49893cd9b5feb5a6c1e519b85cfbcf206f82d1a6b1564893e9e5065e0f3ec6",
+          "git_blob": "266ed39be94b943e79401898f3e4048fbdeb52bb",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_radio_broadcast_input.py": {
+          "bytes": 669,
+          "sha256": "5d3bd6273727ed722ba215d3c98c04a6282c9c33edc72a9aaaed86c10637dd79",
+          "git_blob": "f542cb1fb291397744c11fbba4571d1295996a57",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_radio_codec_workspace.py": {
+          "bytes": 14721,
+          "sha256": "ea9a5bea1c55797102b1f7c21963650322911d190c20f1cd2c343c6d2cc53e69",
+          "git_blob": "79119879115dc5fa54a5f0426f09e9ec0ea20e4b",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_radio_dmr.py": {
+          "bytes": 3524,
+          "sha256": "1d817b30bdc477aa4baa7e2a02557ab82771a40fe93c26ab7eac2e0cbc05ef6f",
+          "git_blob": "e24ad5289991925ec193d2e3467ed943b9d5d027",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_radio_safety.py": {
+          "bytes": 6678,
+          "sha256": "4d6f6f0cd872cea6e2de9c855aa33ef8467e71b7daa80f7edea582eb007604a9",
+          "git_blob": "5d940e2f6c025cd69a67eaadf1f0aeb63b05c652",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_radio_service_schedule.py": {
+          "bytes": 1081,
+          "sha256": "b3a703fb2149c60acbb8692bef49c7e8c6cfb8f0af2209a9ca8d4105700e6f78",
+          "git_blob": "d01cf31af4245c843da3f5e833d1c3dae927922b",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_radio_signal_meter.py": {
+          "bytes": 1081,
+          "sha256": "9b474232bf927cef96e28eb39dc1ece734fc27c2b9bea9aa96d718c5d6690e56",
+          "git_blob": "b82e6cfe5e6ba214070c22cf53f32d58115e7940",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_radio_ux.c": {
+          "bytes": 4114,
+          "sha256": "ca38250cb1883de3419c0e12c9ff60816cdc21e33e1ff47256343d2af7b69ca9",
+          "git_blob": "208d8bf8941c6be30de9cee3830c227e89d9a698",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_receive_adapter.h": {
+          "bytes": 11482,
+          "sha256": "a125724745ddda4ec8125b2a48d78683cce224a359e7855554e64f257a26f9c9",
+          "git_blob": "902d46cbec298e23be834a8db58485b0027cdfba",
+          "source_match": "Privacy-only neutral test/example identifiers; encoded fixtures and independent CRCs regenerated where required",
+          "privacy_sanitized": true,
+          "distributed_git_blob": "a674ef5926d1472c193f97577cc1b2da1f1866c5"
+        },
+        "tests/test_receive_bench.c": {
+          "bytes": 600,
+          "sha256": "9316192df484cdd0a3b302a7cdf6df5cf0be7ccf8be338386d0268aa5d54ac1c",
+          "git_blob": "bca2d38375859aa015c32dbdb6ae8f58859cae8b",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_rx_capture_host.py": {
+          "bytes": 1361,
+          "sha256": "f24d2f8f2afed27030601b9f598f4b54a4e97c533c11372b1f4b9d06607d9372",
+          "git_blob": "4881af22dbe7ef9b1a7f764f0abfa17ad5810bbc",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_rx_equivalence.c": {
+          "bytes": 653,
+          "sha256": "16fd470143babb53af6839fb943589df04e330d17e81001acdf619d9e8c7f145",
+          "git_blob": "9f9a5b57d47361db0a6676d162a4c40861a9eaf3",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_scan_adapter.h": {
+          "bytes": 26907,
+          "sha256": "55bbf1a5e0339dcc686e5a4693214f5f4f3fe43837aaa852b446e39f50a3b431",
+          "git_blob": "bf8233d0ca419baae7e8f14b67884b836d31f3a3",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_test_tone.c": {
+          "bytes": 972,
+          "sha256": "29b2f253af16aec0a406d8f6b8396ddfd9a94e96f9c3e4543859ebf5f4307f28",
+          "git_blob": "bc9592fee6aad0b551e57d972ed6d62a0b29e499",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_tx_diagnostic_host.py": {
+          "bytes": 8968,
+          "sha256": "a5742ba9ebe21c0e925a7843432ba1199831ca8ad6a552fa9bfe153a100d5767",
+          "git_blob": "ec866f9bd100556ba95a05d0f5d203ddaf746678",
+          "source_match": "exact Git blob"
+        },
+        "tests/test_tx_limits.c": {
+          "bytes": 1507,
+          "sha256": "cbfd32677724cade6ead8bb918476da63c7a9dc94e75ceef0a4e4229e760e4c1",
+          "git_blob": "f96ec312731157260318406b7f3c85439fd485e9",
+          "source_match": "exact Git blob"
+        },
+        "tests/web_cps_bridge.py": {
+          "bytes": 3579,
+          "sha256": "a1f3bb7cec7faa16ad11d81209dd2a32809fecc9e0f79507c43a4112c921d009",
+          "git_blob": "e826a1862da7414204ae226c5f3e8c0f624a9e49",
+          "source_match": "exact Git blob"
+        },
+        "tests/web_cps_browser.mjs": {
+          "bytes": 38801,
+          "sha256": "e03adde5d0f0d8bf98daf767f15e446f0de911ec5f7515f3ce0f09cb0cd42af5",
+          "git_blob": "16edde58b998b620ec5b45b97288e7c9ad4cdebc",
+          "source_match": "exact Git blob"
+        }
+      },
+      "privacy_sanitization": {
+        "scope": "Owner-specific identity in test/example inputs replaced with neutral values. Prior regenerated fixtures retained where original source blobs are unchanged; changed V4 legacy record literal regenerated with independent CRC. Production firmware and build inputs remain exact Git blobs.",
+        "replacement_radio_id": 1234567,
+        "replacement_callsign": "N0CALL",
+        "files": [
+          "scripts/export-p25-fixed.py",
+          "tests/dmr_tx_pacing_test.c",
+          "tests/fixtures/p25_call_vectors.h",
+          "tests/radio_dmr_test.c",
+          "tests/reference/mmdvm_fec_audit.cpp",
+          "tests/render_live_ui.c",
+          "tests/test_cps_adapter.c",
+          "tests/test_dmr_tone.py",
+          "tests/test_export_p25_fixed.py",
+          "tests/test_hotspot_dmr_replay.py",
+          "tests/test_hotspot_dmr_trace.py",
+          "tests/test_hotspot_trace_session.py",
+          "tests/test_live_adapter.c",
+          "tests/test_mmdvm_trace.py",
+          "tests/test_p25_call.py",
+          "tests/test_p25_channel_store.c",
+          "tests/test_p25_preferences.c",
+          "tests/test_p25_receive_policy.c",
+          "tests/test_p25_settings_host.py",
+          "tests/test_receive_adapter.h"
+        ],
+        "changed_files": 20,
+        "production_firmware_source_changed": false,
+        "firmware_sources_unchanged": true,
+        "generated_fixtures": [
+          "tests/fixtures/p25_call_vectors.h",
+          "tests/test_p25_preferences.c",
+          "tests/test_p25_channel_store.c"
+        ]
+      }
+    },
     {
       "file": "0.2.0-beta.1-project.zip",
       "upstream_url": "https://github.com/Speexvocon/dm32-p25",

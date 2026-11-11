@@ -1,6 +1,6 @@
 # Quick start
 
-Install using [FLASHING.md](FLASHING.md) first. This guide covers **v0.2.0-beta.1 / build 2e0f18a**. Older firmware has fewer settings/memory slots.
+Install using [FLASHING.md](FLASHING.md) first. This guide covers **v0.2.0-beta.2 / build 32f973f**. Older firmware has fewer settings/memory slots.
 
 ## First use and controls
 

@@ -2,7 +2,7 @@
 
 Open **[DM32 Studio](https://speexvocon.github.io/DM32-Studio/)** in desktop Chrome or Edge. It programs this custom P25/DMR/FM firmware; it does **not flash firmware**. Stock CPS, CHIRP and RadioFoundry binary codeplugs use different formats.
 
-The included `cps/` files are the matching local copy. To serve locally, run from this repository:
+V0.2.0-beta.2 uses the same CPS and V4 codeplug format as beta.1; no CPS update or codeplug conversion is needed between them. The included `cps/` runtime is unchanged from source `2e0f18a`, hosted revision `25453260847760b543410181287c5bff03c229b1`. To serve locally, run from this repository:
 
 ```powershell
 python -m http.server 8000 --bind 127.0.0.1 --directory cps

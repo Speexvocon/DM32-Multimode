@@ -1,9 +1,10 @@
 # Known issues and scope
 
-This is an early private beta. Physical evidence comes from one development radio and finite local tests. **V0.2.0-beta.1 / 2e0f18a** passed host/processor/package checks but its expanded V4 geometry has **not yet been flashed or physically qualified**. Earlier images' results are not an exact-binary hardware pass.
+This is an early private beta. Physical evidence comes from one development radio and finite local tests. **V0.2.0-beta.2 / 32f973f** passed host/processor/package checks, installation/readback and one controlled P25 LISTENING-to-DMR tone transition without a restart. This used one development radio with the NRF/fanti 049 codec; P25 scan was not running. The test began with the retained existing four-channel configuration and included normal menu saves. It does not qualify full 256-channel/zone/list capacity or other hardware/codec variants.
 
 ## Current issues
 
+- **P25-to-DMR audio correction:** beta.2 fixes a stopped P25 worker disabling DMR's shared PCM interrupt/output. The hardware pass covers one ordinary P25 LISTENING-to-DMR transition. Scan-to-DMR has host regression coverage only; broader transitions/endurance remain feedback areas.
 - **DMR initial acquisition:** an earlier clean uplink showed a first-sync/receiver-sequence anomaly followed by correct synchronization. That trace does not prove a missing/duplicated transmitted burst; a preamble change is unqualified.
 - **Uniden DMR uplink:** an AnyTone decoded clear DM32 speech. A Uniden missed an entire uplink; its settings after a P25 test were unconfirmed. Later pacing testing did not settle compatibility.
 - **Accessory audio:** the programming plug affects mic/speaker routing. Remove the radio-side plug for audio comparisons; reconnect without powering off if counters are needed.

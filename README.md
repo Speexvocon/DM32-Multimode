@@ -2,7 +2,7 @@
 
 Private beta firmware bringing conventional **P25 Phase 1, DMR and analog FM** into one DM32 interface.
 
-The current package is **v0.2.0-beta.1**, source `2e0f18ad2d47a20b78d00c0702fbe2307dddfd09` (radio build `2e0f18a`). The previous v0.1.0-beta.1 package remains available. This is an early, non-mission-critical beta; read the version-specific qualification limits before installing.
+The current package is **v0.2.0-beta.2**, source `32f973f77e3b898c8e7bb7b6e3bb9fa64d865a25` (radio build `32f973f`). Previous v0.2.0-beta.1 and v0.1.0-beta.1 packages remain available. This is an early, non-mission-critical beta; read the version-specific qualification limits before installing.
 
 ## Start here
 
@@ -29,14 +29,16 @@ A/B select between contexts on **one receiver**. There is no simultaneous dual r
 
 ## Upgrading from an earlier beta
 
-Before flashing, use CPS to **Read radio** and export the complete JSON configuration. Keep that file for rollback. The new CPS supports earlier firmware; opening its website does not update the radio.
+Before flashing, use CPS to **Read radio** and export the complete JSON configuration. Updating from v0.2.0-beta.1 requires no codeplug conversion or CPS update. Keep that file for rollback. The new CPS supports earlier firmware; opening its website does not update the radio.
 
 V0.2.0 reads saved V1-V3 settings without a startup migration write. The first explicit settings save publishes V4. Earlier firmware cannot read the expanded configuration; never use a 256-channel file as an older-radio backup. See [upgrade and rollback details](FLASHING.md#upgrading-an-existing-beta).
 
 ## Validation and package boundary
 
-The exact 2e0f18a application passed host CI, processor build, migration and complete updater-package checks. The expanded V4 geometry has **not yet been flashed or physically qualified**. Earlier development builds have finite local evidence for P25 speech/filtering and DMR speech/PCM audio/pacing; those observations do not establish a hardware pass for this new binary.
+V0.2.0-beta.2 fixes DMR audio after switching from P25: a stopped P25 speaker worker no longer disables the shared DMR PCM interrupt/output. Exact build 32f973f passed host CI, processor/package checks, installation and independent readback, preserving bootloader, native codec, calibration and saved settings.
 
-The normal application is 302,856 bytes and uses 162,632 of 211,456 linked RAM bytes. Minimal status/fault diagnostics are retained; extended lab capture paths are excluded from the normal build.
+One controlled transition from P25 LISTENING to DMR without a restart played a full steady five-second hotspot tone, with all 252 voice frames accounted for and no lost/concealed frames, queue faults or reset. This used the development radio's NRF/fanti 049 codec. P25 scan was not running; scan-to-DMR coverage is a host regression, not this hardware result. Full 256-channel/zone/list capacity and other hardware/codec variants remain broader beta feedback areas.
 
-No owner's backup, calibration, personal codeplug or merged native-codec image is distributed. Prepare the codec-free application in `firmware/v0.2.0-beta.1/` locally using [FLASHING.md](FLASHING.md). Automatic codec detection supports verified standard 046/049, NRF/fanti 049 and HR046 contracts. Their validation levels differ: see [known issues](KNOWN_ISSUES.md#native-codec-compatibility).
+The normal application is 302,868 bytes and uses 162,632 of 211,456 linked RAM bytes. Minimal status/fault diagnostics are retained; extended lab capture paths are excluded from the normal build.
+
+No owner's backup, calibration, personal codeplug or merged native-codec image is distributed. Prepare the codec-free application in `firmware/v0.2.0-beta.2/` locally using [FLASHING.md](FLASHING.md). Automatic codec detection supports verified standard 046/049, NRF/fanti 049 and HR046 contracts. Their validation levels differ: see [known issues](KNOWN_ISSUES.md#native-codec-compatibility).
