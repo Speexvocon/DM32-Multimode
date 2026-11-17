@@ -44,6 +44,42 @@ def checksum_file(path):
     return records
 
 
+def check_release_cps(path, release, version, root_checksums, default_release):
+    """Keep historical metadata intact; the shared CPS bundle serves the default."""
+    cps = release.get("cps", {})
+    require(cps.get("url") == "https://speexvocon.github.io/DM32-Studio/"
+            and re.fullmatch(r"[0-9a-f]{40}", cps.get("source_commit", "")) is not None
+            and cps.get("firmware_source_commit", cps.get("source_commit")) == release["source_commit"],
+            "Hosted CPS does not match expanded firmware source")
+    if version != 6:
+        return
+    require(cps.get("codeplug_version_max") == 6, "CPS capability manifest lacks V6")
+    if Path(path).resolve() != Path(default_release).resolve():
+        return
+    deployment_path = ROOT / "cps/deployment.json"
+    deployment = json.loads(deployment_path.read_text(encoding="utf-8"))
+    require(deployment.get("source_revision") == cps["source_commit"]
+            and deployment.get("firmware_source_revision") == release["source_commit"]
+            and 6 in deployment.get("protocol_versions", []),
+            "Bundled CPS deployment identity differs from release")
+    assets = deployment.get("assets", {})
+    require(isinstance(assets, dict) and bool(assets), "CPS deployment has no asset checksums")
+    for name, expected in assets.items():
+        relative = PurePosixPath(name)
+        require(not relative.is_absolute() and ".." not in relative.parts and "\\" not in name,
+                "Unsafe CPS deployment asset path")
+        asset = (ROOT / "cps" / name).resolve()
+        require(asset.is_relative_to(ROOT / "cps") and asset.is_file()
+                and digest(asset.read_bytes()) == expected,
+                "CPS deployment asset differs: " + name)
+    require("cps/deployment.json" in root_checksums, "CPS deployment missing from root checksums")
+    cps_model = (ROOT / "cps/model.js").read_text(encoding="utf-8")
+    require(re.search(r"export const RECORD_COUNT\s*=\s*499\s*;", cps_model)
+            and re.search(r"export const TRUNK_SYSTEM_COUNT\s*=\s*8\s*;", cps_model)
+            and re.search(r"export const TRUNK_CONTROL_COUNT\s*=\s*8\s*;", cps_model),
+            "Bundled CPS must be refreshed to the declared V6 capability")
+
+
 def main():
     sys.path.insert(0, str(ROOT / "tools"))
     import beta_tools
@@ -74,35 +110,7 @@ def main():
             if version == 6:
                 expected_geometry.update(contacts=96, trunk_systems=8, control_channels_per_system=8)
             require(geometry == expected_geometry, "Expanded release codeplug geometry mismatch")
-            cps = release.get("cps", {})
-            require(cps.get("url") == "https://speexvocon.github.io/DM32-Studio/"
-                    and re.fullmatch(r"[0-9a-f]{40}", cps.get("source_commit", "")) is not None
-                    and cps.get("firmware_source_commit", cps.get("source_commit")) == release["source_commit"],
-                    "Hosted CPS does not match expanded firmware source")
-            if version == 6:
-                require(cps.get("codeplug_version_max") == 6, "CPS capability manifest lacks V6")
-                deployment_path = ROOT / "cps/deployment.json"
-                deployment = json.loads(deployment_path.read_text(encoding="utf-8"))
-                require(deployment.get("source_revision") == cps["source_commit"]
-                        and deployment.get("firmware_source_revision") == release["source_commit"]
-                        and 6 in deployment.get("protocol_versions", []),
-                        "Bundled CPS deployment identity differs from release")
-                assets = deployment.get("assets", {})
-                require(isinstance(assets, dict) and bool(assets), "CPS deployment has no asset checksums")
-                for name, expected in assets.items():
-                    relative = PurePosixPath(name)
-                    require(not relative.is_absolute() and ".." not in relative.parts and "\\" not in name,
-                            "Unsafe CPS deployment asset path")
-                    asset = (ROOT / "cps" / name).resolve()
-                    require(asset.is_relative_to(ROOT / "cps") and asset.is_file()
-                            and digest(asset.read_bytes()) == expected,
-                            "CPS deployment asset differs: " + name)
-                require("cps/deployment.json" in root_checksums, "CPS deployment missing from root checksums")
-                cps_model = (ROOT / "cps/model.js").read_text(encoding="utf-8")
-                require(re.search(r"export const RECORD_COUNT\s*=\s*499\s*;", cps_model)
-                        and re.search(r"export const TRUNK_SYSTEM_COUNT\s*=\s*8\s*;", cps_model)
-                        and re.search(r"export const TRUNK_CONTROL_COUNT\s*=\s*8\s*;", cps_model),
-                        "Bundled CPS must be refreshed to the declared V6 capability")
+            check_release_cps(path, release, version, root_checksums, beta_tools.DEFAULT_RELEASE)
         app = release["application"]
         require(isinstance(app.get("file"), str) and Path(app["file"]).name == app["file"], "Unsafe application path")
         application = path.parent / app["file"]

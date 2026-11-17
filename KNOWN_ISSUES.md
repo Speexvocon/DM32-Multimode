@@ -1,8 +1,10 @@
 # Known issues and scope
 
-Current package: **v0.3.0-beta.1 / 6868053**. Host/target CI and offline package
-checks passed for the exact firmware. Physical evidence is finite and comes
-from a small local development setup, not a general interoperability program.
+Current package: **v0.3.0-beta.2 / e799c73**. Focused host regressions, the
+processor build and offline package checks passed for the exact firmware.
+The new receive fixes have no new RF qualification. Earlier physical evidence
+is finite and comes from a small local development setup, not a general
+interoperability program.
 
 ## Trunking
 
@@ -14,6 +16,12 @@ from a small local development setup, not a general interoperability program.
   access-slot phase or operation on arbitrary production systems.
 - Control search, grant following, voice termination and return behavior need
   broader site, band, weak-signal and endurance feedback.
+- The additional FDMA/AMBT announcements, control-lock maintenance and bounded
+  receive-only recovery in beta.2 have simulated controller coverage but need
+  field feedback. They do not guarantee compatibility with every site's
+  control-channel message mix or timing.
+- CPS **Do not affiliate (receive only)** defaults on for new systems. Existing
+  systems keep their saved mode; inspect it before writing or starting one.
 - P25 trunking is not simultaneous dual receive. A/B select one receiver.
 
 ## Configuration, audio and applets

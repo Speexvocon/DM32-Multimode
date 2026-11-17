@@ -1,12 +1,15 @@
 # Current source and build provenance
 
-Release **0.3.0-beta.1** distributes exact firmware **6868053** from
-`686805368f63f1382e5024e2856aee0b555173be`, target CI **43845372157** and host CI
-**43845372268**. Firmware application SHA-256 is
-`013e162f9665b4e59e1d8c2674c8f7dc39d98ddef8e93f0c099211c575a79dad`.
+Release **0.3.0-beta.2** distributes exact firmware **e799c73** from
+`e799c73ab286c26648771cc91d2aaefad0c0a10b`, processor CI **44068616566**. Firmware application SHA-256 is
+`23f808a44acb504c8148846ded9c79fe56517875622f4595ca925fcfb4bcd46a`.
+Focused local host checks passed; a complete host-CI workflow was not run for
+this revision. The processor workflow ran the 57 passive, receive-recovery and
+subscriber controller cases before building. See [release notes](RELEASE_NOTES.md)
+for the check scope; no new RF qualification is claimed.
 The later CPS/flasher source identity is separate in the release manifest.
 
-[0.3.0-beta.1-project.zip](source/0.3.0-beta.1-project.zip) contains exact
+[0.3.0-beta.2-project.zip](source/0.3.0-beta.2-project.zip) contains exact
 production firmware/host sources, required build generators, current host
 regressions, applet clients/examples, the firmware revision's CPS source and
 curated pinned reference/fixture inputs. No Git history, owner material,
@@ -25,7 +28,7 @@ The [applet manifest](applets/manifest.json) records source/package hashes.
 The unchanged RadioFoundry/FreeRTOS archives and build procedure below remain
 applicable. Replace the historical project ZIP/version in those commands with
 the current one. Extracted source has no original Git history: a new local
-snapshot commit gives a new build identity, not development commit 6868053.
+snapshot commit gives a new build identity, not development commit e799c73.
 The reference toolchain is GCC14.2.0/Binutils2.43.1/Newlib4.5 on Ubuntu24.04.
 A local rebuild is not promised byte-identical to this tested CI application.
 

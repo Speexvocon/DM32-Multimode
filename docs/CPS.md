@@ -2,7 +2,7 @@
 
 Open **[DM32 Studio](https://speexvocon.github.io/DM32-Studio/)** in desktop Chrome or Edge. The editor programs the logical P25/DMR/FM configuration. Its separate **Firmware** page prepares a local update from your sealed backup and offers a reviewed transfer; opening either page never writes the radio. Stock CPS, CHIRP and RadioFoundry binary codeplugs use different formats.
 
-V0.3.0-beta.1 uses V6: 499 records, 256 channels, 16 zones/lists, 96 contacts and eight named trunking systems with eight control channels each. The current CPS preserves V1–V5 formats until an explicit working-copy upgrade and checks the connected firmware's capabilities before writing. Firmware and CPS source identities are separate in the release manifest. To serve locally, run from this repository:
+V0.3.0-beta.2 uses the same V6 settings format as beta.1: 499 records, 256 channels, 16 zones/lists, 96 contacts and eight named trunking systems with eight control channels each. No conversion is needed between these two releases. The current CPS preserves V1–V5 formats until an explicit working-copy upgrade and checks the connected firmware's capabilities before writing. Firmware and CPS source identities are separate in the release manifest. To serve locally, run from this repository:
 
 ```powershell
 python -m http.server 8000 --bind 127.0.0.1 --directory cps
@@ -39,6 +39,19 @@ Forms, samples, imports and Connect do not write. Firmware validates/stages the 
 Names: 12 printable ASCII characters. Enter MHz, hexadecimal NAC, Hz CTCSS and octal DCS. Digital gain applies to P25/DMR; FM uses native gain. A/B share one receiver. PROM cannot decode encryption; DMR PROM stays on its slot. Power labels are hardware levels, not measured watts. Samples are editing examples: use your own identity/channels.
 
 **JSON is the full backup:** records, CRC, geometry and origin metadata. **CSV is channels only**, omitting zones, lists, VFOs/globals/functions. Export the supplied header before import. Bulk edit updates a selected field atomically. Move rewrites all references to follow channel identities; review dependent-list changes when clearing a channel.
+
+## Trunking: Do not affiliate
+
+In **Trunking**, add or edit a system and leave **Do not affiliate (receive
+only)** checked for listening. The radio may follow the selected talkgroup but
+will not register, affiliate or transmit while that saved system is running.
+Entering a radio ID does not override this setting.
+
+New systems have the checkbox checked. Existing systems keep their saved mode,
+including experimental subscriber mode; opening or updating CPS does not alter
+them. Check each system's mode in **Review & write**. Clear the checkbox only
+for experimental subscriber operation on a system that explicitly authorizes
+your radio and testing. See [the trunking guide](TRUNKING.md).
 
 ## Legacy upgrade and rollback
 

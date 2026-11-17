@@ -110,6 +110,27 @@ test('explicit JS legacy upgrade equals the actual C legacy projection byte for 
   assert.deepEqual(encodePayload(upgradeModel(decodePayload(original,3),6)),Uint8Array.from(Buffer.from(active.payload,'hex')));
 });
 
+test('receive-only trunking mode persists through real C storage and changes only its mode byte when unchecked', {skip:!library}, async t => {
+  const f=fixture();
+  t.after(async()=>{await f.client.disconnect().catch(()=>{});f.stop();});
+  await f.client.connect();
+  const original=await f.client.read(),model=decodePayload(original.payload);
+  model.trunkSystems[7]={name:'RX SYSTEM',mode:'rx-only',wacn:0xabcde,systemId:0x123,nac:0x293,
+    rfss:1,site:2,sourceId:0,talkgroup:1000,controls:[440075000,440087500]};
+  model.settings.trunkSystem=8;model.settings.trunkStartAtBoot=true;
+  const passive=encodePayload(model);
+  await f.client.write(passive,original);await f.rpc({action:'reboot'});
+  const retained=await f.client.read();
+  assert.deepEqual(retained.payload,passive);assert.deepEqual(decodePayload(retained.payload),model);
+  model.trunkSystems[7].mode='experimental';
+  const subscriber=encodePayload(model);
+  assert.deepEqual([...passive.keys()].filter(i=>passive[i]!==subscriber[i]),[497*32+12]);
+  assert.equal(passive[497*32+12],0);assert.equal(subscriber[497*32+12],1);
+  await f.client.write(subscriber,retained);await f.rpc({action:'reboot'});
+  const readback=await f.client.read();
+  assert.deepEqual(readback.payload,subscriber);assert.deepEqual(decodePayload(readback.payload),model);
+});
+
 test('lost COMMIT acknowledgement is uncertain once; reconnect/read recovers actual committed C image', {skip: !library}, async t => {
   const f = fixture();
   t.after(async () => { await f.client.disconnect().catch(() => {}); f.stop(); });

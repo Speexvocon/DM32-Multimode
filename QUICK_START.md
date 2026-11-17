@@ -1,6 +1,6 @@
 # Quick start
 
-Install using [FLASHING.md](FLASHING.md) first. This guide covers **v0.3.0-beta.1 / build 6868053**. Older firmware has fewer settings/memory slots.
+Install using [FLASHING.md](FLASHING.md) first. This guide covers **v0.3.0-beta.2 / build e799c73**. Older firmware has fewer settings/memory slots.
 
 ## First use and controls
 
@@ -91,6 +91,9 @@ The small **D** icon identifies diagnostics/nonstandard operation. Normal releas
 
 Use **Operating → P25 trunking** to select/start a named V6 system and set its
 startup/talkgroup choices. See [the trunking guide](docs/TRUNKING.md) for the
-receive-only versus experimental subscriber distinction. **Operating → Messages**
+receive-only versus experimental subscriber distinction. For listening, leave
+**Do not affiliate (receive only)** checked in the CPS system editor. New
+systems default to it; existing systems keep their saved mode.
+**Operating → Messages**
 opens message controls; CPS contacts provide aliases. **Tools → Applets** manages
 installed sandbox packages; see [the applet guide](docs/APPLETS.md).

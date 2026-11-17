@@ -1,3 +1,57 @@
+# v0.3.0-beta.2 — control-channel reception and receive-only recovery
+
+Firmware source `e799c73ab286c26648771cc91d2aaefad0c0a10b`; radio build
+**e799c73**. This is the normal multimode firmware. Older release applications
+and source archives remain unchanged.
+
+- Decode supported FDMA channel identifiers carried in opcode `0x33`, alongside
+  the existing identifier messages. Unsupported channel types remain refused;
+  this does not add Phase 2 voice.
+- Decode supported AMBT site/network announcements and clear group voice grants,
+  with native framing and integrity checks before accepting their contents.
+- Give candidates with genuine P25 evidence a bounded acquisition window.
+  Valid control traffic can maintain an established lock while the required
+  site/network identity remains fresh. Candidate changes discard old maps and
+  decoder state; old-frequency messages cannot establish a new lock.
+- Recover temporary recorder/input failures in saved receive-only systems:
+  pause, retry the same candidate a limited number of times, then advance after
+  a longer delay if setup still fails. Cancellation, programming, changed
+  settings and unrelated faults cannot restart the old receive owner.
+  Experimental subscriber failures keep their existing policy.
+- Add **Do not affiliate (receive only)** to the CPS system editor. It is checked
+  for new systems; existing saved modes are preserved. A receive-only saved
+  system cannot register, affiliate or transmit, including when PTT is pressed
+  or an inherited radio ID is present.
+
+The settings format remains **V6**, unchanged from v0.3.0-beta.1. No conversion
+is needed between these releases. Export complete JSON before updating.
+Firmware and CPS source identities are recorded separately in the release
+manifest. See [the CPS guide](docs/CPS.md) and [trunking guide](docs/TRUNKING.md).
+
+## Exact-build validation and limits
+
+Processor CI **44068616566** passed and ran 57 actual-controller cases before
+building: three passive safety cases, 19 recovery cases and 35 subscriber
+cases. Focused local checks also passed: 116 actual-C/CPS checks, the passive,
+recovery and subscriber cases, 19 dedicated receive-profile regressions and
+four strict compile configurations. A complete host-CI workflow was not run
+for this revision.
+
+The application is **522,804 bytes**. Linked static RAM is
+**199,176 / 211,456 bytes**, leaving **12,280 bytes**. Only the codec-free
+application is distributed; the installer still needs your radio's own sealed
+original backup to prepare a complete update locally.
+
+**No new RF test or field qualification is claimed for this revision.** These
+receive changes have simulated controller coverage and a successful processor
+build. Actual-site control lock, message cadence, weak-signal reception and
+broader interoperability need beta feedback. Earlier local voice and trunking
+results do not establish precise RF access-slot timing or compatibility with
+arbitrary production systems. The mission-critical-use restriction and other
+[known limits](KNOWN_ISSUES.md) remain in effect.
+
+---
+
 # v0.3.0-beta.1 — named P25 trunking and applet tools
 
 Firmware source `686805368f63f1382e5024e2856aee0b555173be`; radio build **6868053**.

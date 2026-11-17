@@ -54,7 +54,9 @@ New Studio drafts use V6, with eight named P25 trunking systems. Existing files
 and radio reads retain their actual schema until explicitly upgraded. The
 **Trunking** tab configures receive-only or experimental Phase 1 subscriber
 systems, control-channel alternatives, exact identities, radio ID/talkgroup and
-start-at-boot. See the [step-by-step trunking guide](TRUNKING.md). Registration,
+start-at-boot. Leave **Do not affiliate (receive only)** checked to follow calls
+without registration, affiliation or trunked transmission; new systems default
+to this setting. See the [step-by-step trunking guide](TRUNKING.md). Registration,
 affiliation, granted group voice and talkgroup following have worked in the lab;
 precise RF access-slot timing and broader system interoperability remain open.
 
@@ -82,15 +84,21 @@ source/packages are included. Kit generation is reproducible with
 
 - **Trunking** on V6 stores up to eight named P25 Phase 1 systems, each with a
   primary control and up to seven alternates, exact network/site identities,
-  an optional radio ID override and selected talkgroup. Choose receive only
-  or explicit experimental subscriber intent. Startup is off after migration;
+  an optional radio ID override and selected talkgroup. The **Do not affiliate
+  (receive only)** checkbox blocks registration, affiliation and trunked PTT
+  while allowing passive following. Uncheck it for experimental subscriber
+  operation. Startup is off after migration;
   selecting a system does not start it. The separate start-at-boot option is
   deliberate. Subscriber RF qualification, Phase 2 and encrypted voice are not
   implied by these settings. Complete JSON backups retain the system table;
   older radio uploads refuse the larger format before a transaction begins.
-  The radio tries the primary first, then alternates in order, with three-second
-  acquisition and control-loss windows. Only fresh metadata for the exact saved
-  site locks a candidate; this is recovery within that site, not roaming. Calls
+  The radio tries the primary first, then alternates in order. Empty channels
+  can be skipped after 450 ms; genuine P25 evidence extends the ordinary
+  three-second acquisition window up to 12 seconds. Valid control traffic keeps
+  a qualified lock alive, with a separate 30-second site/network identity limit.
+  Only fresh metadata for the exact saved site locks a candidate; this is
+  recovery within that site, not roaming. Receive-only systems retry receive
+  setup faults and recorder gaps without enabling subscriber operation. Calls
   and subscriber requests hold the current receiver. While attached and idle, OK offers
   Resume, Log out and stop, or Stop now. Logout is sent without a network
   acknowledgment and falls back to a local stop if the bounded attempt fails.
@@ -315,3 +323,22 @@ browser changes do not change the identity of an already built application.
 The export versions module dependencies, preserves pinned loader bytes and writes
 `deployment.json` with hashes for the complete public asset set. Validate that
 exact export before pushing it to the Studio repository.
+
+## Sharing the CPS and firmware installer
+
+The public CPS and `firmware.html` include static Open Graph and X Card metadata,
+with separate 1200 × 630 PNG previews under `social/`. Pasting the public page URL
+into a service with link previews enabled lets its crawler read the title,
+description and image without running the editor or opening a serial connection.
+Preview appearance and caching are controlled by the receiving service.
+
+When changing the advertised beta release, update the version, description and
+image URL in `firmware.html`, then regenerate the matching card:
+
+```powershell
+# Requires Pillow; generated PNGs are committed so deployment needs no renderer.
+python scripts/render-cps-share-cards.py --firmware-version 0.3.0-beta.1
+```
+
+Use a new image filename when changing artwork so cached shares can fetch the new
+asset. The committed export includes these images in `deployment.json` hashes.

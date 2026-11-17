@@ -1,0 +1,199 @@
+{
+  "schema": "dm32-multimode-release/1",
+  "version": "0.3.0-beta.2",
+  "board": "dm32",
+  "channel": "beta",
+  "source_commit": "e799c73ab286c26648771cc91d2aaefad0c0a10b",
+  "source_description": "Normal multimode firmware with shared P25 FDMA identifier/AMBT support, control-lock and acquisition fixes, bounded recovery for saved passive systems, and explicit CPS no-affiliation control. Focused host checks and processor build passed; no new RF qualification is claimed.",
+  "firmware_display_id": "e799c73",
+  "application": {
+    "file": "dm32-multimode-0.3.0-beta.2-e799c73.application.bin",
+    "bytes": 522804,
+    "sha256": "23f808a44acb504c8148846ded9c79fe56517875622f4595ca925fcfb4bcd46a",
+    "load_address": "0x0300C000",
+    "contains_native_codec": false,
+    "directly_flashable": false
+  },
+  "upstream": {
+    "radiofoundry_commit": "75c46ea46d5ebf6406f5b4ce0bbe2443b7649f91",
+    "freertos_commit": "3a22924e0a9ddbbc8b0758881c33b3422a5cc20d"
+  },
+  "supported_native_codecs": [
+    {
+      "id": "dm32-046",
+      "name": "Standard 046 (01.01 / 01.02)",
+      "code_sha256": "9720ec0c923ac32bc909d06a0d4c414c6a1e80c3eaa6e9c5b5df0d0bf5ff5665",
+      "tables_sha256": "10684c33e3cc8238376e455fd96b1c15a863a864420dbbaa4589803c4eb0b0e1",
+      "code_bytes": 83456,
+      "tables_bytes": 12152,
+      "run": 93404,
+      "tables_ram": 402656936,
+      "stock_tag": 46,
+      "entries": {
+        "decode": 0,
+        "encode": 608,
+        "dec_init": 180,
+        "dec_set": 132,
+        "enc_init": 788,
+        "enc_set": 740,
+        "fec_init": 7160
+      },
+      "relocations": [
+        6868,
+        6872,
+        11916
+      ],
+      "slot_bytes": 95748
+    },
+    {
+      "id": "dm32-049",
+      "name": "Standard 049",
+      "code_sha256": "355ca9061979eceb2991826da9d39c95b4a9d40466245923d541a6556ceeafd1",
+      "tables_sha256": "10684c33e3cc8238376e455fd96b1c15a863a864420dbbaa4589803c4eb0b0e1",
+      "code_bytes": 83456,
+      "tables_bytes": 12152,
+      "run": 93404,
+      "tables_ram": 402656936,
+      "stock_tag": 49,
+      "entries": {
+        "decode": 0,
+        "encode": 608,
+        "dec_init": 180,
+        "dec_set": 132,
+        "enc_init": 788,
+        "enc_set": 740,
+        "fec_init": 7160
+      },
+      "relocations": [
+        6868,
+        6872,
+        11916
+      ],
+      "slot_bytes": 95748
+    },
+    {
+      "id": "dm32-nrf-049",
+      "name": "NRF / fanti 049",
+      "code_sha256": "cd0820a18df0b53bf011907a02d5b649bfbccf030c3d0432f4e363077d67a2c0",
+      "tables_sha256": "10684c33e3cc8238376e455fd96b1c15a863a864420dbbaa4589803c4eb0b0e1",
+      "code_bytes": 83456,
+      "tables_bytes": 12152,
+      "run": 93404,
+      "tables_ram": 402656944,
+      "stock_tag": 49,
+      "entries": {
+        "decode": 0,
+        "encode": 608,
+        "dec_init": 180,
+        "dec_set": 132,
+        "enc_init": 788,
+        "enc_set": 740,
+        "fec_init": 7160
+      },
+      "relocations": [
+        6868,
+        6872,
+        11916
+      ],
+      "slot_bytes": 95748
+    },
+    {
+      "id": "dm32-046hr",
+      "name": "HR Vocoder 046",
+      "code_sha256": "02743cf4b3d252b8764fe083fb808b00ab42f0f0ab76935e62ca59fd5c5e64fb",
+      "tables_sha256": "cd5a4d270f555cdbd586bca8de89e4e845789ed7aa2a2bb7414b6c3a270ef803",
+      "code_bytes": 82140,
+      "tables_bytes": 12152,
+      "run": 112696,
+      "tables_ram": 402656840,
+      "stock_tag": 46,
+      "entries": {
+        "decode": 0,
+        "encode": 608,
+        "dec_init": 180,
+        "dec_set": 132,
+        "enc_init": 788,
+        "enc_set": 740,
+        "fec_init": 7628
+      },
+      "relocations": [
+        7336,
+        7340,
+        12384
+      ],
+      "slot_bytes": 94432
+    }
+  ],
+  "native_codec_validation": {
+    "scope": "All four declared codec contracts retain offline extraction/layout/package checks. No new multi-variant hardware or RF qualification is claimed for this release.",
+    "hardware_or_rf_qualification_for_this_release": false,
+    "required_source": "Tester own verified stock program-flash backup; never distributed in this repository.",
+    "unrecognized_contract": "Refuse preparation; do not guess firmware family from a version label.",
+    "hardware_qualified_profiles": [],
+    "offline_only_profiles": [
+      "dm32-046",
+      "dm32-049",
+      "dm32-nrf-049",
+      "dm32-046hr"
+    ]
+  },
+  "build_validation": {
+    "target_ci": 44068616566,
+    "target_conclusion": "success",
+    "host_conclusion": "Focused local tests and controller regressions passed; no full host-workflow pass claimed",
+    "focused_host_checks": {
+      "cps_actual_c_parser": 116,
+      "passive_no_affiliate": 3,
+      "recovery": 19,
+      "omaha_passive": 19,
+      "subscriber": 35,
+      "strict_controller_profiles": 4
+    },
+    "processor_ci_controller_checks": 57,
+    "application_bytes": 522804,
+    "static_ram_bytes": 199176,
+    "static_ram_limit": 211456,
+    "static_ram_margin": 12280,
+    "hardware_accessed": false
+  },
+  "codeplug_geometry": {
+    "version": 6,
+    "channels": 256,
+    "vfos": 2,
+    "records": 499,
+    "zones": 16,
+    "scan_lists": 16,
+    "p25_talkgroups_per_list": 64,
+    "contacts": 96,
+    "trunk_systems": 8,
+    "control_channels_per_system": 8
+  },
+  "cps": {
+    "url": "https://speexvocon.github.io/DM32-Studio/",
+    "source_commit": "aded0a2c82fde3733c3f5a4df0cdb13011fa9412",
+    "firmware_source_commit": "e799c73ab286c26648771cc91d2aaefad0c0a10b",
+    "runtime_changed_since": true,
+    "codeplug_version_max": 6,
+    "compatibility": "V1\u2013V6 capability-aware editor; V6 named trunking systems, V5 contacts and existing V4 channels/zones/lists. Bundled CPS is refreshed separately from the firmware binary source.",
+    "public_commit": "d948edda6a2b31ae2b9899eb78450d4ed94c8f21",
+    "capabilities": [
+      "V6 named trunking with Do not affiliate (receive only)",
+      "DAPP/1 applet loading and management",
+      "AI applet builder kit"
+    ]
+  },
+  "distribution": {
+    "proprietary_codec_included": false,
+    "per_radio_backup_included": false,
+    "matching_source": "../../source/0.3.0-beta.2-project.zip"
+  },
+  "status": "Repository beta package. No GitHub tag or prerelease is claimed by this manifest.",
+  "qualification_limits": [
+    "P25 Phase1 C4FM clear calls only; no Phase2, CQPSK or decryption",
+    "Named receive-only systems are separate from explicitly experimental subscriber systems",
+    "Finite local registration/affiliation/voice observations do not qualify actual RF access-slot phase, public-system interoperability, roaming, multi-site operation or endurance",
+    "Native codec bytes, calibration, backups, personal settings and human voice recordings are excluded",
+    "CPS/browser tests do not establish physical browser flashing or all-capacity hardware qualification",
+    "The receive acquisition/recovery changes in this revision have host and processor-build coverage; Hummel/NDOT field reception and RF slot alignment are not qualified by these checks"
+  ]
+}
