@@ -23,7 +23,7 @@ function wireFixture() {
 
 test("geometry and CRC match the firmware and independent standard vectors", () => {
     assert.equal(RECORD_BYTES, 32);
-    assert.equal(RECORD_COUNT, 387);
+    assert.equal(RECORD_COUNT, 499);
     assert.equal(MEMORY_COUNT, 256);
     assert.deepEqual(FILTERS, ["NAC", "PROM", "NAC+TG"]);
     assert.equal(crc32(new Uint8Array()), 0);

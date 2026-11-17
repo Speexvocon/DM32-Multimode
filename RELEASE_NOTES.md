@@ -1,3 +1,39 @@
+# v0.3.0-beta.1 — named P25 trunking and applet tools
+
+Firmware source `686805368f63f1382e5024e2856aee0b555173be`; radio build **6868053**.
+The separately refreshed CPS/flasher has its own source revision in the release
+manifest; it is not represented as a firmware rebuild. Historical release
+applications and source ZIPs remain unchanged.
+
+- V6 named systems: eight systems, up to eight control channels each, selected
+  system, optional start at power-on and per-system talkgroup.
+- Phase 1 C4FM receive following and explicitly experimental registration,
+  affiliation, granted voice and terminal completion reporting.
+- V5 contacts/messaging alongside V4 memories, zones and TG/channel scan lists.
+- Installable DAPP sandbox, Counter/SAME Watch packages and native PCM clients.
+- Current capability-aware CPS and browser installer source, including the
+  native Chromium fetch receiver correction.
+
+Exact firmware host CI **43845372268** and target CI **43845372157** passed.
+The application is **514,024 bytes**; linked RAM is **197,352 / 211,456 bytes**,
+leaving **14,104 bytes**. The locally reconstructed owner package passed bounds,
+sealed codec and checksum checks without hardware access. Only the codec-free
+application is distributed.
+
+Finite development runs demonstrated local control transactions, voice
+transmission and receive following on preceding/current development candidates.
+Those observations are not a calibrated RF access-slot, public-system,
+multi-variant or endurance qualification. This package conservatively declares
+the four native contracts as offline checked; no new hardware qualification for
+all four profiles is implied. Browser flashing remains experimental.
+
+Export complete JSON before upgrade. V6 adds records that older firmware cannot
+read. Keep the older-format JSON needed for rollback; never truncate a V6 file.
+See [installation](FLASHING.md), [trunking scope](docs/TRUNKING.md) and
+[known issues](KNOWN_ISSUES.md).
+
+---
+
 # v0.2.0-beta.2 — preserve DMR audio after P25
 
 Firmware source: `32f973f77e3b898c8e7bb7b6e3bb9fa64d865a25`; radio build **32f973f**. Previous release packages remain unchanged.
@@ -13,14 +49,14 @@ Use the existing [DM32 Studio CPS](https://speexvocon.github.io/DM32-Studio/). V
 - Host CI **43106099351** and processor CI **43106099505** passed at the exact source revision; the shared-output transition has host regression coverage, including the P25 scan transition.
 - Application **302,868 bytes** (+12 from beta.1). Linked RAM remains **162,632 / 211,456 bytes**, with **48,824 bytes** headroom.
 - Installed and independently read back on the development radio. Application/native-codec matching and bootloader, calibration and retained-settings checks passed; normal startup returned.
-- One controlled hardware transition from **P25 LISTENING → Channel / Modulation → DMR CC1/TS2**, without power cycling, played a full steady nominal five-second hotspot tone on TG98638.
+- One controlled hardware transition from **P25 LISTENING â†’ Channel / Modulation â†’ DMR CC1/TS2**, without power cycling, played a full steady nominal five-second hotspot tone on TG98638.
 
 | DMR observation | Result |
 | --- | ---: |
 | Voice frames | 252 / 252 |
 | PCM samples | 40,320 / 40,320 |
 | PCM interrupts | 504 |
-| Maximum interrupt gap | 10,031 µs |
+| Maximum interrupt gap | 10,031 Âµs |
 | Lost / concealed frames | 0 / 0 |
 | Queue starvation / overflow | 0 / 0 |
 | Reset | 0 |

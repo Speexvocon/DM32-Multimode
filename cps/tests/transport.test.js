@@ -1,13 +1,26 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { CpsClient } from '../transport.js';
+import { CpsClient, parseServices } from '../transport.js';
 import { crc32, createDefaultModel, encodePayload, decodePayload, upgradeModel, createScanList } from '../model.js';
 
 const hex = value => (value >>> 0).toString(16).toUpperCase().padStart(8, '0');
 const bytesHex = value => Array.from(value, byte => byte.toString(16).toUpperCase().padStart(2, '0')).join('');
 const tick = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
 const origin = peer => ({ revision: peer.revision, crc: crc32(peer.active) });
+
+test('service capabilities never infer messaging from individual voice or codeplug support', () => {
+  const line = 'CPS SERVICES 1 heard=32 contacts=96 p25_unit=1 dmr_unit=1 p25_text=000 dmr_text=000';
+  const caps = parseServices(line);
+  assert.equal(caps.contactCapacity, 96);assert.equal(caps.historyCapacity, 32);
+  assert.equal(caps.P25.individualVoice, true);assert.equal(caps.DMR.individualVoice, true);
+  assert.deepEqual(caps.P25.messaging, {receive:false,transmit:false,acknowledgments:false});
+  assert.deepEqual(caps.DMR.messaging, {receive:false,transmit:false,acknowledgments:false});
+  assert.throws(() => parseServices(line.replace('SERVICES 1', 'SERVICES 2')));
+  assert.throws(() => parseServices(line.replace('text=000', 'text=0011')));
+  assert.throws(() => parseServices(line.replace('contacts=96', 'contacts=99999999999999')));
+  assert.throws(() => parseServices(line + ' extra'));
+});
 
 function edited(payload) {
   const model = decodePayload(payload);
@@ -18,7 +31,7 @@ function edited(payload) {
 /** Real WHATWG browser streams with a deterministic logical radio peer; no serial port is opened. */
 class FakeSerial {
   constructor({ override, fragment = 0, revision = 19, protocol = 1 } = {}) {
-    this.active = encodePayload(createDefaultModel(protocol === 4 ? 4 : 3));
+    this.active = encodePayload(createDefaultModel(protocol >= 4 ? protocol : 3));
     this.revision = revision;
     this.protocol = protocol;
     this.stage = null;
@@ -73,7 +86,7 @@ class FakeSerial {
     const parts = command.split(' ');
     if (command === 'CPS HELLO') {
       if (this.stage) return 'CPS ERR TRANSACTION\r\n';
-      return `CPS HELLO DM32P25 ${this.protocol} ${this.protocol === 4 ? 256 : 32} 2 ${this.revision} ${hex(crc32(this.active))}\r\n`;
+      return `CPS HELLO DM32P25 ${this.protocol} ${this.protocol >= 4 ? 256 : 32} 2 ${this.revision} ${hex(crc32(this.active))}\r\n`;
     }
     if (parts[1] === 'GET') {
       const index = Number(parts[2]);
@@ -363,7 +376,8 @@ test('bad identity, revision overflow and malformed bounded frames close connect
 });
 
 test('late response after deadline is discarded; no following command can consume its ACK', async t => {
-  const { client, peer } = await setup(t, new FakeSerial(), { timeoutMs: 20 });
+  const { client, peer } = await setup(t);
+  client.timeoutMs = 20; // Restrict the delayed exchange, not recovery reads under CI load.
   const staleController = peer.controller;
   peer.override = (command, response) => {
     if (command === 'CPS GET 0') {
@@ -379,6 +393,7 @@ test('late response after deadline is discarded; no following command can consum
   assert.equal(peer.requests.length, requests);
   await client.disconnect();
   peer.override = null;
+  client.timeoutMs = 500;
   await client.connect();
   assert.deepEqual((await client.read()).payload, peer.active);
 });
@@ -395,8 +410,9 @@ test('physical disconnect rejects the pending read and clears qualification', as
 });
 
 test('overlapping user operations are refused rather than interleaved on the stream', async t => {
-  const { client, peer } = await setup(t, new FakeSerial(), { timeoutMs: 30 });
+  const { client, peer } = await setup(t);
   const read = await client.read();
+  client.timeoutMs = 30; // Only the intentionally unanswered exchange has a short deadline.
   peer.override = (command, response) => command === 'CPS GET 0' ? undefined : response;
   const pending = client.read();
   await assert.rejects(client.write(edited(read.payload), read), { code: 'IN_USE' });
@@ -517,4 +533,45 @@ test('V4 lost commit reply remains uncertain once and reconnect/read recovers fu
   await assert.rejects(client.write(bytes,read),{code:'UNCERTAIN'});assert.equal(peer.commits,1);
   await assert.rejects(client.write(bytes,read),{code:'NOT_CONNECTED'});assert.equal(peer.commits,1);
   drop=false;await client.disconnect();await client.connect();assert.deepEqual((await client.read()).payload,bytes);
+});
+
+
+test('V5 contact directory and P25 individual destination transfer without truncation', async t => {
+  const {client,peer}=await setup(t,new FakeSerial({protocol:5}),{timeoutMs:3000});
+  const read=await client.read(), model=decodePayload(read.payload);
+  assert.equal(model.contacts.length,96);assert.equal(read.payload.length,15456);
+  model.contacts[95]={protocol:'Both',type:'unit',id:0xffffff,name:'LAST CONTACT'};
+  model.vfos[0].privateCall=true;model.vfos[0].destinationId=0x123456;
+  const payload=encodePayload(model);await client.write(payload,{revision:read.revision,crc:read.crc});
+  assert.deepEqual(decodePayload(peer.active),model);
+  assert.equal(peer.requests.filter(x=>x.startsWith('CPS PUT ')).length,483);
+  assert.equal(peer.commits,1);
+});
+
+test('V6 transfers all 499 records and keeps older radio geometry refusal before BEGIN',async t=>{
+  const {client,peer}=await setup(t,new FakeSerial({protocol:6}),{timeoutMs:3000});
+  const read=await client.read(),model=decodePayload(read.payload);
+  model.trunkSystems[7]={name:'RX SYSTEM',mode:'rx-only',wacn:0,systemId:0,nac:0x293,rfss:0,site:0,sourceId:0,talkgroup:1,controls:[440075000]};
+  model.settings.trunkSystem=8;await client.write(encodePayload(model),read);
+  assert.deepEqual(decodePayload(peer.active),model);assert.equal(peer.requests.filter(x=>x.startsWith('CPS PUT ')).length,499);
+  const legacy=await setup(t,new FakeSerial({protocol:5})),old=await legacy.client.read(),count=legacy.peer.requests.length;
+  await assert.rejects(legacy.client.write(encodePayload(model),old),{code:'UNSUPPORTED_GEOMETRY'});
+  assert.equal(legacy.peer.requests.length,count);
+});
+
+test('V5 never upgrades a V4 snapshot implicitly before writing',async t=>{
+  const {client,peer}=await setup(t,new FakeSerial({protocol:5}));
+  const read=await client.read();const before=peer.requests.length;
+  await assert.rejects(client.write(encodePayload(createDefaultModel(4)),{revision:read.revision,crc:read.crc}),{code:'UNSUPPORTED_GEOMETRY'});
+  assert.equal(peer.requests.length,before);assert.equal(peer.commits,0);
+});
+
+
+test('V4 firmware refuses V5 directory and Last heard button data before any transaction',async t=>{
+  const {client,peer}=await setup(t,new FakeSerial({protocol:4}),{timeoutMs:3000});
+  const read=await client.read(),model=upgradeModel(decodePayload(read.payload));
+  model.settings.p1Action=9;model.contacts[0]={protocol:'Both',type:'unit',id:1,name:'ONE'};
+  const before=peer.requests.length;
+  await assert.rejects(client.write(encodePayload(model),{revision:read.revision,crc:read.crc}),{code:'UNSUPPORTED_GEOMETRY'});
+  assert.equal(peer.requests.length,before);assert.equal(peer.commits,0);
 });

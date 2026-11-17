@@ -1,6 +1,6 @@
 # Quick start
 
-Install using [FLASHING.md](FLASHING.md) first. This guide covers **v0.2.0-beta.2 / build 32f973f**. Older firmware has fewer settings/memory slots.
+Install using [FLASHING.md](FLASHING.md) first. This guide covers **v0.3.0-beta.1 / build 6868053**. Older firmware has fewer settings/memory slots.
 
 ## First use and controls
 
@@ -21,7 +21,7 @@ Remove the radio-side programming plug for normal mic/speaker use. Connect it fo
 | # or home-screen digits | Begin frequency entry |
 | Hold OK + * for one second | Lock/unlock; release both before repeating |
 
-Reassign buttons in **Settings → Button actions** or CPS **Functions**. The volume knob sets speaker level. Keypad lock leaves PTT operational and clears at restart. A key that wakes a dark display is consumed; press again to use it. PTT wakes and operates normally.
+Reassign buttons in **Settings -> Button actions** or CPS **Functions**. The volume knob sets speaker level. Keypad lock leaves PTT operational and clears at restart. A key that wakes a dark display is consumed; press again to use it. PTT wakes and operates normally.
 
 Menus/editors pause reception and do not accept PTT. Return home for calls. The TX timeout defaults to 30 seconds; release PTT after timeout before another call.
 
@@ -33,19 +33,19 @@ Menus/editors pause reception and do not accept PTT. Return home for calls. The 
 | Channel | RX/TX frequencies, simplex, mode, NAC/CC, FM/DMR settings, receive-only/filter |
 | Audio & TX | Voice & ID, mic gain, TX permission, channel power and timeout |
 | Settings | Display/keypad timers and button assignments |
-| Tools | FM broadcast, broadcast frequency and Diagnostics/status |
+| Tools | Receivers (Broadcast FM / Airband AM), Applets and Diagnostics/status |
 
-Under **Channel**, enter seven digits in 100-Hz units: `1465200` means 146.520 MHz. OK saves; Back cancels; * deletes. **Use simplex** copies RX to TX. **Receive only** blocks that channel's PTT; **Audio & TX → Transmit → Transmit permission** is the separate overall permission.
+Under **Channel**, enter seven digits in 100-Hz units: `1465200` means 146.520 MHz. OK saves; Back cancels; * deletes. **Use simplex** copies RX to TX. **Receive only** blocks that channel's PTT; **Audio & TX -> Transmit -> Transmit permission** is the separate overall permission.
 
 | Mode | Main settings |
 | --- | --- |
-| P25 | NAC under Channel; TX TG/Radio ID under Audio & TX → Voice & ID |
-| DMR | CC, slot, group/private and direct/repeater under Channel → DMR settings; destination/Radio ID under Voice & ID |
-| FM | Width, squelch and RX/TX tones under Channel → FM settings |
+| P25 | NAC under Channel; TX TG/Radio ID under Audio & TX -> Voice & ID |
+| DMR | CC, slot, group/private and direct/repeater under Channel -> DMR settings; destination/Radio ID under Voice & ID |
+| FM | Width, squelch and RX/TX tones under Channel -> FM settings |
 
 NAC is hexadecimal: type digits, using Up/Down to cycle the last digit through 0-F. TGs/IDs are decimal. CTCSS radio entry is tenths of Hz (`885` = 88.5 Hz); DCS uses octal. Zero disables the tone. Digital mic gain is shared by P25/DMR; FM uses native gain.
 
-**Audio & TX → Transmit** offers calibrated hardware power levels and a **15-600-second timeout**. Named levels are not measured watts; verify actual output with suitable equipment if needed.
+**Audio & TX -> Transmit** offers calibrated hardware power levels and a **15-600-second timeout**. Named levels are not measured watts; verify actual output with suitable equipment if needed.
 
 ## Reception and filters
 
@@ -55,13 +55,13 @@ Green SYNC and the RX panel indicate reception. RX identities differ from the co
 
 ## Channels, zones and A/B
 
-Configure a profile, then **Operating → Save channel**, choosing 001-256. Use **Select channel**, P1 or the encoder to recall memories. CPS supplies names up to 12 printable ASCII characters and **16 named zones**. Choose **Operating → Selected zone**; **All channels** is always available. Encoder/Up/Down visit populated members of that zone.
+Configure a profile, then **Operating -> Save channel**, choosing 001-256. Use **Select channel**, P1 or the encoder to recall memories. CPS supplies names up to 12 printable ASCII characters and **16 named zones**. Choose **Operating -> Selected zone**; **All channels** is always available. Encoder/Up/Down visit populated members of that zone.
 
 A/B retain independent selections/zones but share one receiver; no simultaneous monitoring.
 
 ## Channel scan versus P25 TG scan
 
-Define lists in [CPS](docs/CPS.md), then **Operating → Scan lists** to select/start/stop. Home says **CH SCAN** or **TG SCAN**.
+Define lists in [CPS](docs/CPS.md), then **Operating -> Scan lists** to select/start/stop. Home says **CH SCAN** or **TG SCAN**.
 
 - **Channel scan** visits saved FM/DMR/P25 configurations. Compatible co-channel P25 entries share continuous acquisition.
 - **P25 TG scan** stays on one P25 base memory's frequency/NAC and accepts up to **64 TGs**, without duplicate memories. Its list is strict even if the base normally uses PROM.
@@ -80,8 +80,17 @@ For TG1/10/100/1000 on one frequency/NAC, keep one P25 base memory, create a P25
 
 ## Broadcast FM, lights and diagnostics
 
-**Tools → Broadcast FM** opens a receive-only 65-108-MHz tuner and pauses the two-way channel. **P1 seeks down, P2 seeks up**; Up/Down step manually. Type the frequency (# for decimal point), then **OK** to accept; Back cancels an entry or exits. PTT exits broadcast and requires a fresh press to transmit; broadcast-band TX is never enabled.
+**Tools -> Receivers -> Broadcast FM** opens a receive-only 65-108-MHz tuner and pauses the two-way channel. **P1 seeks down, P2 seeks up**; Up/Down step manually. Type the frequency (# for decimal point), then **OK** to accept; Back cancels an entry or exits. PTT exits broadcast and requires a fresh press to transmit; broadcast-band TX is never enabled.
 
-**Settings → Display & keys** sets screen/keypad timers independently, 0-600 seconds; zero means always on. A dark display does not stop reception.
+**Settings -> Display & keys** sets screen/keypad timers independently, 0-600 seconds; zero means always on. A dark display does not stop reception.
 
-The small **D** icon identifies diagnostics/nonstandard operation. Normal releases retain status/fault info and omit extended lab capture. Use P2 or **Tools → Diagnostics → Radio status** for build/battery/counters in reports.
+The small **D** icon identifies diagnostics/nonstandard operation. Normal releases retain status/fault info and omit extended lab capture. Use P2 or **Tools -> Diagnostics -> Radio status** for build/battery/counters in reports.
+
+
+## Trunking, messages and applets
+
+Use **Operating → P25 trunking** to select/start a named V6 system and set its
+startup/talkgroup choices. See [the trunking guide](docs/TRUNKING.md) for the
+receive-only versus experimental subscriber distinction. **Operating → Messages**
+opens message controls; CPS contacts provide aliases. **Tools → Applets** manages
+installed sandbox packages; see [the applet guide](docs/APPLETS.md).

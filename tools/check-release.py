@@ -4,7 +4,7 @@ import json
 from pathlib import Path, PurePosixPath
 import re
 import sys
-from urllib.parse import unquote
+from urllib.parse import unquote, urlsplit
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -56,14 +56,46 @@ def main():
         require(release.get("firmware_display_id") == release["source_commit"][:7], "Firmware display/source mismatch")
         supported_codecs = beta_tools.release_supported_codecs(release)
         if "supported_native_codecs" in release:
-            require(release.get("codeplug_geometry") == {
-                "version": 4, "channels": 256, "vfos": 2, "records": 387,
+            geometry = release.get("codeplug_geometry", {})
+            version = geometry.get("version")
+            expected_geometry = {
+                "version": version, "channels": 256, "vfos": 2,
+                "records": 387 if version == 4 else 499,
                 "zones": 16, "scan_lists": 16, "p25_talkgroups_per_list": 64,
-            }, "Expanded release codeplug geometry mismatch")
+            }
+            require(version in (4, 6), "Unsupported expanded release codeplug version")
+            if version == 6:
+                expected_geometry.update(contacts=96, trunk_systems=8, control_channels_per_system=8)
+            require(geometry == expected_geometry, "Expanded release codeplug geometry mismatch")
             cps = release.get("cps", {})
             require(cps.get("url") == "https://speexvocon.github.io/DM32-Studio/"
-                    and cps.get("source_commit") == release["source_commit"],
+                    and re.fullmatch(r"[0-9a-f]{40}", cps.get("source_commit", "")) is not None
+                    and cps.get("firmware_source_commit", cps.get("source_commit")) == release["source_commit"],
                     "Hosted CPS does not match expanded firmware source")
+            if version == 6:
+                require(cps.get("codeplug_version_max") == 6, "CPS capability manifest lacks V6")
+                deployment_path = ROOT / "cps/deployment.json"
+                deployment = json.loads(deployment_path.read_text(encoding="utf-8"))
+                require(deployment.get("source_revision") == cps["source_commit"]
+                        and deployment.get("firmware_source_revision") == release["source_commit"]
+                        and 6 in deployment.get("protocol_versions", []),
+                        "Bundled CPS deployment identity differs from release")
+                assets = deployment.get("assets", {})
+                require(isinstance(assets, dict) and bool(assets), "CPS deployment has no asset checksums")
+                for name, expected in assets.items():
+                    relative = PurePosixPath(name)
+                    require(not relative.is_absolute() and ".." not in relative.parts and "\\" not in name,
+                            "Unsafe CPS deployment asset path")
+                    asset = (ROOT / "cps" / name).resolve()
+                    require(asset.is_relative_to(ROOT / "cps") and asset.is_file()
+                            and digest(asset.read_bytes()) == expected,
+                            "CPS deployment asset differs: " + name)
+                require("cps/deployment.json" in root_checksums, "CPS deployment missing from root checksums")
+                cps_model = (ROOT / "cps/model.js").read_text(encoding="utf-8")
+                require(re.search(r"export const RECORD_COUNT\s*=\s*499\s*;", cps_model)
+                        and re.search(r"export const TRUNK_SYSTEM_COUNT\s*=\s*8\s*;", cps_model)
+                        and re.search(r"export const TRUNK_CONTROL_COUNT\s*=\s*8\s*;", cps_model),
+                        "Bundled CPS must be refreshed to the declared V6 capability")
         app = release["application"]
         require(isinstance(app.get("file"), str) and Path(app["file"]).name == app["file"], "Unsafe application path")
         application = path.parent / app["file"]
@@ -87,6 +119,29 @@ def main():
 
     require(beta_tools.DEFAULT_RELEASE in releases, "Default firmware release is missing")
     require(len({row["version"] for row in versions}) == len(versions), "Duplicate firmware version")
+
+    applets_manifest = ROOT / "applets/manifest.json"
+    if applets_manifest.exists():
+        import dm32_applet
+        applets = json.loads(applets_manifest.read_text(encoding="utf-8"))
+        require(applets.get("schema") == "dm32-beta-applets/1", "Unknown applet manifest")
+        for item in applets["packages"]:
+            for key in ("source", "package"):
+                name = item[key]
+                require(isinstance(name, str) and Path(name).name == name, "Unsafe applet path")
+            script = ROOT / "applets" / item["source"]
+            package = ROOT / "applets" / item["package"]
+            raw = package.read_bytes()
+            require(digest(script.read_bytes()) == item["source_sha256"], "Applet source checksum mismatch")
+            require(len(raw) == item["package_bytes"] and digest(raw) == item["package_sha256"],
+                    "Applet package checksum mismatch")
+            require(dm32_applet.compile_source(script.read_text(encoding="utf-8")).data == raw,
+                    "Applet package differs from its source")
+            for item_path in (script, package):
+                require(item_path.relative_to(ROOT).as_posix() in root_checksums,
+                        "Applet missing from root checksums")
+        require(applets_manifest.relative_to(ROOT).as_posix() in root_checksums,
+                "Applet manifest missing from root checksums")
 
     archives = sorted((ROOT / "source").glob("*.zip"))
     require(len(archives) >= 3, "Project and dependency source archives are required")
@@ -160,10 +215,11 @@ def main():
             continue  # Vendored upstream excerpts retain their original links.
         text = path.read_text(encoding="utf-8")
         for raw in re.findall(r"\[[^\]\n]*\]\(([^)\n]+)\)", text):
-            target = raw.strip().strip("<>").split("#", 1)[0]
-            if not target or re.match(r"[a-zA-Z][a-zA-Z0-9+.-]*:", target):
+            target = raw.strip().strip("<>")
+            parsed = urlsplit(target)
+            if parsed.scheme or parsed.netloc or not parsed.path:
                 continue
-            local = (path.parent / unquote(target)).resolve()
+            local = (path.parent / unquote(parsed.path)).resolve()
             require(local.is_relative_to(ROOT) and local.exists(), "Broken local link in " + str(path.relative_to(ROOT)) + ": " + target)
 
     sys.path.insert(0, str(ROOT / "tools"))

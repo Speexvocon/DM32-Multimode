@@ -8,6 +8,7 @@
   let api, controller, stage = null, transaction = null, activity = 0;
   const peer = {
     simulated: true,
+    messaging: false, mailboxSerial: 1, mailbox: [], messageStage: null,
     commands: [],
     revision: 19,
     payload: null,
@@ -21,8 +22,20 @@
     async useV4() {
       await this.ready;
       if (this.connected) throw new Error('Disconnect the simulated radio before changing geometry');
-      const model = api.upgradeModel(api.decodePayload(this.payload, this.protocol));
+      const model = api.upgradeModel(api.decodePayload(this.payload, this.protocol),4);
       this.payload = api.encodePayload(model); this.protocol = 4; this.discardStage();
+    },
+    async useV5() {
+      await this.ready;
+      if(this.connected)throw new Error('Disconnect the simulated radio before changing geometry');
+      const model=api.upgradeModel(api.decodePayload(this.payload,this.protocol));
+      this.payload=api.encodePayload(model);this.protocol=5;this.discardStage();
+    },
+    async useV6() {
+      await this.ready;
+      if(this.connected)throw new Error('Disconnect the simulated radio before changing geometry');
+      this.payload=api.encodePayload(api.upgradeModel(api.decodePayload(this.payload,this.protocol),6));
+      this.protocol=6;this.discardStage();
     },
     busy: false,
     dropCommitReply: false,
@@ -58,7 +71,7 @@
   function validRecord(index, record) {
     // Validate each PUT independently, as firmware does; selected-memory references
     // are checked against the whole staged image only at COMMIT.
-    if (peer.protocol === 4) return true; // Whole V4 descriptor/reference validation occurs at COMMIT.
+    if (peer.protocol >= 4) return true; // Whole V4 descriptor/reference validation occurs at COMMIT.
     const fixture = api.createDefaultModel(3);
     if (index === 34) fixture.channels = Array.from({ length: 32 }, () => structuredClone(fixture.vfos[0]));
     const isolated = api.encodePayload(fixture);
@@ -69,9 +82,47 @@
   function commandReply(command) {
     if (stage && Date.now() - activity >= 60000) peer.discardStage();
     if (peer.busy) return 'CPS ERR BUSY';
+    if (command.startsWith('CPS MSG ')) {
+      if (!peer.messaging) return 'CPS ERR COMMAND';
+      if (stage) return 'CPS MSG ERR TRANSACTION';
+      const parts = command.split(' '), op = parts[2];
+      if (op === 'HELLO') return `CPS MSG HELLO 1 serial=${peer.mailboxSerial} count=${peer.mailbox.length} capacity=16 max=80 p25=110 dmr=111`;
+      if (op === 'LIST') {
+        const m = peer.mailbox[Number(parts[3])];
+        return m ? `CPS MSG ITEM ${m.id} ${m.protocol} ${m.kind} ${m.source} ${m.destination} ${m.state} ${m.format} ${m.unread} ${m.text.length} ${m.stamp} ${m.token} ${m.flags ?? 0}` : 'CPS MSG ERR NOT_FOUND';
+      }
+      if (op === 'GET') {
+        const m = peer.mailbox.find(item => item.id === Number(parts[3])), offset = Number(parts[4]);
+        return m ? `CPS MSG TEXT ${m.id} ${offset} ${hexBytes(new TextEncoder().encode(m.text.slice(offset, offset + 32)))}` : 'CPS MSG ERR NOT_FOUND';
+      }
+      if (op === 'READ' || op === 'DELETE') {
+        const m = peer.mailbox.find(item => item.id === Number(parts[3]));
+        if (!m) return 'CPS MSG ERR NOT_FOUND';
+        if (op === 'READ') m.unread = 0; else peer.mailbox = peer.mailbox.filter(item => item !== m);
+        peer.mailboxSerial++; return `CPS MSG OK ${op} ${m.id}`;
+      }
+      if (op === 'BEGIN') {
+        peer.messageStage = { token:Number(parts[3]), protocol:Number(parts[4]), kind:Number(parts[5]), destination:Number(parts[6]), format:Number(parts[8]), text:'' };
+        return `CPS MSG OK BEGIN ${parts[3]}`;
+      }
+      if (op === 'PUT') {
+        if (Number(parts[4]) !== peer.messageStage.text.length) return 'CPS MSG ERR OFFSET';
+        peer.messageStage.text += String.fromCharCode(...parts[5].match(/../g).map(byte => parseInt(byte,16)));
+        return `CPS MSG OK PUT ${parts[3]} ${parts[4]}`;
+      }
+      if (op === 'SEND') {
+        const id = 100 + peer.mailboxSerial;
+        peer.mailbox.push({ ...peer.messageStage, id, source:1234567, state:'SENT', unread:0, stamp:12345, flags:0 });
+        peer.messageStage = null; peer.mailboxSerial++;
+        return `CPS MSG OK SEND ${parts[3]} ${id}`;
+      }
+      if (op === 'CANCEL') { peer.messageStage = null; return `CPS MSG OK CANCEL ${parts[3]}`; }
+      return 'CPS MSG ERR COMMAND';
+    }
+    if (command === 'CPS LIVE') return 'CPS OK LIVE';
     if (command === 'CPS HELLO') {
       if (stage) return 'CPS ERR TRANSACTION';
-      return `CPS HELLO DM32P25 ${peer.protocol} ${peer.protocol === 4 ? 256 : 32} 2 ${peer.revision} ${hex32(peer.crc)}`;
+      return `CPS HELLO DM32P25 ${peer.protocol} ${peer.protocol >= 4 ? 256 : 32} 2 ${peer.revision} ${hex32(peer.crc)}`;
     }
     let match = /^CPS GET ([0-9]+)$/.exec(command);
     if (match) {

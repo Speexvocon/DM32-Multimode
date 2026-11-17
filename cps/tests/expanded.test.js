@@ -6,7 +6,7 @@ import {createDefaultModel, createScanList, encodePayload, decodePayload, upgrad
   exportChannelsCsv, importChannelsCsv, modelVersion, crc32} from '../model.js';
 
 function fixture() {
-  const model = createDefaultModel();
+  const model = createDefaultModel(4);
   for (const slot of [1, 2, 3, 32, 33, 255, 256]) model.channels[slot - 1] = {...structuredClone(model.vfos[0]), name:`CH${slot}`};
   model.zones[15] = {name:'ZONE 16', channels:[1, 33, 256]};
   model.scanLists[0] = {...createScanList('CH SCAN'), channels:[1, 2, 33, 255]};
@@ -46,7 +46,7 @@ test('V4 rejects reserved fields, orphan references, invalid mode combinations a
 });
 
 test('V4 all 256 channels and 64 independent talkgroups round-trip with upper limits', () => {
-  const model=createDefaultModel();
+  const model=createDefaultModel(4);
   model.channels=Array.from({length:256},(_,i)=>({...structuredClone(model.vfos[0]),name:`CH${i+1}`,talkgroup:65535-i}));
   model.zones=Array.from({length:16},(_,i)=>({name:`ZONE${i+1}`,channels:Array.from({length:256},(_,n)=>n+1)}));
   model.scanLists=Array.from({length:16},(_,i)=>({...createScanList(`TGS${i+1}`,'p25-tg',i+1),dwellMs:5000,holdMs:10000,talkgroups:Array.from({length:64},(_,n)=>65535-n)}));

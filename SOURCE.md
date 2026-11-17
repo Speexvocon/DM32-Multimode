@@ -1,6 +1,43 @@
-# Source and build provenance
+# Current source and build provenance
 
-Latest private beta **0.2.0-beta.2** uses development source revision
+Release **0.3.0-beta.1** distributes exact firmware **6868053** from
+`686805368f63f1382e5024e2856aee0b555173be`, target CI **43845372157** and host CI
+**43845372268**. Firmware application SHA-256 is
+`013e162f9665b4e59e1d8c2674c8f7dc39d98ddef8e93f0c099211c575a79dad`.
+The later CPS/flasher source identity is separate in the release manifest.
+
+[0.3.0-beta.1-project.zip](source/0.3.0-beta.1-project.zip) contains exact
+production firmware/host sources, required build generators, current host
+regressions, applet clients/examples, the firmware revision's CPS source and
+curated pinned reference/fixture inputs. No Git history, owner material,
+hardware investigation reports, backup/capture files, native codec or merged
+image is included. All production/build inputs preserve their Git blobs.
+Test/example personal identities are replaced with neutral values; affected
+encoded OP25 and CRC fixtures are regenerated. Individual original/distributed
+blob IDs, checksums and privacy changes are recorded in
+[SOURCE_MANIFEST.json](source/SOURCE_MANIFEST.json).
+
+The separately updated bundled `cps/` is source code too. Its release metadata
+must match the final CPS export. The project ZIP intentionally identifies the
+firmware build revision rather than relabeling it as a later CPS-only commit.
+The [applet manifest](applets/manifest.json) records source/package hashes.
+
+The unchanged RadioFoundry/FreeRTOS archives and build procedure below remain
+applicable. Replace the historical project ZIP/version in those commands with
+the current one. Extracted source has no original Git history: a new local
+snapshot commit gives a new build identity, not development commit 6868053.
+The reference toolchain is GCC14.2.0/Binutils2.43.1/Newlib4.5 on Ubuntu24.04.
+A local rebuild is not promised byte-identical to this tested CI application.
+
+The source bundle is curated; not every optional historical lab test/input is
+distributed. Focused firmware, metadata/storage and applet host checks run
+without a radio. Proprietary native-codec extraction remains local.
+
+---
+
+# Historical v0.2.0-beta.2 source and build provenance
+
+The earlier private beta **0.2.0-beta.2** uses development source revision
 `32f973f77e3b898c8e7bb7b6e3bb9fa64d865a25`. The firmware checksum in the
 release manifest identifies the tested build. A repository name or version
 label alone does not establish that a different binary is the same build.

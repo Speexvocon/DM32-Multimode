@@ -1,0 +1,26 @@
+{
+  "schema": "dm32-beta-applets/1",
+  "source_commit": "686805368f63f1382e5024e2856aee0b555173be",
+  "firmware_minimum": "0.3.0-beta.1",
+  "format": "DAPP v1",
+  "packages": [
+    {
+      "name": "counter",
+      "source": "counter.dappsrc",
+      "source_sha256": "8afd4b4d66efd7419e21cf55f579623c4d5efa3aea567dc251091c83f60391e5",
+      "package": "counter.dapp",
+      "package_bytes": 130,
+      "package_sha256": "0ea257cf79c93dde0fa849f195e35c51d166e662ca781bd57caf90da1a392f5c"
+    },
+    {
+      "name": "same-watch",
+      "source": "same-watch.dappsrc",
+      "source_sha256": "153a5b8469735ba92bda972dffa881fb5aa87d2fe9a28465003a80a08daab081",
+      "package": "same-watch.dapp",
+      "package_bytes": 187,
+      "package_sha256": "a937db43c5da62e0fcb4e43aaa139fcea6315d8d9ffad910ef5e62b07510098a"
+    }
+  ],
+  "proprietary_bytes_included": false,
+  "hardware_accessed": false
+}

@@ -1,6 +1,6 @@
 # Install or update the DM32 Multimode beta
 
-For **DM-32UV / DM32 only**, using its USB serial programming cable. The current package is **v0.2.0-beta.2 / build 32f973f**. Its bare application is **not directly flashable**: the offline preparer adds the correct native codec from your own sealed backup.
+For **DM-32UV / DM32 only**, using its USB serial programming cable. The current package is **v0.3.0-beta.1 / build 6868053**. Its bare application is **not directly flashable**: the offline preparer adds the correct native codec from your own sealed backup.
 
 Use a charged battery and a reliable cable. Close CPS and every other program using the COM port. Keep the normal USB serial driver: **no DFU or Zadig driver replacement is needed**. PTT stays released except when entering the updater as directed.
 
@@ -8,13 +8,24 @@ Use a charged battery and a reliable cable. Close CPS and every other program us
 
 1. Before flashing, open [DM32 Studio CPS](https://speexvocon.github.io/DM32-Studio/), **Read radio**, and export the complete JSON. Close its serial connection afterward. CSV is not a full backup.
 2. Reuse the **sealed original backup from this same physical radio** and its original radio label. Do not replace it with a backup of the beta or use another radio's backup. There is no need to repeat the two-read backup process if that backup is already sealed and intact.
-3. Update/download this repository, then follow setup, offline preparation, flash and independent verification below. Every flash still makes a **fresh preservation read** to check bootloader and factory calibration.
+3. Update/download this repository, then prepare locally below. The retained guarded CLI route explicitly makes a fresh preservation read; it is separate from the browser's routine existing-backup flow.
 
-Updating v0.2.0-beta.1 to beta.2 keeps the same V4 format and CPS. No conversion is required for an existing V4 codeplug.
+This release writes V6 with contacts and named systems. Read/export complete JSON before upgrading; keep earlier-format JSON for rollback. The new CPS retains earlier formats until an explicit working-copy upgrade.
 
-When coming from pre-V4 firmware, V0.2.0 reads saved V1-V3 settings without a boot-time migration write. The first explicit save publishes V4. The new CPS reads legacy firmware/files; use **Upgrade codeplug** to convert an older JSON draft before writing it to V4 firmware. Review the resulting zones/lists and keep the original JSON.
+Firmware 6868053 reads supported V1-V5 settings without a boot-time migration write. The first explicit save publishes V6. CPS retains an older file's format until you choose **Upgrade codeplug**. Review the resulting channels, zones/lists, contacts and named systems before writing, and keep the original JSON.
 
-**Rollback to pre-V4 firmware:** V0.2.0-beta.1 and beta.2 share V4. Earlier V1-V3 firmware cannot read V4's expanded memories/zones/lists. It may load a retained legacy fallback, which is not a complete copy of your latest configuration. To recover your earlier beta configuration, reinstall that version with its package, then write its saved compatible JSON using CPS. There is no lossless V4-to-legacy conversion. [Stock recovery](RECOVERY.md) restores your original application/codec separately.
+**Rollback to earlier firmware:** V0.2.0-beta.1 and beta.2 use V4 and cannot read V6 contacts/named systems. Earlier V1-V3 firmware also lacks the expanded V4 memories/zones/lists. Reinstall the earlier version with its own package, then write the compatible JSON saved for that version using CPS. Retained fallback records are not a complete copy of your latest configuration; there is no lossless V6-to-earlier conversion. [Stock recovery](RECOVERY.md) restores your original application/codec separately.
+
+## Routine browser updates
+
+The matching CPS **Firmware** page accepts an existing sealed backup, prepares
+the complete application/codec locally and offers a reviewed factory transfer.
+Advanced preservation/readback are separate from transfer completion. Browser
+flashing is experimental; keep the guarded CLI/recovery tools available.
+Opening CPS never updates the radio. Use the release folder from this repository.
+
+The sections below retain the existing first-install/guarded CLI workflow; its
+reader and independent verification steps are explicit parts of that route.
 
 ## 1. Set up the tools
 
@@ -35,7 +46,7 @@ Set your own port, unique physical-radio label, backup path and release. The exa
 $radioPort = 'COM5'
 $radioLabel = 'my-dm32-serial'
 $backup = '.\backups\my-dm32-before-beta'
-$release = '.\firmware\v0.2.0-beta.2\release.json'
+$release = '.\firmware\v0.3.0-beta.1\release.json'
 ```
 
 Use letters, digits, `-` or `_` in the label. A returning user must keep the label already sealed with their backup. The label binds files together; it does not electronically authenticate the radio.
@@ -64,7 +75,7 @@ These commands open **no serial port**:
 & $python tools/radio-safety.py inspect --directory $backup --radio-label $radioLabel
 & $python tools/prepare-firmware.py codec-info --backup $backup --radio-label $radioLabel --release $release
 & $python tools/prepare-firmware.py --backup $backup --radio-label $radioLabel --release $release
-$package = ".\build\$radioLabel\0.2.0-beta.2\package.json"
+$package = ".\build\$radioLabel\0.3.0-beta.1\package.json"
 ```
 
 Codec selection is automatic. The tool accepts exact verified standard 046, standard 049, NRF/fanti 049 and HR046 contracts, checks code/tables and relocation layout, then validates the complete merged update. No separate stock download, manual selection or stock-049 upgrade is needed when your backup matches a profile. HR046 has offline layout/package checks; its voice behavior still needs physical feedback.
@@ -74,14 +85,14 @@ If detection refuses an unknown/damaged codec, retain the exact error and ask th
 Default private output for this release:
 
 ```text
-build/<radio-label>/0.2.0-beta.2/package.json
-build/<radio-label>/0.2.0-beta.2/application-codec.bin
-build/<radio-label>/0.2.0-beta.2/application-codec_BFUV32.bin
+build/<radio-label>/0.3.0-beta.1/package.json
+build/<radio-label>/0.3.0-beta.1/application-codec.bin
+build/<radio-label>/0.3.0-beta.1/application-codec_BFUV32.bin
 ```
 
 A repeat command safely reuses an already verified package for the same backup/release. Changed or invalid existing output is never overwritten. To make a separate package, use `--output .\build\my-new-package`, then set `$package` to its `package.json`. Use the generated manifest with the flash helper; never hand the bare application to an updater.
 
-## 4. Review, then flash
+## 4. Guarded CLI transfer (explicit preservation workflow)
 
 First review the offline plan:
 
@@ -116,7 +127,7 @@ After transfer closes, switch **OFF**, remove the battery for ten seconds, refit
 
 At the reader's cue, turn **ON normally, no buttons**. Its independent read must match the complete prepared application/codec, original bootloader and factory calibration. Wait for **`VERIFIED`**. The readback and `verification.json` stay in a new check folder inside your backup. Ordinary settings may legitimately differ after a normal boot.
 
-When the reader closes, switch off, remove/refit the battery, then turn on normally with PTT released. The home screen should return; find build **32f973f** under **Tools → Diagnostics → Radio status**. Keep the package and verification result with your original backup.
+When the reader closes, switch off, remove/refit the battery, then turn on normally with PTT released. The home screen should return; find build **6868053** under **Tools -> Diagnostics -> Radio status**. Keep the package and verification result with your original backup.
 
 ## 6. Configure and use
 
@@ -132,6 +143,6 @@ Close the PC serial session and remove the **radio-side programming plug** for n
 | Blank screen after reading | Expected RAM-monitor state; let the tool finish/close, then remove/refit the battery and boot normally |
 | Unsupported codec | Update this repository and run `codec-info` against the existing sealed backup; send its exact output. No extra backup read or stock upgrade is required for diagnosis |
 | No internal mic/speaker audio | Close the PC serial session and remove the radio-side programming plug |
-| Wrong/stale channels after rollback | Restore the older version's compatible JSON through CPS; expanded V4 is not readable by older firmware |
+| Wrong/stale settings after rollback | Restore the older version's compatible JSON through CPS; earlier firmware cannot read V6 contacts/named systems, and V1-V3 also lacks expanded V4 memories/zones/lists |
 
 For a failure, keep the full error, detected codec name, version and logs. Use [RECOVERY.md](RECOVERY.md); never flash the complete `program.bin` as an application or copy another radio's calibration.

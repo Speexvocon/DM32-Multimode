@@ -10,6 +10,10 @@ Keep the full JSON exported before upgrading. Prepare/install the earlier releas
 
 V0.2.0-beta.1 and beta.2 use the same V4 format, so rollback between them does not need a codeplug conversion. Firmware using V1-V3 cannot read V4's extra memories, zones and scan records. Its legacy fallback may be stale. After restoring a compatible earlier beta, use DM32 Studio to read the radio and write the saved older-format JSON; never force or truncate a V4 file. New V4-only data has no lossless older-format conversion.
 
+V0.3.0-beta.1 uses V6; earlier beta firmware cannot read the added contacts and
+system records. Reinstall the desired release and its saved compatible JSON;
+do not truncate V6 records to force an older write.
+
 ## Restore your original stock application
 
 Close CPS and serial sessions. Use a charged battery and keep the same radio and
