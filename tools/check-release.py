@@ -22,7 +22,9 @@ def digest(content):
 
 def checksum_file(path):
     records = {}
-    for line in path.read_text(encoding="utf-8").splitlines():
+    raw_checksums = path.read_bytes()
+    require(b"\r" not in raw_checksums, "Checksum lists must use canonical LF line endings: " + str(path))
+    for line in raw_checksums.decode("utf-8").splitlines():
         if not line.strip():
             continue
         match = re.fullmatch(r"([0-9a-f]{64})  (.+)", line)
@@ -31,7 +33,12 @@ def checksum_file(path):
         require(name not in records, "Duplicate checksum: " + name)
         target = (path.parent / name).resolve()
         require(target.is_relative_to(ROOT), "Checksum path escapes repository")
-        require(target.is_file() and digest(target.read_bytes()) == match[1], "Checksum mismatch: " + name)
+        require(target.is_file(), "Checksum target missing: " + name)
+        content = target.read_bytes()
+        if target.suffix in {".json", ".dappsrc"}:
+            require(b"\r\n" not in content,
+                    "Hashed text must use canonical LF before checksumming: " + name)
+        require(digest(content) == match[1], "Checksum mismatch: " + name)
         records[name] = match[1]
     require(bool(records), "Empty checksum list: " + str(path))
     return records
