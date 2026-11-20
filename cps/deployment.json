@@ -21,7 +21,21 @@
     "runtime_difference": "Only the latest-release link changed after the tested revision",
     "target_ci": 44068616566,
     "hardware_accessed": false,
-    "physical_browser_flash_qualified": false
+    "physical_browser_flash_qualified": false,
+    "codec_037_039_040": {
+      "scope": "Offline extraction, layout, relocation and byte-identical browser/CLI packaging using stock 040 dump; no radio operation or physical browser flash qualification",
+      "package_tests": 15,
+      "producer_tests": 23,
+      "hardware_accessed": false,
+      "proprietary_codec_distributed": false,
+      "bundled_cps_tests": {
+        "passed": 131,
+        "failed": 0,
+        "skipped": 8,
+        "scope": "Offline Node tests; environment-dependent bridge tests are skipped in this standalone bundle"
+      },
+      "native_chromium_reader_asset_fetch_passed": true
+    }
   },
   "source_adjustments": [
     "README logical protocol link adjusted for standalone bundle",
@@ -43,8 +57,8 @@
     "flasher/app.js": "50e577893a8476b3f9ddf739dd1ddeef6d8f57928f2b4623e32574c8dac4681e",
     "flasher/backup-export.js": "394308ad5bd124ca0ba0edf8725a628d256cb8a3684ea3f31a0a004772c72785",
     "flasher/device.js": "35becc38cddcb445a9ba44663553f527682510d9ebff99f19e2bbe6208940780",
-    "flasher/package.js": "ebddbfef80f0c05a4e3316b8a53de0ce26e63157f325e3ea10b15dab61e5ac22",
-    "flasher/README.md": "f727eb033a5d57852ccdec4a21fb9a4642e334ac980b255a53ba433dc87c9b76",
+    "flasher/package.js": "827fd6239274ed8ee6d5c9e5b45bc6cb3ed16f462bee480435d487d3158fddac",
+    "flasher/README.md": "afa665eae9ef73405aea50e7d1195b3fa0086dadbedc9a7887a4fa2c9a09b805",
     "flasher/styles.css": "d3153e9606e92acbef97fbe0daf40fb59703d08eff0c4393c90a59e25afe12e3",
     "flasher/vendor/.gitattributes": "a79691a93b46e49ce460c26ef22afcc03d6eca1e63bf2edbc20e96159510f6c9",
     "flasher/vendor/diag.js": "87ea6cc2e5a0fff880f105dea92223bb94f78c73fc421bed4f0d727cb92400fd",
@@ -79,11 +93,12 @@
     "tests/trunking-ui.test.js": "60c48d6da752e5c2f6c41f2613a47d29def3888bd17eb8f03ec05505fdaae9d9",
     "tests/trunking.test.js": "2a1cf5cbbde33242ac17a5d866f1f9fbc3b47e41b2b6ce4520cfb8e0a2584156",
     "tests/web-flasher-backup-export.test.js": "1e494bdf9260259a8b459f289fc38759b18a8c2ee9f6db95568d1cc5f3846c02",
-    "tests/web-flasher-package.test.js": "122e31a340ed2161399aa9372a6c2cc3b6e4373595056de1763a1bb00013936b",
+    "tests/web-flasher-package.test.js": "4d8cf4e719f9c368a8942883fccf77f34e841e89f59381724aedc56fed98856a",
     "transport.js": "b2e3a969405574d5d72108b9fb8a4708e701459a7f6e9b943f51520aa0708c27",
     "TRUNKING.md": "a76b9effa9190f22c39c335823ef9ca3ae62b03faed7217e2279cb209befe733",
     "UPSTREAM.md": "27dbf00b6be9319fe9c0c2199af10de8bfb2079d201eb99622f9b63b96104295",
     "vendor/LICENSE.RadioFoundry": "9988da23b503eebd9b627eca5bea80742257eec657c2a6916a705a301de42f67",
     "vendor/undo.js": "034fd4a3439add324b0d1205fc0e840c9e2f2db31b64eebb5ec4874e9661b4ed"
-  }
+  },
+  "flasher_source_revision": "c440fb6b9436cbad394b0cbdfcfd43eaa71d7fc7"
 }

@@ -3,7 +3,7 @@
 27cff08a2041b32249c5304c3fc1b4335b729959daf64a221a9253d6bde3c5d5  applets/manifest.json
 a937db43c5da62e0fcb4e43aaa139fcea6315d8d9ffad910ef5e62b07510098a  applets/same-watch.dapp
 153a5b8469735ba92bda972dffa881fb5aa87d2fe9a28465003a80a08daab081  applets/same-watch.dappsrc
-21973dca7c46934031fd61b37f471b0d96d6673cee75808e27ca3df650077e96  cps/deployment.json
+b899ef6063a45216b08cd1727c9efed76186d6c890080b32a7b2168604f896af  cps/deployment.json
 7f4366141b337c3f6201b2b39f2a573241f4e1c3b8144d45b5b3dbae4dcdff97  firmware/v0.1.0-beta.1/dm32-multimode-0.1.0-beta.1-05c4965.application.bin
 7d21c9fd4222074a82ecf5de8ddc497ab8dcb81d0317f15c628266bc45df836c  firmware/v0.1.0-beta.1/release.json
 c33d62667b348d4880a3c15654bdccd835658468dcd189fad15d4ddd6664764e  firmware/v0.2.0-beta.1/dm32-multimode-0.2.0-beta.1-2e0f18a.application.bin
@@ -13,7 +13,7 @@ b165b351578f457f432d82c40b9a589cc83e10c8401b235a6a19397480829ad0  firmware/v0.2.
 013e162f9665b4e59e1d8c2674c8f7dc39d98ddef8e93f0c099211c575a79dad  firmware/v0.3.0-beta.1/dm32-multimode-0.3.0-beta.1-6868053.application.bin
 139681bad046a5a14f6ac26069e09d131be7f0b434ebe57d05f763c8f86d2573  firmware/v0.3.0-beta.1/release.json
 23f808a44acb504c8148846ded9c79fe56517875622f4595ca925fcfb4bcd46a  firmware/v0.3.0-beta.2/dm32-multimode-0.3.0-beta.2-e799c73.application.bin
-dcf7461335d88d4de5bdf13656b33d20682cbc5493edb0d490e6ca807722326d  firmware/v0.3.0-beta.2/release.json
+ef480434d8ff8ee6136960bc48262dec55082d1beb4d4ae83c5a362abeba9c3d  firmware/v0.3.0-beta.2/release.json
 f949e63c43bd65d70cf64f4d5544cb51797b652fe954cb3182e69df14ff50af2  source/0.1.0-beta.1-project.zip
 1c6f08bf47b575e83be76b60190c2d0e845e51c322511e2da6b5110c366c18db  source/0.2.0-beta.1-project.zip
 89b8356de915998058a518bb9b9ff43bd4a7600461f6dbd5e97c9146833776e6  source/0.2.0-beta.2-project.zip

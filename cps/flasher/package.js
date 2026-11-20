@@ -26,10 +26,13 @@ const CONTRACTS = [
   contract('dm32-046hr','HR Vocoder 046','02743cf4b3d252b8764fe083fb808b00ab42f0f0ab76935e62ca59fd5c5e64fb',{
     tables_sha256:'cd5a4d270f555cdbd586bca8de89e4e845789ed7aa2a2bb7414b6c3a270ef803',code_bytes:0x140dc,
     run:0x1b838,tables_ram:0x18000e48,entries:{decode:0,encode:0x260,dec_init:0xb4,dec_set:0x84,enc_init:0x314,enc_set:0x2e4,fec_init:0x1dcc},
-    relocations:[0x1ca8,0x1cac,0x3060],slot_bytes:94432})
+    relocations:[0x1ca8,0x1cac,0x3060],slot_bytes:94432}),
+  contract('dm32-037','Standard 037 / 039 / 040','6b1c46cb4bfefbbe9fe5d2d47d43624a4854fa4d52d5db29b75a5c968d68a065',{
+    stock_tag:37,stock_tags:[37,39,40]})
 ];
 const REFERENCE_WORDS = { 'dm32-046':[0x19540,0x22754,0x26cac], 'dm32-049':[0x19540,0x22754,0x26cac],
-  'dm32-nrf-049':[0x19540,0x22754,0x26cac], 'dm32-046hr':[0x1e270,0x26d8c,0x2b2e4] };
+  'dm32-nrf-049':[0x19540,0x22754,0x26cac], 'dm32-046hr':[0x1e270,0x26d8c,0x2b2e4],
+  'dm32-037':[0x19540,0x22754,0x26cac] };
 export function nativeContracts() { return structuredClone(CONTRACTS); }
 function fail(message) { throw new Error(message); }
 function bytes(value, name='File') {

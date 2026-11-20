@@ -22,13 +22,18 @@ VENDOR_NAME = "application-codec_BFUV32.bin"
 # they do not assert fresh on-radio or RF qualification for a release.
 def _native_contract(identifier, name, code_sha256, tables_sha256=QUALIFIED_TABLES,
                      code_bytes=0x14600, run=0x16CDC, tables_ram=0x18000EA8,
-                     fec_init=0x1BF8, relocations=(0x1AD4, 0x1AD8, 0x2E8C), slot_bytes=95748):
-    return {"id": identifier, "name": name, "code_sha256": code_sha256,
+                     fec_init=0x1BF8, relocations=(0x1AD4, 0x1AD8, 0x2E8C), slot_bytes=95748,
+                     stock_tag=None, stock_tags=None):
+    row = {"id": identifier, "name": name, "code_sha256": code_sha256,
             "tables_sha256": tables_sha256, "code_bytes": code_bytes, "tables_bytes": 0x2F78,
-            "run": run, "tables_ram": tables_ram, "stock_tag": 46 if "046" in identifier else 49,
+            "run": run, "tables_ram": tables_ram,
+            "stock_tag": stock_tag if stock_tag is not None else 46 if "046" in identifier else 49,
             "entries": dict(zip(("decode", "encode", "dec_init", "dec_set", "enc_init", "enc_set", "fec_init"),
                                 (0, 0x260, 0xB4, 0x84, 0x314, 0x2E4, fec_init))),
             "relocations": list(relocations), "slot_bytes": slot_bytes}
+    if stock_tags is not None:
+        row["stock_tags"] = list(stock_tags)
+    return row
 
 
 SUPPORTED_NATIVE_CODECS = {item["id"]: item for item in (
@@ -42,6 +47,9 @@ SUPPORTED_NATIVE_CODECS = {item["id"]: item for item in (
         tables_sha256="cd5a4d270f555cdbd586bca8de89e4e845789ed7aa2a2bb7414b6c3a270ef803",
         code_bytes=0x140DC, run=0x1B838, tables_ram=0x18000E48, fec_init=0x1DCC,
         relocations=(0x1CA8, 0x1CAC, 0x3060), slot_bytes=94432),
+    _native_contract("dm32-037", "Standard 037 / 039 / 040",
+        "6b1c46cb4bfefbbe9fe5d2d47d43624a4854fa4d52d5db29b75a5c968d68a065",
+        stock_tag=37, stock_tags=(37, 39, 40)),
 )}
 
 
@@ -153,7 +161,8 @@ def _extract_native(program, codec):
     except (ValueError, codec.get("ExtractError", ValueError)) as error:
         raise NativeCodecError("Native codec not recognized in this sealed backup. Keep it private and send the "
                                "stock version and this diagnostic to the maintainer. No radio was accessed. " + str(error)) from error
-    info = {"profile": profile.get("name", "unknown"), "code_sha256": safety.digest(code),
+    info = {"profile": profile.get("name", "unknown"), "detected_stock_tag": profile.get("tag"),
+            "code_sha256": safety.digest(code),
             "tables_sha256": safety.digest(tables), "code_bytes": len(code), "tables_bytes": len(tables)}
     contract = next((row for row in SUPPORTED_NATIVE_CODECS.values()
                      if row["code_sha256"] == info["code_sha256"]), None)
@@ -165,7 +174,8 @@ def _extract_native(program, codec):
     info["contract"] = contract["id"]
     if info["tables_sha256"] != contract["tables_sha256"]:
         raise NativeCodecError("Native codec table hash mismatch for " + fingerprint + "; preparation refused.", info)
-    if (profile.get("board") != "dm32" or profile.get("tag") != contract["stock_tag"]
+    if (profile.get("board") != "dm32"
+            or profile.get("tag") not in contract.get("stock_tags", [contract["stock_tag"]])
             or len(code) != contract["code_bytes"] or len(tables) != contract["tables_bytes"]
             or tuple(profile.get("code", ()))[1:] != (contract["code_bytes"], contract["run"])
             or tuple(profile.get("tables", ()))[1:] != (contract["tables_bytes"], contract["tables_ram"])
@@ -204,7 +214,11 @@ def merge_qualified(application, program, codec, loader, allowed_profiles=None, 
         raise NativeCodecError(f"Native profile {contract['name']} is supported by these tools but is not declared "
                                f"for release {release_version or 'selected'}. Select a release that declares this profile; "
                                "do not force the old release or replace the backup.")
-    merged = codec["merge"](application, profile, code, tables)
+    # 037/039/040 share the exact code/table bytes and dm32-037 relocation map.
+    # The slot tag names that canonical map build, not the detected stock
+    # firmware version retained in codec-info. Never mutate the source profile.
+    merge_profile = dict(profile, tag=contract["stock_tag"]) if "stock_tags" in contract else profile
+    merged = codec["merge"](application, merge_profile, code, tables)
     slot = merged[SLOT_OFFSET:]
     parsed = codec["parse_slot"](slot)
     if (not parsed or len(slot) != contract["slot_bytes"] or parsed.get("version") != 2

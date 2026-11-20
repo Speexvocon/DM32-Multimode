@@ -20,6 +20,7 @@ import radio_safety as safety
 class NativeProfileTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        cls.production_contracts = copy.deepcopy(beta.SUPPORTED_NATIVE_CODECS)
         cls.real_codec, cls.loader = beta.libraries()
         release = beta.read_json(beta.DEFAULT_RELEASE)
         cls.app = (beta.DEFAULT_RELEASE.parent / release["application"]["file"]).read_bytes()
@@ -55,7 +56,7 @@ class NativeProfileTests(unittest.TestCase):
         patched.start()
         self.addCleanup(patched.stop)
 
-    def test_all_four_exact_layouts_merge_parse_and_wrap(self):
+    def test_all_exact_layouts_merge_parse_and_wrap(self):
         for identifier, (profile, code, tables, codec) in self.fixtures.items():
             with self.subTest(profile=identifier):
                 merged, wrapped, parsed, _ = beta.merge_qualified(self.app, b"synthetic-program", codec, self.loader)
@@ -65,6 +66,78 @@ class NativeProfileTests(unittest.TestCase):
                 self.assertEqual(parsed["relocations"], self.contracts[identifier]["relocations"])
                 self.assertEqual(parsed["length"], self.contracts[identifier]["slot_bytes"])
                 self.assertEqual(self.loader["unwrap"](wrapped, self.loader["MODELS"]["dm32"]), (merged, "vendor"))
+
+    def test_037_039_040_share_canonical_slot_but_retain_detected_stock_tag(self):
+        original, code, tables, codec = self.fixtures["dm32-037"]
+        canonical = None
+        for tag in (37, 39, 40):
+            with self.subTest(stock_tag=tag):
+                profile = copy.deepcopy(original);profile["tag"] = tag
+                profile["name"] = "Synthetic stock " + str(tag)
+                before = copy.deepcopy(profile);seen = []
+                def merge(application, adopted, code_bytes, table_bytes):
+                    self.assertIsNot(adopted, profile)
+                    self.assertEqual(adopted, dict(before, tag=37))
+                    seen.append(adopted)
+                    return codec["merge"](application, adopted, code_bytes, table_bytes)
+                actual = dict(codec, extract=lambda *a, **kw: (profile, code, tables), merge=merge)
+                _, _, _, contract, info = beta._extract_native(b"synthetic", actual)
+                self.assertEqual(info["detected_stock_tag"], tag)
+                self.assertEqual(info["contract"], "dm32-037")
+                self.assertEqual(contract["stock_tag"], 37)
+                merged, wrapped, parsed, _ = beta.merge_qualified(self.app, b"synthetic", actual, self.loader,
+                    {"dm32-037"}, "0.3.0-beta.2")
+                self.assertEqual(parsed["tag"], 37)
+                self.assertEqual(profile, before)
+                self.assertEqual(len(seen), 1)
+                slot = merged[beta.SLOT_OFFSET:]
+                canonical = slot if canonical is None else canonical
+                self.assertEqual(slot, canonical)
+                self.assertEqual(self.loader["unwrap"](wrapped, self.loader["MODELS"]["dm32"]), (merged, "vendor"))
+
+    def test_037_family_rejects_other_tags_damaged_bytes_layout_and_map(self):
+        original, code, tables, codec = self.fixtures["dm32-037"]
+        for tag in (32, 38, 41, 46, 49):
+            profile = dict(original, tag=tag)
+            actual = dict(codec, extract=lambda *a, **kw: (profile, code, tables))
+            with self.subTest(tag=tag), self.assertRaisesRegex(ValueError, "layout/entry placement"):
+                beta.merge_qualified(self.app, b"synthetic", actual, self.loader)
+        changed = dict(original, tables=(0x03070000, len(tables), 0x18000EB0))
+        cases = (
+            (dict(codec, extract=lambda *a, **kw: (original, b"?"+code[1:], tables)), "Unsupported"),
+            (dict(codec, extract=lambda *a, **kw: (original, code, b"?"+tables[1:])), "table hash"),
+            (dict(codec, extract=lambda *a, **kw: (changed, code, tables)), "layout/entry placement"),
+            (dict(codec, codec_map=lambda *a: None), "relocation map"),
+        )
+        for actual, message in cases:
+            actual["merge"] = lambda *a: self.fail("Untrusted family variant reached merge")
+            with self.subTest(message=message), self.assertRaisesRegex(ValueError, message):
+                beta.merge_qualified(self.app, b"synthetic", actual, self.loader)
+
+    def test_037_release_contract_and_pinned_map_are_exact_and_latest_only(self):
+        with patch.object(beta, "SUPPORTED_NATIVE_CODECS", self.production_contracts):
+            row = beta.SUPPORTED_NATIVE_CODECS["dm32-037"]
+            self.assertEqual(row["stock_tag"], 37)
+            self.assertEqual(row["stock_tags"], [37, 39, 40])
+            for identifier, contract in beta.SUPPORTED_NATIVE_CODECS.items():
+                if identifier != "dm32-037":self.assertNotIn("stock_tags", contract)
+            latest = beta.read_json(beta.DEFAULT_RELEASE)
+            self.assertEqual(latest["supported_native_codecs"][-1], row)
+            self.assertIn("dm32-037", beta.release_supported_codecs(latest))
+            historical = beta.read_json(ROOT/"firmware/v0.3.0-beta.1/release.json")
+            self.assertNotIn("dm32-037", beta.release_supported_codecs(historical))
+            changed = copy.deepcopy(latest)
+            changed["supported_native_codecs"][-1]["stock_tags"].append(41)
+            with self.assertRaisesRegex(ValueError, "contract differs"):
+                beta.release_supported_codecs(changed)
+            path = "tools/rfoundry/rfoundry/codec_maps/dm32/dm32-037.json"
+            content = (safety.UPSTREAM/path).read_bytes()
+            expected = {"bytes":13428,"sha256":"e0b302ab53e4393507ef7c4f722b43262d6e43cc7cec877b0e577f3e3e720e3d"}
+            self.assertEqual(beta.record(content), expected)
+            self.assertEqual(beta.read_json(ROOT/"tools/vendor-radiofoundry.json")["files"][path], expected)
+            mapped = json.loads(content)
+            self.assertEqual(mapped["profile"], row["id"])
+            self.assertEqual(mapped["code"]["sha256"], row["code_sha256"])
 
     def test_altered_code_and_tables_are_rejected_before_merge(self):
         profile, code, tables, codec = self.fixtures["dm32-046"]

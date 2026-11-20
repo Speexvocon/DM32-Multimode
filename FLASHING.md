@@ -2,6 +2,12 @@
 
 For **DM-32UV / DM32 only**, using its USB serial programming cable. The current package is **v0.3.0-beta.2 / build e799c73**. Its bare application is **not directly flashable**: the offline preparer adds the correct native codec from your own sealed backup.
 
+The current installer also accepts the verified stock **037, 039 and 040** codec
+family for v0.3.0-beta.2. Update the installer tools and use that release folder;
+older releases keep their original compatibility limits. Identification checks
+the backup's codec bytes, not the version you type. A package may show codec map
+tag **037** for stock 039/040; `codec-info` retains the detected stock tag.
+
 Use a charged battery and a reliable cable. Close CPS and every other program using the COM port. Keep the normal USB serial driver: **no DFU or Zadig driver replacement is needed**. PTT stays released except when entering the updater as directed.
 
 ## Upgrading an existing beta

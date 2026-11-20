@@ -11,7 +11,8 @@ const digest=b=>createHash('sha256').update(b).digest('hex');
 const json=b=>JSON.parse(dec.decode(b));
 const pack=o=>enc.encode(JSON.stringify(o,null,2)+'\n');
 const copyFiles=files=>new Map([...files].map(([k,v])=>[k,new Uint8Array(v)]));
-const refs=[[0x19540,0x22754,0x26cac],[0x19540,0x22754,0x26cac],[0x19540,0x22754,0x26cac],[0x1e270,0x26d8c,0x2b2e4]];
+const refs=[[0x19540,0x22754,0x26cac],[0x19540,0x22754,0x26cac],[0x19540,0x22754,0x26cac],[0x1e270,0x26d8c,0x2b2e4],
+  [0x19540,0x22754,0x26cac]];
 function crc32(bytes) {let c=0xffffffff;for(const b of bytes){c^=b;for(let j=0;j<8;j++)c=c&1?0xedb88320^(c>>>1):c>>>1;}return(c^0xffffffff)>>>0;}
 const contracts=production.nativeContracts();
 function syntheticNative(index) {
@@ -98,7 +99,15 @@ test('real production contracts reject synthetic native code, with no configurab
   const altered=production.nativeContracts();altered[0].run++;
   await assert.rejects(production.prepareRelease(release(altered),app,backup),/contract differs/);
 });
-test('all four slot contracts, raw/vendor wrapping and CRC match independent Python packing',async()=>{
+test('037 family has one exact canonical contract and leaves the existing four contracts unchanged',()=>{
+  assert.deepEqual(contracts.map(row=>row.id),['dm32-046','dm32-049','dm32-nrf-049','dm32-046hr','dm32-037']);
+  assert.ok(contracts.slice(0,4).every(row=>!Object.hasOwn(row,'stock_tags')));
+  assert.deepEqual(contracts[4],{...contracts[1],id:'dm32-037',name:'Standard 037 / 039 / 040',
+    code_sha256:'6b1c46cb4bfefbbe9fe5d2d47d43624a4854fa4d52d5db29b75a5c968d68a065',
+    stock_tag:37,stock_tags:[37,39,40]});
+});
+
+test('all five slot contracts, raw/vendor wrapping and CRC match independent Python packing',async()=>{
   const python=String.raw`import sys,json,struct,zlib,hashlib,base64
 p=json.load(sys.stdin); app=base64.b64decode(p['app']); out=[]
 for i,r in enumerate(p['rows']):
@@ -115,7 +124,7 @@ for i,r in enumerate(p['rows']):
 print(json.dumps(out))`;
   const result=spawnSync(process.env.CPS_TEST_PYTHON||'python',['-c',python],{input:JSON.stringify({app:Buffer.from(app).toString('base64'),rows:engine.nativeContracts(),refs}),encoding:'utf8'});
   assert.equal(result.status,0,result.stderr);const expected=JSON.parse(result.stdout);
-  for(let i=0;i<4;i++) {
+  for(let i=0;i<contracts.length;i++) {
     const s=snapshot(i),files=await engine.sealBackup(s,s,'matrix-radio','synthetic'),backup=await engine.validateBackup(files);
     const p=await engine.prepareRelease(release(),app,backup),slot=p.raw.subarray(production.SLOT_OFFSET);
     assert.equal(digest(p.raw),expected[i].raw);assert.equal(digest(p.vendor),expected[i].vendor);assert.equal(digest(slot),expected[i].slot);
@@ -127,6 +136,28 @@ print(json.dumps(out))`;
     await engine.validatePrepared(withRelease(p),backup);
   }
 });
+test('037 family emits canonical tag37 while preserving the backup stock version',async()=>{
+  const s=snapshot(4),files=await engine.sealBackup(s,s,'family-radio','DM32.01.01.040');
+  const backup=await engine.validateBackup(files),p=await engine.prepareRelease(release(),app,backup);
+  assert.equal(backup.manifest.installed_firmware,'DM32.01.01.040');
+  assert.equal(p.manifest.native_codec.tag,37);
+  assert.equal(new DataView(p.raw.buffer,p.raw.byteOffset+production.SLOT_OFFSET).getUint32(60,true),37);
+  assert.equal(p.manifest.native_codec.code_sha256,engine.nativeContracts()[4].code_sha256);
+  await assert.rejects(engine.prepareRelease(release(engine.nativeContracts().slice(0,4)),app,backup),/not declared/);
+});
+
+test('037 family still rejects unknown code, corrupted tables and synthetic bytes in production',async()=>{
+  for(const [offset,error] of [[0x50020,/not recognized/],[0x90000+contracts[4].tables_bytes-1,/tables are missing or damaged/]]) {
+    const s=snapshot(4);s.program[offset]^=1;
+    const files=await engine.sealBackup(s,s,'damaged-family','synthetic');
+    const backup=await engine.validateBackup(files);
+    await assert.rejects(engine.prepareRelease(release(),app,backup),error);
+  }
+  const s=snapshot(4),files=await production.sealBackup(s,s,'unknown-family','synthetic');
+  const backup=await production.validateBackup(files);
+  await assert.rejects(production.prepareRelease(release(production.nativeContracts()),app,backup),/not recognized/);
+});
+
 test('release gate rejects bare apps, changed application, traversal, overlap, unknown or repeated contracts',async()=>{
   const {backup}=await baseline();
   await assert.rejects(engine.prepareRelease({},app,backup),/original release.json bytes/);

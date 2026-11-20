@@ -4,6 +4,12 @@ Firmware source `e799c73ab286c26648771cc91d2aaefad0c0a10b`; radio build
 **e799c73**. This is the normal multimode firmware. Older release applications
 and source archives remain unchanged.
 
+**Installer compatibility update:** the verified stock 037/039/040 codec family
+is now accepted for this release. The application and firmware source archive
+are unchanged. The package uses canonical codec map tag 037; offline diagnostics
+retain the detected stock tag. This fixes an installer allowlist omission and
+does not claim a new radio or RF qualification.
+
 - Decode supported FDMA channel identifiers carried in opcode `0x33`, alongside
   the existing identifier messages. Unsupported channel types remain refused;
   this does not add Phase 2 voice.

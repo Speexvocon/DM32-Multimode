@@ -100,8 +100,8 @@
       "sha256": "6e7391986b74c2eda74824125e59ea2a46374bf70ed2f5d79c144eef9004cfa0"
     },
     "tools/rfoundry/rfoundry/codec_maps/dm32/dm32-037.json": {
-      "bytes": 14213,
-      "sha256": "a35b78b71b14a5b0a6c345ee8546a9985be300582ac3d85953168b55943aba6b"
+      "bytes": 13428,
+      "sha256": "e0b302ab53e4393507ef7c4f722b43262d6e43cc7cec877b0e577f3e3e720e3d"
     },
     "tools/rfoundry/rfoundry/codec_maps/dm32/dm32-046.json": {
       "bytes": 14213,

@@ -122,10 +122,41 @@
         12384
       ],
       "slot_bytes": 94432
+    },
+    {
+      "id": "dm32-037",
+      "name": "Standard 037 / 039 / 040",
+      "code_sha256": "6b1c46cb4bfefbbe9fe5d2d47d43624a4854fa4d52d5db29b75a5c968d68a065",
+      "tables_sha256": "10684c33e3cc8238376e455fd96b1c15a863a864420dbbaa4589803c4eb0b0e1",
+      "code_bytes": 83456,
+      "tables_bytes": 12152,
+      "run": 93404,
+      "tables_ram": 402656936,
+      "stock_tag": 37,
+      "entries": {
+        "decode": 0,
+        "encode": 608,
+        "dec_init": 180,
+        "dec_set": 132,
+        "enc_init": 788,
+        "enc_set": 740,
+        "fec_init": 7160
+      },
+      "relocations": [
+        6868,
+        6872,
+        11916
+      ],
+      "slot_bytes": 95748,
+      "stock_tags": [
+        37,
+        39,
+        40
+      ]
     }
   ],
   "native_codec_validation": {
-    "scope": "All four declared codec contracts retain offline extraction/layout/package checks. No new multi-variant hardware or RF qualification is claimed for this release.",
+    "scope": "All five declared codec contracts retain offline extraction/layout/package checks, including the shared stock 037/039/040 family. No new hardware or RF qualification is claimed.",
     "hardware_or_rf_qualification_for_this_release": false,
     "required_source": "Tester own verified stock program-flash backup; never distributed in this repository.",
     "unrecognized_contract": "Refuse preparation; do not guess firmware family from a version label.",
@@ -134,7 +165,8 @@
       "dm32-046",
       "dm32-049",
       "dm32-nrf-049",
-      "dm32-046hr"
+      "dm32-046hr",
+      "dm32-037"
     ]
   },
   "build_validation": {
@@ -175,12 +207,13 @@
     "runtime_changed_since": true,
     "codeplug_version_max": 6,
     "compatibility": "V1\u2013V6 capability-aware editor; V6 named trunking systems, V5 contacts and existing V4 channels/zones/lists. Bundled CPS is refreshed separately from the firmware binary source.",
-    "public_commit": "d948edda6a2b31ae2b9899eb78450d4ed94c8f21",
+    "public_commit": "764a2e3ec48ed53025b0cd1a6c92a31db378d569",
     "capabilities": [
       "V6 named trunking with Do not affiliate (receive only)",
       "DAPP/1 applet loading and management",
       "AI applet builder kit"
-    ]
+    ],
+    "flasher_source_commit": "c440fb6b9436cbad394b0cbdfcfd43eaa71d7fc7"
   },
   "distribution": {
     "proprietary_codec_included": false,

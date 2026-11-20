@@ -125,8 +125,10 @@ available in the beta repository.
   complete reads and application installation through the factory updater. The
   application UI does not use the RAM monitor's flash-write commands.
 - `package.js` is an offline port of the beta backup/codec/package checks. No
-  serial, file-system or networking access occurs in that engine. Four exact
-  native-codec contracts are supported; a release must declare its contract too.
+  serial, file-system or networking access occurs in that engine. Five exact
+  native-codec contracts are supported, including the shared stock 037/039/040
+  family; a release must declare its contract too. This family uses the canonical
+  codec-map tag 037; the original stock version remains in the backup metadata.
 - `backup-export.js` creates the full diagnostic dump and a local ZIP archive.
   It does not extract a codec, enable installation or access a serial port.
 - `vendor/` contains unchanged MIT-licensed RadioFoundry transport modules and
