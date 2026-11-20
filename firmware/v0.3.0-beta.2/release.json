@@ -207,13 +207,13 @@
     "runtime_changed_since": true,
     "codeplug_version_max": 6,
     "compatibility": "V1\u2013V6 capability-aware editor; V6 named trunking systems, V5 contacts and existing V4 channels/zones/lists. Bundled CPS is refreshed separately from the firmware binary source.",
-    "public_commit": "764a2e3ec48ed53025b0cd1a6c92a31db378d569",
+    "public_commit": "eb797ee75225a2191641f94678fff16edff3ae66",
     "capabilities": [
       "V6 named trunking with Do not affiliate (receive only)",
       "DAPP/1 applet loading and management",
       "AI applet builder kit"
     ],
-    "flasher_source_commit": "c440fb6b9436cbad394b0cbdfcfd43eaa71d7fc7"
+    "flasher_source_commit": "3cbd3283d9cba30d2d76670696418e815e9b9dcf"
   },
   "distribution": {
     "proprietary_codec_included": false,

@@ -2,8 +2,10 @@
 import { WebFlashDevice } from './device.js';
 import { validateBackup, sealBackup, compareSnapshot, prepareRelease, validatePrepared, verifyInstalled } from './package.js';
 import { backupCompatibility, buildBackupZip, createFullDump } from './backup-export.js';
+import { browserSupport } from './browser-support.js';
 
 const root = document.getElementById('flasher');
+const browser = browserSupport();
 const state = { device:null, busy:false, writing:false, backup:null, backupFiles:null, backupSaved:false,
   prepared:null, release:null, packageSaved:false, preflight:false, identified:false, transferComplete:false, verified:false, controller:null, logs:[],
   dumpFiles:null, dumpEvidence:null, dumpSaved:false };
@@ -46,7 +48,7 @@ function progress(value,total) {
 function refresh() {
   const readOnly=backupOnly();
   for(const node of root.querySelectorAll('input,button')) node.disabled=state.busy;
-  ui.connect.disabled=state.busy||!!state.device;
+  ui.connect.disabled=state.busy||!!state.device||!browser.supported;
   ui.close.disabled=state.busy||!state.device;
   ui.create.disabled=state.busy||!state.device;
   ui.saveBackup.disabled=state.busy||!(state.backupFiles||state.dumpFiles);
@@ -115,7 +117,7 @@ async function saveFolder(files,prefix) {
 }
 async function connect() {
   if(state.busy)return;
-  if(!navigator.serial)return notice('Open this page in desktop Chrome or Edge over HTTPS or localhost. Web Serial is unavailable.',true);
+  if(!browser.supported)return notice(browser.message,true);
   const device=new WebFlashDevice({serial:navigator.serial,log});
   await run('Choose the programming cable. Close its CPS connection first.',async signal=>{
     try {
@@ -240,7 +242,8 @@ function picker(id,action) {const input=h('input',{id,type:'file',webkitdirector
 function card(number,title,...children) {return h('section',{class:'flash-card'},h('h2',{},h('span',{class:'flash-number'},number),title),...children);}
 function field(label,input) {return [h('label',{for:input.id},label),input];}
 ui.connection=h('span',{class:'tag neutral'},'Disconnected');ui.statusText=h('span',{},'No radio is connected. Files stay on this computer.');ui.progress=h('progress',{max:'1',value:'0','aria-label':'Operation progress'});ui.status=h('div',{class:'flash-state',role:'status','aria-live':'polite'},ui.statusText,ui.progress);
-ui.connect=button('Connect cable',connect,'primary');ui.close=button('Disconnect',close);ui.cancel=button('Stop waiting / reading',()=>state.controller?.abort());
+ui.connect=button('Connect cable',connect,'primary');ui.connect.setAttribute('aria-describedby','browser-support');ui.close=button('Disconnect',close);ui.cancel=button('Stop waiting / reading',()=>state.controller?.abort());
+ui.browserWarning=h('div',{id:'browser-support',class:'flash-browser-warning',role:'alert'},browser.message);ui.browserWarning.hidden=browser.supported;
 ui.backupOnly=h('input',{id:'backup-only',type:'checkbox',onchange:policyChanged});ui.backupOnly.checked=new URL(location.href).searchParams.get('backup')==='1';
 ui.incompatible=h('input',{id:'incompatible-radio',type:'checkbox',onchange:policyChanged});ui.modeResult=h('p',{class:'flash-mode-result'});
 ui.label=h('input',{id:'radio-label',type:'text',maxlength:'80',placeholder:'Your label for this radio'});ui.firmware=h('input',{id:'installed-firmware',type:'text',maxlength:'80',placeholder:'For example, DM32.NRFB.01.050',oninput:policyChanged});
@@ -258,6 +261,7 @@ ui.log=h('pre',{class:'flash-log','aria-label':'Firmware activity log'});
 ui.newBackup=h('details',{},h('summary',{},'Create a first-install backup / full dump'),...field('Radio label',ui.label),...field('Installed firmware',ui.firmware),h('p',{},'Start with the radio OFF, cable connected and PTT released. After starting, wait for the power-on cue in the log. A full dump reads both memories twice; no codec recognition is required in backup-only mode.'),ui.create);
 ui.newBackup.open=ui.backupOnly.checked;
 root.replaceChildren(h('div',{class:'flash-intro'},h('h1',{},'Install or update your DM32'),h('span',{class:'tag warn'},'Experimental browser installer'),h('p',{},'Use your own backup and a release folder from the beta repository. Preparation happens in your browser; native codec, calibration and backup files are never uploaded. Export your codeplug in CPS and disconnect it before starting. The CLI installer remains available.'),h('p',{},h('a',{href:'https://github.com/Speexvocon/DM32-Multimode/tree/main/firmware/v0.3.0-beta.2',target:'_blank',rel:'noopener noreferrer'},'Latest trunking beta: v0.3.0-beta.2'), ' · ',h('a',{href:'./index.html'},'Open CPS: trunking systems and applets'))),
+ ui.browserWarning,
  h('section',{class:'flash-compatibility','aria-label':'Radio compatibility'},h('h2',{},'RF-B / DM32.NRFB.01.050: currently incompatible; support planned'),h('p',{},'Do not install the current multimode firmware on the newer RF-B radio. You can save a full dump here now and send it privately to the maintainer to help upcoming support. Puya flash alone does not identify RF-B.'),h('label',{class:'flash-check',for:'incompatible-radio'},ui.incompatible,'My radio has RF-B hardware, or it shipped with DM32.NRFB.01.050.'),h('label',{class:'flash-check',for:'backup-only'},ui.backupOnly,'Backup / full dump only (no installation)'),ui.modeResult),
  h('div',{},ui.connection,' ',ui.connect,ui.close,ui.cancel),ui.status,
  h('div',{class:'flash-grid'},

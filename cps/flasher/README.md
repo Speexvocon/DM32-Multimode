@@ -5,6 +5,13 @@ Firmware button in Studio first offers to preserve unsaved edits and disconnects
 the programming session. Nothing opens a serial port until Connect cable is
 pressed. Opening the page or selecting a folder does not flash the radio.
 
+Only Chromium-based desktop browsers are supported. Use Google Chrome or
+Microsoft Edge; Chrome on an iPhone or iPad uses a different browser engine and
+is not supported. The installer shows a warning and disables **Connect cable**
+when the browser, secure context or Web Serial support is unavailable. Open the
+page over HTTPS or localhost. Documentation and download links remain available
+without connecting a radio.
+
 ## Newer RF-B radios: currently incompatible, support planned
 
 Radios with the newer RF-B frontend, including units shipped with
